@@ -1,0 +1,6 @@
+name: DebtCollector
+main: com.example.debtcollector.DebtCollectorPlugin
+version: 1.0.0
+api-version: 1.19
+depend: [Vault]
+author: ChatGPT
