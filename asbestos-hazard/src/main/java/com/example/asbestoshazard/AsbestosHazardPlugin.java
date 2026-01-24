@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Random;
 
 public class AsbestosHazardPlugin extends JavaPlugin implements Listener {
-    private static final double DROP_CHANCE = 0.06;
+    private static final double DROP_CHANCE = 0.12;
+    private static final int ASBESTOS_ZONE_MAX_Y = 32;
     private static final long EFFECT_INTERVAL_TICKS = 40L;
     private static final int EFFECT_DURATION_TICKS = 120;
 
@@ -40,6 +41,14 @@ public class AsbestosHazardPlugin extends JavaPlugin implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         if (player.getGameMode() != GameMode.SURVIVAL) {
+            return;
+        }
+
+        if (!isRockBlock(event.getBlock().getType())) {
+            return;
+        }
+
+        if (!isAsbestosZone(event.getBlock().getLocation())) {
             return;
         }
 
@@ -63,6 +72,26 @@ public class AsbestosHazardPlugin extends JavaPlugin implements Listener {
     private void applyEffect(Player player, PotionEffectType type, int amplifier) {
         PotionEffect effect = new PotionEffect(type, EFFECT_DURATION_TICKS, amplifier, true, true, true);
         player.addPotionEffect(effect);
+    }
+
+    private boolean isAsbestosZone(Location location) {
+        return location.getBlockY() <= ASBESTOS_ZONE_MAX_Y && location.getWorld() != null
+                && location.getWorld().getEnvironment() == org.bukkit.World.Environment.NORMAL;
+    }
+
+    private boolean isRockBlock(Material material) {
+        return material == Material.COBBLESTONE
+                || material == Material.COBBLED_DEEPSLATE
+                || material == Material.DEEPSLATE
+                || material == Material.STONE
+                || material == Material.GRANITE
+                || material == Material.DIORITE
+                || material == Material.ANDESITE
+                || material == Material.TUFF
+                || material == Material.CALCITE
+                || material == Material.BLACKSTONE
+                || material == Material.BASALT
+                || material == Material.SMOOTH_BASALT;
     }
 
     private boolean hasAsbestos(PlayerInventory inventory) {
