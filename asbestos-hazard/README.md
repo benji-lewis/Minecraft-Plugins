@@ -5,7 +5,8 @@ AsbestosHazard is a Paper plugin that adds asbestos drops when mining and applie
 ## Features
 
 - **Random asbestos drops**: Mining rock blocks at deep overworld depths has a 12% chance to drop asbestos.
-- **Hazardous inventory effects**: Holding asbestos applies slowness and poison until it is removed.
+- **Escalating inventory effects**: Holding asbestos applies slowness and poison that worsen with longer exposure and larger asbestos stacks.
+- **Chunk status command**: Use `/asbestoschunk` to check whether your current chunk is within the asbestos zone.
 
 ## Build
 

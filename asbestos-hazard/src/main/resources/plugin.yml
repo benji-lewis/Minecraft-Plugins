@@ -4,3 +4,7 @@ version: 1.0.0
 api-version: 1.19
 authors:
   - Codex
+commands:
+  asbestoschunk:
+    description: Check whether your current chunk is within the asbestos zone.
+    usage: /<command>
