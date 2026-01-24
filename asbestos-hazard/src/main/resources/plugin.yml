@@ -2,5 +2,6 @@ name: AsbestosHazard
 main: com.example.asbestoshazard.AsbestosHazardPlugin
 version: 1.0.0
 api-version: 1.19
+description: Adds asbestos drops from hazardous rock chunks and hazardous inventory effects.
 authors:
   - Codex

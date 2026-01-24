@@ -18,13 +18,30 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class AsbestosHazardPlugin extends JavaPlugin implements Listener {
-    private static final double DROP_CHANCE = 0.06;
+    private static final double DROP_CHANCE = 0.12;
     private static final long EFFECT_INTERVAL_TICKS = 40L;
     private static final int EFFECT_DURATION_TICKS = 120;
+    private static final Set<Material> ROCK_MATERIALS = EnumSet.of(
+            Material.STONE,
+            Material.COBBLESTONE,
+            Material.MOSSY_COBBLESTONE,
+            Material.ANDESITE,
+            Material.DIORITE,
+            Material.GRANITE,
+            Material.DEEPSLATE,
+            Material.COBBLED_DEEPSLATE,
+            Material.TUFF,
+            Material.CALCITE,
+            Material.BLACKSTONE,
+            Material.BASALT,
+            Material.SMOOTH_BASALT
+    );
 
     private final Random random = new Random();
     private NamespacedKey asbestosKey;
@@ -40,6 +57,14 @@ public class AsbestosHazardPlugin extends JavaPlugin implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         if (player.getGameMode() != GameMode.SURVIVAL) {
+            return;
+        }
+
+        if (!isHazardChunk(event.getBlock().getChunk())) {
+            return;
+        }
+
+        if (!ROCK_MATERIALS.contains(event.getBlock().getType())) {
             return;
         }
 
@@ -63,6 +88,15 @@ public class AsbestosHazardPlugin extends JavaPlugin implements Listener {
     private void applyEffect(Player player, PotionEffectType type, int amplifier) {
         PotionEffect effect = new PotionEffect(type, EFFECT_DURATION_TICKS, amplifier, true, true, true);
         player.addPotionEffect(effect);
+    }
+
+    private boolean isHazardChunk(Chunk chunk) {
+        long seed = chunk.getWorld().getSeed();
+        long chunkSeed = seed
+                ^ ((long) chunk.getX() << 32)
+                ^ (long) chunk.getZ();
+        Random chunkRandom = new Random(chunkSeed);
+        return chunkRandom.nextDouble() <= DROP_CHANCE;
     }
 
     private boolean hasAsbestos(PlayerInventory inventory) {
