@@ -1,5 +1,9 @@
-# Agent Instructions
+# AGENTS Instructions
 
-- Keep code changes scoped to the asbestos-hazard plugin.
-- Follow standard Spigot/Bukkit conventions and keep code readable.
-- Update README and plugin.yml whenever behavior or configuration changes.
+## Scope
+- These instructions apply to all files within the `asbestos-hazard` directory tree.
+
+## Development Guidelines
+- Keep gameplay logic in `AsbestosHazardPlugin.java`.
+- Update `README.md` when changing player-facing behavior.
+- Prefer small, targeted changes with clear constants for tunable values.
