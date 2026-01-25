@@ -4,7 +4,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>asbestos-hazard</artifactId>
-    <version>1.0.0</version>
+    <version>1.2.0</version>
     <name>AsbestosHazard</name>
     <description>Adds asbestos drops with hazardous inventory effects.</description>
 
