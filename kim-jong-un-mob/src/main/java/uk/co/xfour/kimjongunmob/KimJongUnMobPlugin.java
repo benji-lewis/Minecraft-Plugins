@@ -88,6 +88,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
                     Commands.literal("spawnkim")
                             .requires(source -> source.getSender().hasPermission("kimjongunmob.spawn"))
                             .executes(context -> handleSpawnCommand(context.getSource()))
+                            .build()
             );
         });
     }
