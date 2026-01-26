@@ -308,8 +308,8 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
         if (world == null) {
             return;
         }
-        world.spawnParticle(Particle.SMOKE_LARGE, location, 20, 0.3, 0.5, 0.3, 0.02);
-        TNTPrimed tnt = (TNTPrimed) world.spawnEntity(location, EntityType.PRIMED_TNT);
+        world.spawnParticle(Particle.LARGE_SMOKE, location, 20, 0.3, 0.5, 0.3, 0.02);
+        TNTPrimed tnt = (TNTPrimed) world.spawnEntity(location, EntityType.TNT);
         tnt.setFuseTicks(MISSILE_FUSE_TICKS);
         tnt.setVelocity(new Vector(0, MISSILE_LAUNCH_SPEED, 0));
     }
