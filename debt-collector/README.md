@@ -9,7 +9,7 @@ Spawns "Debt Collector" NPCs in suits that chase and attack players whose Vault 
 - Collectors chase and attack the indebted player until their balance is non-negative.
 
 ## Requirements
-- Spigot/Paper 1.19+ (tested against API 1.19.4)
+- Paper 1.19+ (tested against API 1.19.4)
 - Vault
 - An economy plugin that Vault can hook into
 
