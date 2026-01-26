@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,7 +29,9 @@ import java.util.Random;
 
 public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
     private static final double SPAWN_CHANCE = 0.3;
-    private static final int SHOUT_INTERVAL_TICKS = 120;
+    private static final int SHOUT_MIN_INTERVAL_TICKS = 80;
+    private static final int SHOUT_MAX_INTERVAL_TICKS = 260;
+    private static final double SHOUT_CHANCE = 0.4;
     private static final int DESPAWN_DELAY_TICKS = 100;
     private static final double SHOUT_RADIUS = 18.0;
     private static final double WALK_SPEED = 0.06;
@@ -92,6 +95,17 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
         scheduleDespawn(villager);
     }
 
+    @EventHandler
+    public void onVolunteerTrade(PlayerInteractEntityEvent event) {
+        if (!(event.getRightClicked() instanceof Villager villager)) {
+            return;
+        }
+        if (!isVolunteer(villager)) {
+            return;
+        }
+        event.setCancelled(true);
+    }
+
     private void spawnVolunteer(Location location) {
         if (location.getWorld() == null) {
             return;
@@ -107,8 +121,7 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
 
         setVolunteerData(villager);
         setMovementSpeed(villager, WALK_SPEED);
-        shoutAtNearbyPlayers(villager);
-        startShouting(villager);
+        startRandomShouting(villager);
     }
 
     private double randomOffset() {
@@ -144,20 +157,25 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    private void startShouting(Villager villager) {
+    private void startRandomShouting(Villager villager) {
+        scheduleNextShout(villager);
+    }
+
+    private void scheduleNextShout(Villager villager) {
+        int delay = SHOUT_MIN_INTERVAL_TICKS
+                + random.nextInt(SHOUT_MAX_INTERVAL_TICKS - SHOUT_MIN_INTERVAL_TICKS + 1);
         new BukkitRunnable() {
             @Override
             public void run() {
                 if (!villager.isValid() || villager.isDead()) {
-                    cancel();
                     return;
                 }
-                if (isFleeing(villager)) {
-                    return;
+                if (!isFleeing(villager) && random.nextDouble() <= SHOUT_CHANCE) {
+                    shoutAtNearbyPlayers(villager);
                 }
-                shoutAtNearbyPlayers(villager);
+                scheduleNextShout(villager);
             }
-        }.runTaskTimer(this, SHOUT_INTERVAL_TICKS, SHOUT_INTERVAL_TICKS);
+        }.runTaskLater(this, delay);
     }
 
     private void shoutAtNearbyPlayers(Villager villager) {
