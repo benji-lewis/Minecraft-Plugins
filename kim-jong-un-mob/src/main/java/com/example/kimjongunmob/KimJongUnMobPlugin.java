@@ -1,9 +1,12 @@
 package com.example.kimjongunmob;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
+import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -20,6 +23,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -31,9 +35,12 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
@@ -42,6 +49,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
     private static final int SPAWN_INTERVAL_TICKS = 20 * 60 * 5;
     private static final int MISSILE_FUSE_TICKS = 60;
     private static final double MISSILE_LAUNCH_SPEED = 1.4;
+    private static final String KIM_SKIN_URL = "https://minotar.net/skin/KimJongUn";
 
     private final Random random = new Random();
     private NamespacedKey mobKey;
@@ -88,10 +96,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
         }
         event.getDrops().clear();
         World world = entity.getWorld();
-        world.dropItemNaturally(entity.getLocation(), createNoseCone());
-        world.dropItemNaturally(entity.getLocation(), createMissileBody());
-        world.dropItemNaturally(entity.getLocation(), createMissileFins());
-        world.dropItemNaturally(entity.getLocation(), createWarheadCore());
+        world.dropItemNaturally(entity.getLocation(), createRandomMissilePart());
     }
 
     @EventHandler
@@ -143,11 +148,31 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
         entity.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
         Objects.requireNonNull(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(40.0);
         entity.setHealth(40.0);
-        entity.getEquipment().setHelmet(createBlackArmorPiece(Material.LEATHER_HELMET));
+        if (entity instanceof Zombie zombie) {
+            zombie.setAggressive(false);
+        }
+        entity.getEquipment().setHelmet(createKimHead());
         entity.getEquipment().setChestplate(createBlackArmorPiece(Material.LEATHER_CHESTPLATE));
         entity.getEquipment().setLeggings(createBlackArmorPiece(Material.LEATHER_LEGGINGS));
         entity.getEquipment().setBoots(createBlackArmorPiece(Material.LEATHER_BOOTS));
         entity.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD));
+    }
+
+    private ItemStack createKimHead() {
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), "KimJongUn");
+        try {
+            PlayerTextures textures = profile.getTextures();
+            textures.setSkin(new URL(KIM_SKIN_URL));
+            profile.setTextures(textures);
+        } catch (MalformedURLException e) {
+            getLogger().warning("Invalid Kim Jong Un skin URL configured.");
+        }
+        meta.setOwnerProfile(profile);
+        meta.displayName(Component.text("Kim Jong Un Head", NamedTextColor.RED));
+        item.setItemMeta(meta);
+        return item;
     }
 
     private ItemStack createBlackArmorPiece(Material material) {
@@ -189,6 +214,16 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
 
     private ItemStack createWarheadCore() {
         return createPart(Material.NETHER_STAR, "Thermonuclear Warhead Core", "Unstable energy core.", "item_warhead");
+    }
+
+    private ItemStack createRandomMissilePart() {
+        List<ItemStack> parts = List.of(
+                createNoseCone(),
+                createMissileBody(),
+                createMissileFins(),
+                createWarheadCore()
+        );
+        return parts.get(random.nextInt(parts.size()));
     }
 
     private ItemStack createMissileItem() {
