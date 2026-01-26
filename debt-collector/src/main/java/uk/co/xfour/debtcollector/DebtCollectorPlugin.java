@@ -1,11 +1,11 @@
 package uk.co.xfour.debtcollector;
 
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
@@ -24,6 +24,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +51,8 @@ public class DebtCollectorPlugin extends JavaPlugin implements Listener {
             "Bennett"
     );
 
-    private Economy economy;
+    private Object economy;
+    private Method getBalanceMethod;
     private NamespacedKey collectorKey;
 
     @Override
@@ -78,18 +80,37 @@ public class DebtCollectorPlugin extends JavaPlugin implements Listener {
             return false;
         }
 
-        RegisteredServiceProvider<Economy> provider = getServer().getServicesManager().getRegistration(Economy.class);
+        Class<?> economyClass;
+        try {
+            economyClass = Class.forName("net.milkbowl.vault.economy.Economy");
+        } catch (ClassNotFoundException exception) {
+            getLogger().warning("Vault API not found on the classpath.");
+            return false;
+        }
+
+        RegisteredServiceProvider<?> provider = getServer().getServicesManager().getRegistration(economyClass);
         if (provider == null) {
             return false;
         }
 
         economy = provider.getProvider();
-        return economy != null;
+        if (economy == null) {
+            return false;
+        }
+
+        try {
+            getBalanceMethod = economy.getClass().getMethod("getBalance", OfflinePlayer.class);
+        } catch (NoSuchMethodException exception) {
+            getLogger().warning("Vault economy provider does not expose getBalance(OfflinePlayer).");
+            return false;
+        }
+
+        return true;
     }
 
     private void checkPlayers() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            double balance = economy.getBalance(player);
+            double balance = getBalance(player);
             if (balance < DEBT_THRESHOLD) {
                 ensureCollector(player);
             } else {
@@ -177,6 +198,24 @@ public class DebtCollectorPlugin extends JavaPlugin implements Listener {
         if (entity != null && !entity.isDead()) {
             entity.remove();
         }
+    }
+
+    private double getBalance(OfflinePlayer player) {
+        if (economy == null || getBalanceMethod == null) {
+            return 0.0;
+        }
+
+        try {
+            Object result = getBalanceMethod.invoke(economy, player);
+            if (result instanceof Number number) {
+                return number.doubleValue();
+            }
+        } catch (ReflectiveOperationException exception) {
+            getLogger().severe("Failed to query Vault economy balance. Disabling plugin.");
+            getServer().getPluginManager().disablePlugin(this);
+        }
+
+        return 0.0;
     }
 
     @EventHandler

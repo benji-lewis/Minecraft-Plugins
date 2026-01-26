@@ -25,3 +25,4 @@ mvn clean package
 
 ## Notes
 - Debt collectors are tagged internally and removed when a player is no longer in debt or leaves the server.
+- The plugin disables itself if Vault (and its economy service) is unavailable.
