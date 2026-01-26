@@ -98,13 +98,12 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
         }
 
         Location spawnLocation = location.clone().add(randomOffset(), 0, randomOffset());
-        Villager villager = location.getWorld().spawn(spawnLocation, Villager.class, spawned -> {
-            spawned.setCustomName(ChatColor.LIGHT_PURPLE + "PETA Volunteer");
-            spawned.setCustomNameVisible(true);
-            spawned.setAdult();
-            spawned.setSilent(false);
-            spawned.setRemoveWhenFarAway(true);
-        });
+        Villager villager = location.getWorld().spawn(spawnLocation, Villager.class);
+        villager.setCustomName(ChatColor.LIGHT_PURPLE + "PETA Volunteer");
+        villager.setCustomNameVisible(true);
+        villager.setAdult();
+        villager.setSilent(false);
+        villager.setRemoveWhenFarAway(true);
 
         setVolunteerData(villager);
         setMovementSpeed(villager, WALK_SPEED);
