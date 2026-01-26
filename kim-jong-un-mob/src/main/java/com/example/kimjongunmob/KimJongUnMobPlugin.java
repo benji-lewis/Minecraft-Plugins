@@ -1,33 +1,34 @@
 package com.example.kimjongunmob;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import de.oliver.fancynpcs.api.FancyNpcsPlugin;
+import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.NpcData;
+import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
-import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -35,12 +36,8 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.profile.PlayerProfile;
-import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
@@ -52,14 +49,19 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
     private static final String KIM_SKIN_URL = "https://minotar.net/skin/KimJongUn";
 
     private final Random random = new Random();
-    private NamespacedKey mobKey;
     private NamespacedKey itemTypeKey;
     private BukkitTask spawnTask;
+    private boolean fancyNpcsAvailable;
 
     @Override
     public void onEnable() {
-        mobKey = new NamespacedKey(this, "kim_jong_un_mob");
         itemTypeKey = new NamespacedKey(this, "kim_jong_un_item_type");
+        fancyNpcsAvailable = Bukkit.getPluginManager().isPluginEnabled("FancyNpcs");
+        if (!fancyNpcsAvailable) {
+            getLogger().severe("FancyNpcs is required for Kim Jong Un NPCs. Disabling plugin.");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         Bukkit.getPluginManager().registerEvents(this, this);
         registerRecipes();
@@ -83,20 +85,9 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
             sender.sendMessage("Only players can use this command.");
             return true;
         }
-        spawnKimMob(player.getLocation());
-        player.sendMessage(Component.text("A Kim Jong Un themed mob has appeared.", NamedTextColor.RED));
+        spawnKimNpc(player.getLocation(), player.getUniqueId());
+        player.sendMessage(Component.text("A Kim Jong Un themed NPC has appeared.", NamedTextColor.RED));
         return true;
-    }
-
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        LivingEntity entity = event.getEntity();
-        if (!isKimMob(entity)) {
-            return;
-        }
-        event.getDrops().clear();
-        World world = entity.getWorld();
-        world.dropItemNaturally(entity.getLocation(), createRandomMissilePart());
     }
 
     @EventHandler
@@ -126,8 +117,8 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (random.nextDouble() <= SPAWN_CHANCE_PER_PLAYER) {
                     Location spawnLocation = player.getLocation().clone().add(randomOffset(), 0, randomOffset());
-                    spawnKimMob(spawnLocation);
-                    player.sendMessage(Component.text("A Kim Jong Un themed mob lurks nearby.", NamedTextColor.DARK_RED));
+                    spawnKimNpc(spawnLocation, player.getUniqueId());
+                    player.sendMessage(Component.text("A Kim Jong Un themed NPC lurks nearby.", NamedTextColor.DARK_RED));
                 }
             }
         }, SPAWN_INTERVAL_TICKS, SPAWN_INTERVAL_TICKS);
@@ -137,42 +128,47 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
         return random.nextInt(16) - 8;
     }
 
-    private void spawnKimMob(Location location) {
+    private void spawnKimNpc(Location location, UUID creator) {
+        if (!fancyNpcsAvailable) {
+            return;
+        }
         World world = location.getWorld();
         if (world == null) {
             return;
         }
-        LivingEntity entity = (LivingEntity) world.spawnEntity(location, EntityType.ZOMBIE);
-        entity.customName(Component.text("Kim Jong Un", NamedTextColor.RED));
-        entity.setCustomNameVisible(true);
-        entity.getPersistentDataContainer().set(mobKey, PersistentDataType.BYTE, (byte) 1);
-        Objects.requireNonNull(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(40.0);
-        entity.setHealth(40.0);
-        if (entity instanceof Zombie zombie) {
-            zombie.setAggressive(false);
-        }
-        entity.getEquipment().setHelmet(createKimHead());
-        entity.getEquipment().setChestplate(createBlackArmorPiece(Material.LEATHER_CHESTPLATE));
-        entity.getEquipment().setLeggings(createBlackArmorPiece(Material.LEATHER_LEGGINGS));
-        entity.getEquipment().setBoots(createBlackArmorPiece(Material.LEATHER_BOOTS));
-        entity.getEquipment().setItemInMainHand(new ItemStack(Material.IRON_SWORD));
+        String npcName = "kim-jong-un-" + UUID.randomUUID();
+        NpcData data = new NpcData(npcName, creator, location);
+        data.setDisplayName(ChatColor.RED + "Kim Jong Un");
+        data.setSkin(KIM_SKIN_URL);
+        data.setType(EntityType.PLAYER);
+        data.setTurnToPlayer(true);
+        data.setEquipment(createKimEquipment());
+        Npc npc = FancyNpcsPlugin.get().getNpcAdapter().apply(data);
+        npc.setSaveToFile(false);
+        data.setOnClick(player -> {
+            Location dropLocation = npc.getData().getLocation();
+            if (dropLocation == null) {
+                dropLocation = player.getLocation();
+            }
+            World dropWorld = dropLocation.getWorld();
+            if (dropWorld != null) {
+                dropWorld.dropItemNaturally(dropLocation, createRandomMissilePart());
+            }
+            npc.removeForAll();
+            FancyNpcsPlugin.get().getNpcManager().removeNpc(npc);
+        });
+        npc.create();
+        FancyNpcsPlugin.get().getNpcManager().registerNpc(npc);
+        npc.spawnForAll();
     }
 
-    private ItemStack createKimHead() {
-        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
-        SkullMeta meta = (SkullMeta) item.getItemMeta();
-        PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID(), "KimJongUn");
-        try {
-            PlayerTextures textures = profile.getTextures();
-            textures.setSkin(new URL(KIM_SKIN_URL));
-            profile.setTextures(textures);
-        } catch (MalformedURLException e) {
-            getLogger().warning("Invalid Kim Jong Un skin URL configured.");
-        }
-        meta.setOwnerProfile(profile);
-        meta.displayName(Component.text("Kim Jong Un Head", NamedTextColor.RED));
-        item.setItemMeta(meta);
-        return item;
+    private Map<NpcEquipmentSlot, ItemStack> createKimEquipment() {
+        Map<NpcEquipmentSlot, ItemStack> equipment = new EnumMap<>(NpcEquipmentSlot.class);
+        equipment.put(NpcEquipmentSlot.CHEST, createBlackArmorPiece(Material.LEATHER_CHESTPLATE));
+        equipment.put(NpcEquipmentSlot.LEGS, createBlackArmorPiece(Material.LEATHER_LEGGINGS));
+        equipment.put(NpcEquipmentSlot.FEET, createBlackArmorPiece(Material.LEATHER_BOOTS));
+        equipment.put(NpcEquipmentSlot.MAINHAND, new ItemStack(Material.IRON_SWORD));
+        return equipment;
     }
 
     private ItemStack createBlackArmorPiece(Material material) {
@@ -182,11 +178,6 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
         meta.displayName(Component.text("Charcoal Suit", NamedTextColor.GRAY));
         item.setItemMeta(meta);
         return item;
-    }
-
-    private boolean isKimMob(LivingEntity entity) {
-        PersistentDataContainer container = entity.getPersistentDataContainer();
-        return container.has(mobKey, PersistentDataType.BYTE);
     }
 
     private void registerRecipes() {

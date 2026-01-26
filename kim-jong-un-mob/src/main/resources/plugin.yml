@@ -2,6 +2,7 @@ name: KimJongUnMob
 main: com.example.kimjongunmob.KimJongUnMobPlugin
 version: 1.0.0
 api-version: 1.19
+depend: [FancyNpcs]
 commands:
   spawnkim:
     description: Spawn the Kim Jong Un themed mob.
