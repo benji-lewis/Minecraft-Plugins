@@ -37,6 +37,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
@@ -57,7 +58,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         itemTypeKey = new NamespacedKey(this, "kim_jong_un_item_type");
-        fancyNpcsAvailable = Bukkit.getPluginManager().isPluginEnabled("FancyNpcs");
+        fancyNpcsAvailable = isFancyNpcsAvailable();
         if (!fancyNpcsAvailable) {
             getLogger().severe("FancyNpcs is required for Kim Jong Un NPCs. Disabling plugin.");
             Bukkit.getPluginManager().disablePlugin(this);
@@ -123,6 +124,20 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
                 }
             }
         }, SPAWN_INTERVAL_TICKS, SPAWN_INTERVAL_TICKS);
+    }
+
+    private boolean isFancyNpcsAvailable() {
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("FancyNPCs");
+        if (plugin == null) {
+            plugin = Bukkit.getPluginManager().getPlugin("FancyNpcs");
+        }
+        if (plugin == null) {
+            return false;
+        }
+        if (!plugin.isEnabled()) {
+            getLogger().warning("FancyNpcs is installed but not enabled yet.");
+        }
+        return plugin.isEnabled();
     }
 
     private double randomOffset() {
