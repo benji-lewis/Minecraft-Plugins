@@ -3,6 +3,8 @@ package uk.co.xfour.kimjongunmob;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
+import de.oliver.fancynpcs.api.skins.SkinData;
+import de.oliver.fancynpcs.api.skins.SkinData.SkinVariant;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import java.util.EnumMap;
 import java.util.List;
@@ -50,7 +52,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
     private static final int SPAWN_INTERVAL_TICKS = 20 * 60 * 5;
     private static final int MISSILE_FUSE_TICKS = 60;
     private static final double MISSILE_LAUNCH_SPEED = 1.4;
-    private static final String KIM_SKIN_URL = "https://minotar.net/skin/KimJongUn";
+    private static final String KIM_SKIN_USERNAME = "KimJongUn";
 
     private final Random random = new Random();
     private NamespacedKey itemTypeKey;
@@ -166,8 +168,10 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
         String npcName = "kim-jong-un-" + UUID.randomUUID();
         NpcData data = new NpcData(npcName, creator, location);
         data.setDisplayName(ChatColor.RED + "Kim Jong Un");
-        data.setSkin(KIM_SKIN_URL);
+        applyKimSkin(data);
         data.setType(EntityType.PLAYER);
+        data.setSpawnEntity(true);
+        data.setCollidable(true);
         data.setTurnToPlayer(true);
         data.setEquipment(createKimEquipment());
         Npc npc = FancyNpcsPlugin.get().getNpcAdapter().apply(data);
@@ -194,6 +198,15 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
         equipment.put(NpcEquipmentSlot.FEET, createBlackArmorPiece(Material.LEATHER_BOOTS));
         equipment.put(NpcEquipmentSlot.MAINHAND, new ItemStack(Material.IRON_SWORD));
         return equipment;
+    }
+
+    private void applyKimSkin(NpcData data) {
+        SkinData skinData = FancyNpcsPlugin.get().getSkinManager().getByUsername(KIM_SKIN_USERNAME, SkinVariant.AUTO);
+        if (skinData != null) {
+            data.setSkinData(skinData);
+        } else {
+            getLogger().warning("Unable to resolve Kim Jong Un skin data; using default skin.");
+        }
     }
 
     private ItemStack createBlackArmorPiece(Material material) {
