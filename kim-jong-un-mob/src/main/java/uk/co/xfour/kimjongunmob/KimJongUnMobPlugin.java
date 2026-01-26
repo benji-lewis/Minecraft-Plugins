@@ -21,8 +21,10 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+import com.mojang.brigadier.Command;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -67,6 +69,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, this);
         registerRecipes();
+        registerCommands();
         scheduleSpawns();
     }
 
@@ -78,18 +81,25 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase("spawnkim")) {
-            return false;
-        }
-        if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can use this command.");
-            return true;
+    private void registerCommands() {
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
+            Commands commands = event.registrar();
+            commands.register(
+                    Commands.literal("spawnkim")
+                            .requires(source -> source.getSender().hasPermission("kimjongunmob.spawn"))
+                            .executes(context -> handleSpawnCommand(context.getSource()))
+            );
+        });
+    }
+
+    private int handleSpawnCommand(CommandSourceStack source) {
+        if (!(source.getSender() instanceof Player player)) {
+            source.getSender().sendMessage("Only players can use this command.");
+            return Command.SINGLE_SUCCESS;
         }
         spawnKimNpc(player.getLocation(), player.getUniqueId());
         player.sendMessage(Component.text("A Kim Jong Un has appeared.", NamedTextColor.RED));
-        return true;
+        return Command.SINGLE_SUCCESS;
     }
 
     @EventHandler
