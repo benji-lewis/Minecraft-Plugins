@@ -1,4 +1,4 @@
-package com.example.kimjongunmob;
+package uk.co.xfour.kimjongunmob;
 
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
