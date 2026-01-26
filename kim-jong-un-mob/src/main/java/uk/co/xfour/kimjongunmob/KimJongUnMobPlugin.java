@@ -52,7 +52,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
     private static final int SPAWN_INTERVAL_TICKS = 20 * 60 * 5;
     private static final int MISSILE_FUSE_TICKS = 60;
     private static final double MISSILE_LAUNCH_SPEED = 1.4;
-    private static final String KIM_SKIN_USERNAME = "KimJongUn";
+    private static final String KIM_SKIN_USERNAME = "kimyou12345";
 
     private final Random random = new Random();
     private NamespacedKey itemTypeKey;
