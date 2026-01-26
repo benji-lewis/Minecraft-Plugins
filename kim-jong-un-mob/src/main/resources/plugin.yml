@@ -1,0 +1,13 @@
+name: KimJongUnMob
+main: com.example.kimjongunmob.KimJongUnMobPlugin
+version: 1.0.0
+api-version: 1.19
+commands:
+  spawnkim:
+    description: Spawn the Kim Jong Un themed mob.
+    usage: /spawnkim
+    permission: kimjongunmob.spawn
+permissions:
+  kimjongunmob.spawn:
+    description: Allows spawning the Kim Jong Un mob.
+    default: op
