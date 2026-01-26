@@ -137,12 +137,12 @@ public class DebtCollectorPlugin extends JavaPlugin implements Listener {
         collector.setCanPickupItems(false);
         collector.setRemoveWhenFarAway(false);
 
-        AttributeInstance followRange = collector.getAttribute(Attribute.GENERIC_FOLLOW_RANGE);
+        AttributeInstance followRange = collector.getAttribute(Attribute.FOLLOW_RANGE);
         if (followRange != null) {
             followRange.setBaseValue(40.0);
         }
 
-        AttributeInstance attackDamage = collector.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        AttributeInstance attackDamage = collector.getAttribute(Attribute.ATTACK_DAMAGE);
         if (attackDamage != null) {
             attackDamage.setBaseValue(6.0);
         }

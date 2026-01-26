@@ -151,7 +151,7 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
     }
 
     private void setMovementSpeed(Villager villager, double speed) {
-        AttributeInstance attribute = villager.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        AttributeInstance attribute = villager.getAttribute(Attribute.MOVEMENT_SPEED);
         if (attribute != null) {
             attribute.setBaseValue(speed);
         }
