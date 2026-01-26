@@ -170,8 +170,6 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
             if (dropWorld != null) {
                 dropWorld.dropItemNaturally(dropLocation, createRandomMissilePart());
             }
-            npc.removeForAll();
-            FancyNpcsPlugin.get().getNpcManager().removeNpc(npc);
         });
         npc.create();
         FancyNpcsPlugin.get().getNpcManager().registerNpc(npc);

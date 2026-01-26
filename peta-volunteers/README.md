@@ -4,8 +4,8 @@ Spawns a PETA volunteer NPC when players kill animals. Volunteers walk slowly, s
 
 ## Behavior
 - When a player kills an animal, there is a 30% chance to spawn a PETA volunteer nearby.
-- Volunteers wander at a slow pace and periodically broadcast shaming messages.
-- When attacked, volunteers scream, run away, and despawn shortly after.
+- Volunteers wander at a slow pace and shout shaming messages to nearby players without needing interaction.
+- When attacked, volunteers scream, run away, can take damage, and despawn shortly after.
 
 ## Compatibility
 - Built for PaperMC.

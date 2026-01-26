@@ -5,7 +5,7 @@ Spawns "Debt Collector" NPCs in suits that chase and attack players whose Vault 
 ## Features
 - Checks player balances via Vault.
 - Spawns a single debt collector per indebted player.
-- Collectors wear black leather armor ("suit") and are named `Debt Collector <random name>`.
+- Collectors wear black leather armor ("suit") that is forced on spawn and does not drop.
 - Collectors chase and attack the indebted player until their balance is non-negative.
 
 ## Requirements

@@ -4,7 +4,7 @@
 
     <groupId>uk.co.xfour.kimjongunmob</groupId>
     <artifactId>kim-jong-un-mob</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <name>KimJongUnMob</name>
     <description>Adds a themed mob that drops missile parts craftable into a redstone-activated missile.</description>
 

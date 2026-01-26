@@ -30,6 +30,7 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
     private static final double SPAWN_CHANCE = 0.3;
     private static final int SHOUT_INTERVAL_TICKS = 120;
     private static final int DESPAWN_DELAY_TICKS = 100;
+    private static final double SHOUT_RADIUS = 18.0;
     private static final double WALK_SPEED = 0.06;
     private static final double FLEE_SPEED = 0.35;
     private static final double FLEE_VELOCITY = 0.6;
@@ -83,11 +84,9 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
         }
 
         if (isFleeing(villager)) {
-            event.setCancelled(true);
             return;
         }
 
-        event.setCancelled(true);
         markFleeing(villager);
         playScream(villager.getLocation());
         fleeFromAttacker(villager, event.getDamager());
@@ -110,6 +109,7 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
 
         setVolunteerData(villager);
         setMovementSpeed(villager, WALK_SPEED);
+        shoutAtNearbyPlayers(villager);
         startShouting(villager);
     }
 
@@ -157,10 +157,17 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
                 if (isFleeing(villager)) {
                     return;
                 }
-                String shout = SHOUTS.get(random.nextInt(SHOUTS.size()));
-                Bukkit.broadcastMessage(ChatColor.RED + "[PETA] " + ChatColor.YELLOW + shout);
+                shoutAtNearbyPlayers(villager);
             }
         }.runTaskTimer(this, SHOUT_INTERVAL_TICKS, SHOUT_INTERVAL_TICKS);
+    }
+
+    private void shoutAtNearbyPlayers(Villager villager) {
+        String shout = SHOUTS.get(random.nextInt(SHOUTS.size()));
+        String message = ChatColor.RED + "[PETA] " + ChatColor.YELLOW + shout;
+        for (Player player : villager.getLocation().getNearbyPlayers(SHOUT_RADIUS)) {
+            player.sendMessage(message);
+        }
     }
 
     private void fleeFromAttacker(Villager villager, Entity damager) {

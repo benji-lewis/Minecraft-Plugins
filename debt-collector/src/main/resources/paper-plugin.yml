@@ -1,6 +1,6 @@
 name: DebtCollector
 main: uk.co.xfour.debtcollector.DebtCollectorPlugin
-version: 1.0.1
+version: 1.0.2
 api-version: 1.19
 dependencies:
   server:
