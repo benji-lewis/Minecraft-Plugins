@@ -34,66 +34,20 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
     private static final double WALK_SPEED = 0.06;
     private static final double FLEE_SPEED = 0.35;
     private static final double FLEE_VELOCITY = 0.6;
-
-    private static final List<String> SHOUTS = List.of(
-            "Shame on you for hurting animals!",
-            "Every creature deserves compassion!",
-            "Violence against animals is not okay!",
-            "Think about the innocent lives you take!",
-            "You should be ashamed of that cruelty!",
-            "Animals are friends, not targets!",
-            "Your choices leave pawprints of pain!",
-            "That was a heartless act!",
-            "Be better than your worst impulses!",
-            "Kindness costs nothing!",
-            "Cruelty is not strength!",
-            "Mercy makes you stronger!",
-            "Animals feel fear too!",
-            "Do you hear the silence you caused?",
-            "Compassion is the real courage!",
-            "Leave the innocent in peace!",
-            "Is this the legacy you want?",
-            "Every life deserves respect!",
-            "You can choose empathy!",
-            "Stop turning nature into victims!",
-            "That was needless and cruel!",
-            "Shame can't wash off those hands!",
-            "Think before you strike again!",
-            "Respect the lives you share this world with!",
-            "They trusted the world around them!",
-            "Your actions speak louder than your words!",
-            "Protect the powerless!",
-            "Don't let cruelty define you!",
-            "You can still change your ways!",
-            "Do better for those without voices!",
-            "That's not bravery, it's brutality!",
-            "Let kindness lead your path!",
-            "You broke the peace here!",
-            "Compassion is a choice you ignored!",
-            "Your cruelty echoes in this place!",
-            "The wild doesn't deserve your wrath!",
-            "Be a guardian, not a destroyer!",
-            "That life mattered too!",
-            "You can't undo the harm you caused!",
-            "Your actions are shameful!",
-            "Choose respect over violence!",
-            "That was unnecessary suffering!",
-            "You owe the world more mercy!",
-            "Think of the fear you caused!",
-            "Let this be the last time!",
-            "Gentleness is the better path!",
-            "Your cruelty stains this land!",
-            "Stop the cycle of harm!",
-            "Compassion is always an option!",
-            "Animals are not your enemies!"
-    );
+    private static final String SHAMING_MESSAGES_KEY = "shaming-messages";
 
     private final Random random = new Random();
+    private List<String> shouts;
     private NamespacedKey volunteerKey;
     private NamespacedKey fleeingKey;
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        shouts = getConfig().getStringList(SHAMING_MESSAGES_KEY);
+        if (shouts.isEmpty()) {
+            getLogger().warning("No shaming messages configured. Volunteers will remain silent.");
+        }
         volunteerKey = new NamespacedKey(this, "peta_volunteer");
         fleeingKey = new NamespacedKey(this, "peta_fleeing");
         getServer().getPluginManager().registerEvents(this, this);
@@ -208,7 +162,10 @@ public class PetaVolunteersPlugin extends JavaPlugin implements Listener {
     }
 
     private void shoutAtNearbyPlayers(Villager villager) {
-        String shout = SHOUTS.get(random.nextInt(SHOUTS.size()));
+        if (shouts.isEmpty()) {
+            return;
+        }
+        String shout = shouts.get(random.nextInt(shouts.size()));
         String message = ChatColor.RED + "[PETA] " + ChatColor.YELLOW + shout;
         for (Player player : villager.getLocation().getNearbyPlayers(SHOUT_RADIUS)) {
             player.sendMessage(message);
