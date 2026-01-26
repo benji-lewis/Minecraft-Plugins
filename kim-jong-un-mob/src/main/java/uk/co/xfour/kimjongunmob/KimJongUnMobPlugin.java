@@ -24,7 +24,7 @@ import org.bukkit.World;
 import com.mojang.brigadier.Command;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
-import io.papermc.paper.plugin.lifecycle.event.LifecycleEventType;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -82,7 +82,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
     }
 
     private void registerCommands() {
-        getLifecycleManager().registerEventHandler(LifecycleEventType.COMMANDS, event -> {
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
             Commands commands = event.registrar();
             commands.register(
                     Commands.literal("spawnkim")
