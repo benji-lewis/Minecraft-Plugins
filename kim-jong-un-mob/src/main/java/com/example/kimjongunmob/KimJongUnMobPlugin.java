@@ -40,6 +40,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+import org.bukkit.persistence.PersistentDataContainer;
 
 public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
     private static final double SPAWN_CHANCE_PER_PLAYER = 0.12;
@@ -86,7 +87,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
             return true;
         }
         spawnKimNpc(player.getLocation(), player.getUniqueId());
-        player.sendMessage(Component.text("A Kim Jong Un themed NPC has appeared.", NamedTextColor.RED));
+        player.sendMessage(Component.text("A Kim Jong Un has appeared.", NamedTextColor.RED));
         return true;
     }
 
@@ -118,7 +119,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
                 if (random.nextDouble() <= SPAWN_CHANCE_PER_PLAYER) {
                     Location spawnLocation = player.getLocation().clone().add(randomOffset(), 0, randomOffset());
                     spawnKimNpc(spawnLocation, player.getUniqueId());
-                    player.sendMessage(Component.text("A Kim Jong Un themed NPC lurks nearby.", NamedTextColor.DARK_RED));
+                    player.sendMessage(Component.text("Kim Jong Un lurks nearby.", NamedTextColor.DARK_RED));
                 }
             }
         }, SPAWN_INTERVAL_TICKS, SPAWN_INTERVAL_TICKS);
@@ -192,7 +193,7 @@ public class KimJongUnMobPlugin extends JavaPlugin implements Listener {
     }
 
     private ItemStack createNoseCone() {
-        return createPart(Material.IRON_INGOT, "Thermonuclear Nose Cone", "Aerodynamic guidance tip.", "Recovered from a leader's cache.", "item_nose");
+        return createPart(Material.IRON_INGOT, "Thermonuclear Warhead", "Aerodynamic guidance tip.", "Recovered from a leader's cache.", "item_nose");
     }
 
     private ItemStack createMissileBody() {
