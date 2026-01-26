@@ -2,5 +2,8 @@ name: DebtCollector
 main: uk.co.xfour.debtcollector.DebtCollectorPlugin
 version: 1.0.1
 api-version: 1.19
-depend: [Vault]
+dependencies:
+  server:
+    Vault:
+      required: true
 author: ChatGPT
