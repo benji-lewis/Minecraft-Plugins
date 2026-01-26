@@ -5,3 +5,4 @@
 - Plugins must be built for PaperMC not Spigot or bukkit
 - When new blocks/ machines are needed create a Nova addon.
 - Use uk.co.xfour.{projectName} as a standard identifier format. Where uk.co is not allowed use com.xfour...
+- Unit tests should be written & integrated with GitHub CI
