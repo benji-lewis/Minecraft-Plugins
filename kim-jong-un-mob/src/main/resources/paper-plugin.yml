@@ -5,7 +5,9 @@ api-version: 1.19
 dependencies:
   server:
     FancyNpcs:
+      load: before
       required: true
+      join-classpath: true
 commands:
   spawnkim:
     description: Spawn the Kim Jong Un themed mob.
