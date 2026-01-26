@@ -9,4 +9,5 @@ Spawns a PETA volunteer NPC when players kill animals. Volunteers walk slowly, s
 
 ## Compatibility
 - Built for PaperMC.
+- Uses Paper plugin metadata (`paper-plugin.yml`).
 - Also intended to stay compatible with Nova where applicable.

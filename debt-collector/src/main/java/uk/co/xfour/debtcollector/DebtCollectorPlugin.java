@@ -1,4 +1,4 @@
-package com.example.debtcollector;
+package uk.co.xfour.debtcollector;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;

@@ -1,4 +1,4 @@
-package com.example.asbestoshazard;
+package uk.co.xfour.asbestoshazard;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;

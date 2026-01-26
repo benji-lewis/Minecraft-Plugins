@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example</groupId>
+    <groupId>uk.co.xfour.kimjongunmob</groupId>
     <artifactId>kim-jong-un-mob</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>KimJongUnMob</name>
     <description>Adds a themed mob that drops missile parts craftable into a redstone-activated missile.</description>
 

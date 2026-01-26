@@ -1,6 +1,6 @@
 name: KimJongUnMob
-main: com.example.kimjongunmob.KimJongUnMobPlugin
-version: 1.0.0
+main: uk.co.xfour.kimjongunmob.KimJongUnMobPlugin
+version: 1.0.1
 api-version: 1.19
 depend: [FancyNpcs]
 commands:

@@ -1,4 +1,4 @@
-package com.example.petavolunteers;
+package uk.co.xfour.petavolunteers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
