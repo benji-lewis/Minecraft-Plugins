@@ -1,18 +1,13 @@
 name: KimJongUnMob
 main: uk.co.xfour.kimjongunmob.KimJongUnMobPlugin
 version: 1.1.2
-api-version: 1.19
+api-version: "1.20"
 dependencies:
   server:
     FancyNpcs:
       load: before
       required: true
       join-classpath: true
-commands:
-  spawnkim:
-    description: Spawn the Kim Jong Un themed mob.
-    usage: /spawnkim
-    permission: kimjongunmob.spawn
 permissions:
   kimjongunmob.spawn:
     description: Allows spawning the Kim Jong Un mob.
