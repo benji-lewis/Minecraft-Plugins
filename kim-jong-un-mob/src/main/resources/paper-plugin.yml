@@ -8,11 +8,6 @@ dependencies:
       load: before
       required: true
       join-classpath: true
-commands:
-  spawnkim:
-    description: Spawn the Kim Jong Un themed mob.
-    usage: /spawnkim
-    permission: kimjongunmob.spawn
 permissions:
   kimjongunmob.spawn:
     description: Allows spawning the Kim Jong Un mob.
