@@ -160,10 +160,16 @@ public class DebtCollectorPlugin extends JavaPlugin implements Listener {
             return;
         }
 
-        equipment.setHelmet(dyedLeather(org.bukkit.Material.LEATHER_HELMET, Color.fromRGB(20, 20, 20)));
-        equipment.setChestplate(dyedLeather(org.bukkit.Material.LEATHER_CHESTPLATE, Color.fromRGB(30, 30, 30)));
-        equipment.setLeggings(dyedLeather(org.bukkit.Material.LEATHER_LEGGINGS, Color.fromRGB(25, 25, 25)));
-        equipment.setBoots(dyedLeather(org.bukkit.Material.LEATHER_BOOTS, Color.fromRGB(15, 15, 15)));
+        ItemStack helmet = dyedLeather(org.bukkit.Material.LEATHER_HELMET, Color.fromRGB(20, 20, 20));
+        ItemStack chestplate = dyedLeather(org.bukkit.Material.LEATHER_CHESTPLATE, Color.fromRGB(30, 30, 30));
+        ItemStack leggings = dyedLeather(org.bukkit.Material.LEATHER_LEGGINGS, Color.fromRGB(25, 25, 25));
+        ItemStack boots = dyedLeather(org.bukkit.Material.LEATHER_BOOTS, Color.fromRGB(15, 15, 15));
+
+        equipment.setArmorContents(new ItemStack[]{boots, leggings, chestplate, helmet});
+        equipment.setHelmetDropChance(0.0f);
+        equipment.setChestplateDropChance(0.0f);
+        equipment.setLeggingsDropChance(0.0f);
+        equipment.setBootsDropChance(0.0f);
     }
 
     private ItemStack dyedLeather(org.bukkit.Material material, Color color) {
