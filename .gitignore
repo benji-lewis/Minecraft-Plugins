@@ -45,3 +45,5 @@ docs/site/plugins/Utility/Vault/index.html
 docs/site/plugins/Utility/floodgate/index.html
 docs/site/plugins/Waypoints/index.html
 docs/site/plugins/voicechat/index.html
+*.jar
+target/
