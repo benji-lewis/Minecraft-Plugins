@@ -57,6 +57,16 @@ def stripe(width: int, height: int, color_a: tuple[int, int, int], color_b: tupl
     return pixels
 
 
+def vertical_stripe(width: int, height: int, color_a: tuple[int, int, int], color_b: tuple[int, int, int]) -> list[list[tuple[int, int, int]]]:
+    pixels = []
+    for y in range(height):
+        row = []
+        for x in range(width):
+            row.append(color_a if x % 2 == 0 else color_b)
+        pixels.append(row)
+    return pixels
+
+
 def ensure_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
@@ -64,15 +74,21 @@ def ensure_dir(path: str) -> None:
 def generate_textures(output_dir: str) -> None:
     output_dir = os.path.abspath(output_dir)
     ensure_dir(output_dir)
+    steel_light = (200, 200, 200)
+    steel_dark = (120, 120, 120)
+    hazard_yellow = (240, 200, 40)
+    hazard_black = (30, 30, 30)
+    launchpad_metal = (80, 85, 90)
     textures = {
-        "missile.png": stripe(16, 16, (220, 60, 60), (120, 120, 120)),
-        "launchpad.png": checker(16, 16, (70, 70, 70), (40, 40, 40)),
-        "missile_part.png": stripe(16, 16, (210, 210, 210), (160, 160, 160)),
-        "launchpad_part.png": checker(16, 16, (90, 90, 90), (60, 60, 60)),
+        "missile.png": stripe(16, 16, (230, 80, 80), steel_light),
+        "launchpad.png": vertical_stripe(16, 16, hazard_yellow, hazard_black),
+        "missile_part.png": checker(16, 16, steel_light, steel_dark),
+        "launchpad_part.png": checker(16, 16, launchpad_metal, hazard_black),
     }
 
     for name, pixels in textures.items():
         write_png(os.path.join(output_dir, name), pixels)
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate resource pack textures.")
