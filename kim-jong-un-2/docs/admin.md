@@ -18,7 +18,7 @@ The plugin ships model overrides for:
 - `netherite_scrap` (launchpad parts)
 - `nether_star` (assembled missile + launchpad)
 
-The pack includes `pack.mcmeta` and the model overrides under:
+The pack includes `pack.mcmeta` (pack format 15 for 1.20+ compatibility) and the model overrides under:
 ```
 kim-jong-un-2/src/main/resources/resourcepack/
 ```

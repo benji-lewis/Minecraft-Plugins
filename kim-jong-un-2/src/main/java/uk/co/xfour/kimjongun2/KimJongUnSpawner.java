@@ -70,23 +70,24 @@ public class KimJongUnSpawner {
 
     public LivingEntity spawnMob(Location location) {
         FileConfiguration config = plugin.getConfig();
-        String typeName = config.getString("spawn.entity-type", "PIGLIN_BRUTE");
+        String typeName = config.getString("spawn.entity-type", "VILLAGER");
         EntityType type;
         try {
             type = EntityType.valueOf(typeName.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException ex) {
-            type = EntityType.PIGLIN_BRUTE;
+            type = EntityType.VILLAGER;
         }
         if (!type.isAlive()) {
-            type = EntityType.PIGLIN_BRUTE;
+            type = EntityType.VILLAGER;
         }
         LivingEntity entity = (LivingEntity) location.getWorld().spawnEntity(location, type);
         entity.setCustomName("Kim Jong Un");
         entity.setCustomNameVisible(true);
         entity.getPersistentDataContainer().set(items.keys().mobKey, org.bukkit.persistence.PersistentDataType.BYTE, (byte) 1);
         entity.setRemoveWhenFarAway(false);
-        entity.setAI(false);
-        entity.setInvisible(true);
+        entity.setAI(true);
+        entity.setInvisible(false);
+        entity.setInvulnerable(false);
         if (entity.getEquipment() != null) {
             entity.getEquipment().setHelmet(createSkinDisplay());
             entity.getEquipment().setChestplate(null);

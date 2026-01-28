@@ -4,7 +4,7 @@ spawn:
   max-active: 2
   min-distance-from-player: 20
   max-distance-from-player: 60
-  entity-type: PIGLIN_BRUTE
+  entity-type: VILLAGER
 
 drops:
   parts-per-kill: 1
