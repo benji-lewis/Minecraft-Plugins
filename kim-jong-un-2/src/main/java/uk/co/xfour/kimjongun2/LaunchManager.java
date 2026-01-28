@@ -33,11 +33,15 @@ public class LaunchManager {
         }
         ArmorStand stand = (ArmorStand) world.spawnEntity(location, EntityType.ARMOR_STAND);
         stand.setInvisible(true);
-        stand.setMarker(true);
+        stand.setMarker(false);
         stand.setGravity(false);
         stand.setSmall(true);
         stand.setSilent(true);
         stand.setInvulnerable(true);
+        stand.setBasePlate(false);
+        stand.setArms(false);
+        stand.setCollidable(false);
+        stand.setCanPickupItems(false);
         stand.getEquipment().setHelmet(items.createItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD));
         stand.getPersistentDataContainer().set(items.keys().launchpadKey, PersistentDataType.BYTE, (byte) 1);
         return stand;

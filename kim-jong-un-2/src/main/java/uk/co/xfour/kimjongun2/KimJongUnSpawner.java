@@ -6,11 +6,14 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class KimJongUnSpawner {
@@ -78,11 +81,25 @@ public class KimJongUnSpawner {
             type = EntityType.PIGLIN_BRUTE;
         }
         LivingEntity entity = (LivingEntity) location.getWorld().spawnEntity(location, type);
-        entity.setCustomName("Kim Jong Un 2");
+        entity.setCustomName("Kim Jong Un");
         entity.setCustomNameVisible(true);
         entity.getPersistentDataContainer().set(items.keys().mobKey, org.bukkit.persistence.PersistentDataType.BYTE, (byte) 1);
         entity.setRemoveWhenFarAway(false);
+        entity.setAI(false);
+        if (entity.getEquipment() != null) {
+            entity.getEquipment().setHelmet(createSkinHead());
+        }
         return entity;
+    }
+
+    private ItemStack createSkinHead() {
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        if (meta != null) {
+            meta.setOwningPlayer(Bukkit.getOfflinePlayer("kimyou12345"));
+            head.setItemMeta(meta);
+        }
+        return head;
     }
 
     private int countActiveMobs(World world) {
