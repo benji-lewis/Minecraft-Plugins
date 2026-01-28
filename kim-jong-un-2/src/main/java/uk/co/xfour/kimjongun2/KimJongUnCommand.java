@@ -19,9 +19,13 @@ public class KimJongUnCommand implements BasicCommand {
     private final KimJongUnSpawner spawner;
 
     public KimJongUnCommand(KimJongUn2Plugin plugin, KimJongUnItems items, KimJongUnSpawner spawner) {
+        super("kimjongun2");
         this.plugin = plugin;
         this.items = items;
         this.spawner = spawner;
+        setDescription("Kim Jong Un 2 admin command.");
+        setUsage("/kimjongun2 <give|spawn> [player] [item]");
+        setPermission("kimjongun2.admin");
     }
 
     @Override
