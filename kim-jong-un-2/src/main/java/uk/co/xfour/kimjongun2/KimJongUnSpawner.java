@@ -70,33 +70,44 @@ public class KimJongUnSpawner {
 
     public LivingEntity spawnMob(Location location) {
         FileConfiguration config = plugin.getConfig();
-        String typeName = config.getString("spawn.entity-type", "PIGLIN_BRUTE");
+        String typeName = config.getString("spawn.entity-type", "VILLAGER");
         EntityType type;
         try {
             type = EntityType.valueOf(typeName.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException ex) {
-            type = EntityType.PIGLIN_BRUTE;
+            type = EntityType.VILLAGER;
         }
         if (!type.isAlive()) {
-            type = EntityType.PIGLIN_BRUTE;
+            type = EntityType.VILLAGER;
         }
         LivingEntity entity = (LivingEntity) location.getWorld().spawnEntity(location, type);
         entity.setCustomName("Kim Jong Un");
         entity.setCustomNameVisible(true);
         entity.getPersistentDataContainer().set(items.keys().mobKey, org.bukkit.persistence.PersistentDataType.BYTE, (byte) 1);
         entity.setRemoveWhenFarAway(false);
-        entity.setAI(false);
+        entity.setAI(true);
+        entity.setInvisible(false);
+        entity.setInvulnerable(false);
         if (entity.getEquipment() != null) {
-            entity.getEquipment().setHelmet(createSkinHead());
+            entity.getEquipment().setHelmet(createSkinDisplay());
+            entity.getEquipment().setChestplate(null);
+            entity.getEquipment().setLeggings(null);
+            entity.getEquipment().setBoots(null);
+            entity.getEquipment().setItemInMainHand(null);
+            entity.getEquipment().setItemInOffHand(null);
         }
         return entity;
     }
 
-    private ItemStack createSkinHead() {
+    private ItemStack createSkinDisplay() {
+        FileConfiguration config = plugin.getConfig();
+        String skinPlayer = config.getString("skin.player-name", "kimyou12345");
+        int modelData = config.getInt("models.player-skin-custom-model-data", 5012);
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         if (meta != null) {
-            meta.setOwningPlayer(Bukkit.getOfflinePlayer("kimyou12345"));
+            meta.setOwningPlayer(Bukkit.getOfflinePlayer(skinPlayer));
+            meta.setCustomModelData(modelData);
             head.setItemMeta(meta);
         }
         return head;

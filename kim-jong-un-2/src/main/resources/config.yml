@@ -4,7 +4,7 @@ spawn:
   max-active: 2
   min-distance-from-player: 20
   max-distance-from-player: 60
-  entity-type: PIGLIN_BRUTE
+  entity-type: VILLAGER
 
 drops:
   parts-per-kill: 1
@@ -15,6 +15,9 @@ launch:
   explosion-power: 6.0
   show-firework: true
 
+skin:
+  player-name: kimyou12345
+
 models:
   missile-custom-model-data: 5010
   launchpad-custom-model-data: 5011
@@ -24,3 +27,4 @@ models:
   launchpad-base-custom-model-data: 5004
   launchpad-control-custom-model-data: 5005
   launchpad-support-custom-model-data: 5006
+  player-skin-custom-model-data: 5012
