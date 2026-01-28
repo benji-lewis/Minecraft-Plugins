@@ -3,15 +3,29 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
 
 from generate_textures import generate_textures
 
+PACK_FORMAT = 94.1
+
+
+def ensure_pack_format(resourcepack_dir: Path) -> None:
+    pack_mcmeta = resourcepack_dir / "pack.mcmeta"
+    payload = json.loads(pack_mcmeta.read_text(encoding="utf-8"))
+    payload.setdefault("pack", {})["pack_format"] = PACK_FORMAT
+    pack_mcmeta.write_text(
+        json.dumps(payload, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
 
 def build_resource_pack(output_path: Path, resourcepack_dir: Path) -> None:
     texture_dir = resourcepack_dir / "assets" / "kimjongun2" / "textures" / "item"
     generate_textures(str(texture_dir))
+    ensure_pack_format(resourcepack_dir)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     if output_path.exists():
         output_path.unlink()
