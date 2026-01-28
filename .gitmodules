@@ -1,6 +1,6 @@
 [submodule "docs/MC-Docs"]
 	path = docs/MC-Docs
 	url = https://github.com/XFour-IT/MC-Docs
-[submodule "docs/Docs"]
-	path = docs/Docs
+[submodule "docs/Nova-Docs"]
+	path = docs/Nova-Docs
 	url = https://github.com/xenondevs/Docs
