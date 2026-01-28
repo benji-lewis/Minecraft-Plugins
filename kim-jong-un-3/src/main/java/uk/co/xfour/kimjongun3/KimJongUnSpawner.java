@@ -16,6 +16,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+/**
+ * Manages periodic spawning of the Kim Jong Un mob.
+ */
 public class KimJongUnSpawner {
     private final KimJongUn3Plugin plugin;
     private final KimJongUnItems items;
@@ -27,6 +30,9 @@ public class KimJongUnSpawner {
         this.items = items;
     }
 
+    /**
+     * Starts the timed spawn task based on configuration.
+     */
     public void start() {
         FileConfiguration config = plugin.getConfig();
         long intervalTicks = Math.max(20L, config.getLong("spawn.interval-seconds", 300) * 20L);
@@ -39,12 +45,18 @@ public class KimJongUnSpawner {
         task.runTaskTimer(plugin, intervalTicks, intervalTicks);
     }
 
+    /**
+     * Stops the timed spawn task if it is running.
+     */
     public void stop() {
         if (task != null) {
             task.cancel();
         }
     }
 
+    /**
+     * Attempts a spawn using the configured chance and player proximity rules.
+     */
     public void attemptSpawn() {
         List<Player> players = Bukkit.getOnlinePlayers().stream().collect(Collectors.toList());
         if (players.isEmpty()) {
@@ -55,12 +67,12 @@ public class KimJongUnSpawner {
         if (random.nextDouble() > chance) {
             return;
         }
+        Player target = players.get(random.nextInt(players.size()));
         int maxActive = config.getInt("spawn.max-active", 2);
-        int active = countActiveMobs(players.get(0).getWorld());
+        int active = countActiveMobs(target.getWorld());
         if (active >= maxActive) {
             return;
         }
-        Player target = players.get(random.nextInt(players.size()));
         Location spawnLocation = pickSpawnLocation(target);
         if (spawnLocation == null) {
             return;
@@ -68,6 +80,12 @@ public class KimJongUnSpawner {
         spawnMob(spawnLocation);
     }
 
+    /**
+     * Spawns a configured mob at the provided location.
+     *
+     * @param location the spawn location
+     * @return the spawned entity
+     */
     public LivingEntity spawnMob(Location location) {
         FileConfiguration config = plugin.getConfig();
         String typeName = config.getString("spawn.entity-type", "VILLAGER");
@@ -123,6 +141,11 @@ public class KimJongUnSpawner {
         FileConfiguration config = plugin.getConfig();
         int min = config.getInt("spawn.min-distance-from-player", 20);
         int max = config.getInt("spawn.max-distance-from-player", 60);
+        if (max < min) {
+            int swap = max;
+            max = min;
+            min = swap;
+        }
         World world = player.getWorld();
         for (int i = 0; i < 8; i++) {
             double angle = random.nextDouble() * Math.PI * 2;

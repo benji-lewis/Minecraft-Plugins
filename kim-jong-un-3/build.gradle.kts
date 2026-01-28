@@ -1,3 +1,7 @@
+import java.net.URI
+import org.gradle.api.provider.Property
+import org.gradle.jvm.toolchain.JavaLauncher
+
 group = "uk.co.xfour.kimjongun3"
 version = "1.0.0"
 
@@ -16,6 +20,7 @@ dependencies {
     implementation(libs.nova)
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.2")
 }
 
 kotlin {
@@ -31,6 +36,48 @@ java {
 tasks.test {
     useJUnitPlatform()
 }
+
+val proxyUri = System.getenv("HTTPS_PROXY") ?: System.getenv("HTTP_PROXY")
+if (!proxyUri.isNullOrBlank()) {
+    val parsedProxy = URI(proxyUri)
+    val proxyHost = parsedProxy.host
+    val proxyPort = if (parsedProxy.port != -1) parsedProxy.port else 80
+    if (!proxyHost.isNullOrBlank()) {
+        val proxyArgs = listOf(
+            "-Dhttp.proxyHost=$proxyHost",
+            "-Dhttp.proxyPort=$proxyPort",
+            "-Dhttps.proxyHost=$proxyHost",
+            "-Dhttps.proxyPort=$proxyPort"
+        )
+        val baseLauncher = javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
+        tasks.matching { it.name == "_oriApplyBinDiff" }.configureEach {
+            doFirst {
+                val scriptFile = layout.buildDirectory.file("proxy-java/bin/java").get().asFile
+                scriptFile.parentFile.mkdirs()
+                val targetJava = baseLauncher.get().executablePath.asFile.absolutePath
+                scriptFile.writeText(
+                    """
+                    #!/usr/bin/env bash
+                    exec "$targetJava" ${proxyArgs.joinToString(" ")} "$@"
+                    """.trimIndent()
+                )
+                scriptFile.setExecutable(true)
+                @Suppress("UNCHECKED_CAST")
+                val javaLauncherProperty = this::class.java.methods
+                    .firstOrNull { it.name == "getJavaLauncher" }
+                    ?.invoke(this) as? Property<JavaLauncher>
+                javaLauncherProperty?.set(object : JavaLauncher {
+                    override fun getExecutablePath() = layout.file(provider { scriptFile }).get()
+
+                    override fun getMetadata() = baseLauncher.get().metadata
+                })
+            }
+        }
+    }
+}
+
 
 addon {
     name = "Kim Jong Un 3"

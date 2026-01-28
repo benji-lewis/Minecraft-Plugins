@@ -1,6 +1,7 @@
 package uk.co.xfour.kimjongun3
 
 import net.kyori.adventure.text.Component
+import org.bukkit.plugin.java.JavaPlugin
 import xyz.xenondevs.nova.addon.Addon
 import xyz.xenondevs.nova.world.item.NovaItem
 
@@ -9,6 +10,7 @@ import xyz.xenondevs.nova.world.item.NovaItem
  */
 object KimJongUn3Addon : Addon() {
     private var registeredItems: KimJongUn3AddonItems? = null
+    private var metadataInitialized = false
 
     /**
      * Registers the Nova items used by this addon if they are not registered yet.
@@ -31,6 +33,53 @@ object KimJongUn3Addon : Addon() {
         )
         registeredItems = KimJongUn3AddonItems(items)
         return registeredItems as KimJongUn3AddonItems
+    }
+
+    /**
+     * Initializes Nova addon metadata from the owning JavaPlugin if needed.
+     *
+     * @param plugin the owning JavaPlugin instance
+     */
+    fun initializeFrom(plugin: JavaPlugin) {
+        if (metadataInitialized) {
+            return
+        }
+        val addonClass = Addon::class.java
+        val pluginMetaClass = Class.forName("io.papermc.paper.plugin.configuration.PluginMeta")
+        addonClass.findSetter("setPluginMeta\$nova", pluginMetaClass)
+            .invoke(this, plugin.pluginMeta)
+        val fileField = JavaPlugin::class.java.getDeclaredField("file").apply { isAccessible = true }
+        val pluginFile = fileField.get(plugin) as java.io.File
+        addonClass.findSetter("setFile\$nova", java.nio.file.Path::class.java)
+            .invoke(this, pluginFile.toPath())
+        addonClass.findSetter("setDataFolder\$nova", java.nio.file.Path::class.java)
+            .invoke(this, plugin.dataFolder.toPath())
+        addonClass.findSetter("setLogger\$nova", plugin.componentLogger.javaClass)
+            .invoke(this, plugin.componentLogger)
+        addonClass.findSetter("setPlugin\$nova", JavaPlugin::class.java)
+            .invoke(this, plugin)
+        registerWithNova()
+        metadataInitialized = true
+    }
+
+    private fun Class<*>.findSetter(name: String, paramType: Class<*>): java.lang.reflect.Method {
+        return declaredMethods.firstOrNull { method ->
+            method.name == name
+                && method.parameterCount == 1
+                && method.parameterTypes[0].isAssignableFrom(paramType)
+        }?.apply { isAccessible = true }
+            ?: throw NoSuchMethodException("$name(${paramType.name})")
+    }
+
+    private fun registerWithNova() {
+        val bootstrapperClass = Class.forName("xyz.xenondevs.nova.addon.AddonBootstrapper")
+        val addonsField = bootstrapperClass.getDeclaredField("_addons").apply { isAccessible = true }
+        @Suppress("UNCHECKED_CAST")
+        val addons = addonsField.get(null) as MutableList<Any>
+        val exists = addons.any { it === this }
+        if (!exists) {
+            addons.add(this)
+        }
     }
 
     /**

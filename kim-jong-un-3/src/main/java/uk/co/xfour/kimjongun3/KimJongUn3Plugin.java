@@ -14,16 +14,8 @@ public class KimJongUn3Plugin extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        KimJongUn3AddonItems addonItems = KimJongUn3Addon.INSTANCE.registerItems();
-        items = new KimJongUnItems(this, addonItems);
-        launchManager = new LaunchManager(this, items);
-        spawner = new KimJongUnSpawner(this, items);
-
-        Bukkit.getPluginManager().registerEvents(new KimJongUnListener(this, items, launchManager), this);
-
-        registerCommand();
-        items.registerRecipes();
-        spawner.start();
+        KimJongUn3Addon.INSTANCE.initializeFrom(this);
+        initializeAddon();
     }
 
     @Override
@@ -34,6 +26,19 @@ public class KimJongUn3Plugin extends JavaPlugin {
         if (launchManager != null) {
             launchManager.shutdown();
         }
+    }
+
+    private void initializeAddon() {
+        KimJongUn3AddonItems addonItems = KimJongUn3Addon.INSTANCE.registerItems();
+        items = new KimJongUnItems(this, addonItems);
+        launchManager = new LaunchManager(this, items);
+        spawner = new KimJongUnSpawner(this, items);
+
+        Bukkit.getPluginManager().registerEvents(new KimJongUnListener(this, items, launchManager), this);
+
+        registerCommand();
+        items.registerRecipes();
+        spawner.start();
     }
 
     private void registerCommand() {
