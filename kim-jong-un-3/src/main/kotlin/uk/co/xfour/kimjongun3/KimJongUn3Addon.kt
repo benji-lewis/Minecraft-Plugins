@@ -58,6 +58,7 @@ object KimJongUn3Addon : Addon() {
             .invoke(this, plugin.componentLogger)
         addonClass.findSetter("setPlugin\$nova", JavaPlugin::class.java)
             .invoke(this, plugin)
+        registerWithNova()
         metadataInitialized = true
     }
 
@@ -68,6 +69,17 @@ object KimJongUn3Addon : Addon() {
                 && method.parameterTypes[0].isAssignableFrom(paramType)
         }?.apply { isAccessible = true }
             ?: throw NoSuchMethodException("$name(${paramType.name})")
+    }
+
+    private fun registerWithNova() {
+        val bootstrapperClass = Class.forName("xyz.xenondevs.nova.addon.AddonBootstrapper")
+        val addonsField = bootstrapperClass.getDeclaredField("_addons").apply { isAccessible = true }
+        @Suppress("UNCHECKED_CAST")
+        val addons = addonsField.get(null) as MutableList<Any>
+        val exists = addons.any { it === this }
+        if (!exists) {
+            addons.add(this)
+        }
     }
 
     /**
