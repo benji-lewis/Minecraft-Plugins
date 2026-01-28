@@ -45,19 +45,29 @@ object KimJongUn3Addon : Addon() {
             return
         }
         val addonClass = Addon::class.java
-        addonClass.getDeclaredMethod("setPluginMeta\$nova", plugin.pluginMeta.javaClass)
+        val pluginMetaClass = Class.forName("io.papermc.paper.plugin.configuration.PluginMeta")
+        addonClass.findSetter("setPluginMeta\$nova", pluginMetaClass)
             .invoke(this, plugin.pluginMeta)
         val fileField = JavaPlugin::class.java.getDeclaredField("file").apply { isAccessible = true }
         val pluginFile = fileField.get(plugin) as java.io.File
-        addonClass.getDeclaredMethod("setFile\$nova", java.nio.file.Path::class.java)
+        addonClass.findSetter("setFile\$nova", java.nio.file.Path::class.java)
             .invoke(this, pluginFile.toPath())
-        addonClass.getDeclaredMethod("setDataFolder\$nova", java.nio.file.Path::class.java)
+        addonClass.findSetter("setDataFolder\$nova", java.nio.file.Path::class.java)
             .invoke(this, plugin.dataFolder.toPath())
-        addonClass.getDeclaredMethod("setLogger\$nova", plugin.componentLogger.javaClass)
+        addonClass.findSetter("setLogger\$nova", plugin.componentLogger.javaClass)
             .invoke(this, plugin.componentLogger)
-        addonClass.getDeclaredMethod("setPlugin\$nova", JavaPlugin::class.java)
+        addonClass.findSetter("setPlugin\$nova", JavaPlugin::class.java)
             .invoke(this, plugin)
         metadataInitialized = true
+    }
+
+    private fun Class<*>.findSetter(name: String, paramType: Class<*>): java.lang.reflect.Method {
+        return declaredMethods.firstOrNull { method ->
+            method.name == name
+                && method.parameterCount == 1
+                && method.parameterTypes[0].isAssignableFrom(paramType)
+        }?.apply { isAccessible = true }
+            ?: throw NoSuchMethodException("$name(${paramType.name})")
     }
 
     /**
