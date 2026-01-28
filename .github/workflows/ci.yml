@@ -3,7 +3,9 @@ name: CI
 on:
   push:
     branches: ["main", "develop"]
+    paths: ["kim-jong-un-2/**"]
   pull_request:
+    paths: ["kim-jong-un-2/**"]
 
 jobs:
   test-kim-jong-un-2:
