@@ -15,8 +15,8 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - name: Generate resource pack textures
-        run: python3 kim-jong-un-2/scripts/generate_textures.py
+      - name: Build resource pack
+        run: python3 kim-jong-un-2/scripts/build_resource_pack.py
       - name: Run tests
         run: mvn -f kim-jong-un-2/pom.xml test
       - name: Package jar
@@ -26,3 +26,8 @@ jobs:
         with:
           name: kim-jong-un-2-jar
           path: kim-jong-un-2/target/kim-jong-un-2-1.0.0.jar
+      - name: Upload resource pack artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kim-jong-un-2-resourcepack
+          path: kim-jong-un-2/build/kim-jong-un-2-resourcepack.zip

@@ -61,6 +61,19 @@ def ensure_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
 
+def generate_textures(output_dir: str) -> None:
+    output_dir = os.path.abspath(output_dir)
+    ensure_dir(output_dir)
+    textures = {
+        "missile.png": stripe(16, 16, (220, 60, 60), (120, 120, 120)),
+        "launchpad.png": checker(16, 16, (70, 70, 70), (40, 40, 40)),
+        "missile_part.png": stripe(16, 16, (210, 210, 210), (160, 160, 160)),
+        "launchpad_part.png": checker(16, 16, (90, 90, 90), (60, 60, 60)),
+    }
+
+    for name, pixels in textures.items():
+        write_png(os.path.join(output_dir, name), pixels)
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate resource pack textures.")
     parser.add_argument(
@@ -80,18 +93,7 @@ def main() -> int:
         help="Directory to write generated textures.",
     )
     args = parser.parse_args()
-    output_dir = os.path.abspath(args.output_dir)
-    ensure_dir(output_dir)
-
-    textures = {
-        "missile.png": stripe(16, 16, (220, 60, 60), (120, 120, 120)),
-        "launchpad.png": checker(16, 16, (70, 70, 70), (40, 40, 40)),
-        "missile_part.png": stripe(16, 16, (210, 210, 210), (160, 160, 160)),
-        "launchpad_part.png": checker(16, 16, (90, 90, 90), (60, 60, 60)),
-    }
-
-    for name, pixels in textures.items():
-        write_png(os.path.join(output_dir, name), pixels)
+    generate_textures(args.output_dir)
 
     return 0
 

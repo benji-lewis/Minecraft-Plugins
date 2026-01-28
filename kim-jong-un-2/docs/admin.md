@@ -8,8 +8,9 @@
 ## Installation
 1. Build the plugin: `mvn -f kim-jong-un-2/pom.xml package`.
 2. Copy `kim-jong-un-2/target/kim-jong-un-2-1.0.0.jar` into your server `plugins/` folder.
-3. Copy the `resourcepack/` folder from this plugin into your server resource pack, or merge it into your existing pack.
-4. Restart the server to generate `plugins/KimJongUn2/config.yml`.
+3. Build a resource pack zip with `python3 kim-jong-un-2/scripts/build_resource_pack.py` (writes `kim-jong-un-2/build/kim-jong-un-2-resourcepack.zip`).
+4. Add the generated zip to your server resource packs (or merge its contents into your existing pack).
+5. Restart the server to generate `plugins/KimJongUn2/config.yml`.
 
 ## Resource Pack Setup
 The plugin ships model overrides for:
@@ -17,11 +18,11 @@ The plugin ships model overrides for:
 - `netherite_scrap` (launchpad parts)
 - `nether_star` (assembled missile + launchpad)
 
-You must merge the provided files under:
+The pack includes `pack.mcmeta` and the model overrides under:
 ```
 kim-jong-un-2/src/main/resources/resourcepack/
 ```
-into your resource pack so the custom model data values map to the 3D models. Nova is not required for the visuals; the resource pack alone drives the 3D appearance.
+Run `python3 kim-jong-un-2/scripts/build_resource_pack.py` to generate a ready-to-zip resource pack (including placeholder textures). Nova is not required for the visuals; the resource pack alone drives the 3D appearance.
 
 This repository intentionally excludes binary texture files. Add your own PNG textures at:
 - `assets/kimjongun2/textures/item/missile.png`
