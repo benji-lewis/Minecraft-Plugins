@@ -1,0 +1,10 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "item/nether_star"
+  },
+  "overrides": [
+    {"predicate": {"custom_model_data": 5010}, "model": "kimjongun2:item/missile"},
+    {"predicate": {"custom_model_data": 5011}, "model": "kimjongun2:item/launchpad"}
+  ]
+}

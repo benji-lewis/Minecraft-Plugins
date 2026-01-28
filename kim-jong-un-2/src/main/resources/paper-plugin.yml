@@ -1,0 +1,24 @@
+name: KimJongUn2
+main: uk.co.xfour.kimjongun2.KimJongUn2Plugin
+version: 1.0.0
+api-version: "1.20"
+dependencies:
+  server:
+    Nova:
+      required: false
+      load: before
+permissions:
+  kimjongun2.admin:
+    description: Allows admin commands for Kim Jong Un 2.
+    default: op
+  kimjongun2.spawn:
+    description: Allows spawning Kim Jong Un 2 mobs.
+    default: op
+  kimjongun2.use:
+    description: Allows using launchpads and missiles.
+    default: true
+commands:
+  kimjongun2:
+    description: Kim Jong Un 2 admin command.
+    usage: /<command> <give|spawn> [player]
+    permission: kimjongun2.admin
