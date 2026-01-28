@@ -7,3 +7,4 @@
 - Use uk.co.xfour.{projectName} as a standard identifier format. Where uk.co is not allowed use com.xfour...
 - Unit tests should be written & integrated with GitHub CI
 - Write doc comments for the Javadoc tool as instructed by Oracle (https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html)
+- Where available, always run tests & fix any errors. 
