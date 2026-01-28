@@ -28,6 +28,8 @@ This repository intentionally excludes binary texture files. Add your own PNG te
 - `assets/kimjongun2/textures/item/launchpad.png`
 - `assets/kimjongun2/textures/item/missile_part.png`
 - `assets/kimjongun2/textures/item/launchpad_part.png`
+You can also generate placeholder textures by running
+`python3 kim-jong-un-2/scripts/generate_textures.py`, which writes PNGs into the resource pack folder.
 
 ### Nova Resource Pack Users (No Config Changes)
 If your server already uses the Nova resource pack, you do not need to change Nova configuration. Just merge the files from
@@ -42,6 +44,7 @@ See `plugins/KimJongUn2/config.yml`:
 - `spawn.min-distance-from-player` / `spawn.max-distance-from-player`:
   spawn distance range.
 - `launch.*`: missile ascent ticks, step size, explosion power, fireworks.
+- `skin.player-name`: Minecraft username whose skin is rendered on Kim Jong Un 2.
 - `models.*`: custom model data values (ensure they match your resource pack overrides).
 
 ## Commands & Permissions
