@@ -18,9 +18,9 @@ jobs:
           java-version: '21'
           cache: gradle
       - name: Run tests
-        run: kim-jong-un-3/gradlew -p kim-jong-un-3 test
+        run: gradle -p kim-jong-un-3 test --no-daemon
       - name: Package addon jar
-        run: kim-jong-un-3/gradlew -p kim-jong-un-3 addonJar -PoutDir=kim-jong-un-3/build/addons
+        run: gradle -p kim-jong-un-3 addonJar -PoutDir=kim-jong-un-3/build/addons --no-daemon
       - name: Upload addon artifact
         uses: actions/upload-artifact@v4
         with:
