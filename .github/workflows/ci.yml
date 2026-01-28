@@ -33,3 +33,21 @@ jobs:
         with:
           name: kim-jong-un-2-resourcepack
           path: kim-jong-un-2/build/kim-jong-un-2-resourcepack.zip
+  test-kim-jong-un-3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - name: Run tests
+        run: kim-jong-un-3/gradlew -p kim-jong-un-3 test
+      - name: Package addon jar
+        run: kim-jong-un-3/gradlew -p kim-jong-un-3 addonJar -PoutDir=kim-jong-un-3/build/addons
+      - name: Upload addon artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kim-jong-un-3-addon
+          path: kim-jong-un-3/build/addons/kim-jong-un-3-1.0.0.jar

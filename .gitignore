@@ -48,3 +48,5 @@ docs/site/plugins/voicechat/index.html
 *.jar
 target/
 kim-jong-un-2/build/
+kim-jong-un-3/.gradle/
+kim-jong-un-3/build/

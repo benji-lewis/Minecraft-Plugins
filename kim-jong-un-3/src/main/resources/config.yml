@@ -1,0 +1,20 @@
+spawn:
+  interval-seconds: 300
+  chance-per-interval: 0.35
+  max-active: 2
+  min-distance-from-player: 20
+  max-distance-from-player: 60
+  entity-type: VILLAGER
+
+drops:
+  parts-per-kill: 1
+
+launch:
+  ascent-ticks: 80
+  ascent-step: 0.35
+  explosion-power: 6.0
+  show-firework: true
+
+skin:
+  player-name: kimyou12345
+  custom-model-data: 5012
