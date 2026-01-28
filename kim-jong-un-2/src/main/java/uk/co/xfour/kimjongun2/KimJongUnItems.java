@@ -95,38 +95,45 @@ public class KimJongUnItems {
     }
 
     private int modelData(KimJongUnItem item) {
-        return config.getInt("models." + item.configKey(), 0);
+        String path = "models." + item.configKey();
+        if (config.contains(path)) {
+            return config.getInt(path, 0);
+        }
+        return item.defaultModelData();
     }
 
     public enum KimJongUnItem {
         MISSILE_NOSE("missile_nose", "Missile Nose Cone", Material.IRON_INGOT,
-                "missile-nose-custom-model-data", List.of("A precision-guided nose cone.")),
+                "missile-nose-custom-model-data", 5001, List.of("A precision-guided nose cone.")),
         MISSILE_BODY("missile_body", "Missile Body", Material.IRON_INGOT,
-                "missile-body-custom-model-data", List.of("Reinforced fuselage plating.")),
+                "missile-body-custom-model-data", 5002, List.of("Reinforced fuselage plating.")),
         MISSILE_ENGINE("missile_engine", "Missile Engine", Material.IRON_INGOT,
-                "missile-engine-custom-model-data", List.of("Thrust vectoring engine.")),
+                "missile-engine-custom-model-data", 5003, List.of("Thrust vectoring engine.")),
         LAUNCHPAD_BASE("launchpad_base", "Launchpad Base", Material.NETHERITE_SCRAP,
-                "launchpad-base-custom-model-data", List.of("Stabilized platform core.")),
+                "launchpad-base-custom-model-data", 5004, List.of("Stabilized platform core.")),
         LAUNCHPAD_CONTROL("launchpad_control", "Launchpad Control", Material.NETHERITE_SCRAP,
-                "launchpad-control-custom-model-data", List.of("Guidance and ignition panel.")),
+                "launchpad-control-custom-model-data", 5005, List.of("Guidance and ignition panel.")),
         LAUNCHPAD_SUPPORT("launchpad_support", "Launchpad Support", Material.NETHERITE_SCRAP,
-                "launchpad-support-custom-model-data", List.of("Hydraulic support struts.")),
+                "launchpad-support-custom-model-data", 5006, List.of("Hydraulic support struts.")),
         MISSILE("missile", "Assembled Missile", Material.NETHER_STAR,
-                "missile-custom-model-data", List.of("Handle with care.")),
+                "missile-custom-model-data", 5010, List.of("Handle with care.")),
         LAUNCHPAD("launchpad", "Assembled Launchpad", Material.NETHER_STAR,
-                "launchpad-custom-model-data", List.of("Place on flat ground."));
+                "launchpad-custom-model-data", 5011, List.of("Place on flat ground."));
 
         private final String id;
         private final String displayName;
         private final Material material;
         private final String configKey;
+        private final int defaultModelData;
         private final List<String> lore;
 
-        KimJongUnItem(String id, String displayName, Material material, String configKey, List<String> lore) {
+        KimJongUnItem(String id, String displayName, Material material, String configKey,
+                int defaultModelData, List<String> lore) {
             this.id = id;
             this.displayName = displayName;
             this.material = material;
             this.configKey = configKey;
+            this.defaultModelData = defaultModelData;
             this.lore = lore;
         }
 
@@ -144,6 +151,10 @@ public class KimJongUnItems {
 
         public String configKey() {
             return configKey;
+        }
+
+        public int defaultModelData() {
+            return defaultModelData;
         }
 
         public List<String> lore() {
