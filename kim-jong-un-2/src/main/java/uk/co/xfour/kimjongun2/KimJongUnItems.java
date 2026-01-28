@@ -151,6 +151,9 @@ public class KimJongUnItems {
         }
 
         public static Optional<KimJongUnItem> fromId(String id) {
+            if (id == null || id.isBlank()) {
+                return Optional.empty();
+            }
             String normal = id.toLowerCase(Locale.ROOT);
             return Arrays.stream(values())
                     .filter(item -> item.id.equals(normal))

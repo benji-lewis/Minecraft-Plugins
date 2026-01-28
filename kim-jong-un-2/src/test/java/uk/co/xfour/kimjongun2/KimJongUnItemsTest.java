@@ -1,6 +1,7 @@
 package uk.co.xfour.kimjongun2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -19,5 +20,12 @@ class KimJongUnItemsTest {
     void fromIdMatchesCaseInsensitive() {
         assertTrue(KimJongUnItems.KimJongUnItem.fromId("MISSILE").isPresent());
         assertTrue(KimJongUnItems.KimJongUnItem.fromId("launchpad_base").isPresent());
+    }
+
+    @Test
+    void fromIdReturnsEmptyForBlankInputs() {
+        assertFalse(KimJongUnItems.KimJongUnItem.fromId(null).isPresent());
+        assertFalse(KimJongUnItems.KimJongUnItem.fromId("").isPresent());
+        assertFalse(KimJongUnItems.KimJongUnItem.fromId("  ").isPresent());
     }
 }
