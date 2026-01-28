@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'
       - name: Run tests
         run: mvn -f kim-jong-un-2/pom.xml test
       - name: Package jar
