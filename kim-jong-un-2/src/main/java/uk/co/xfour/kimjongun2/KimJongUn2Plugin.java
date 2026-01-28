@@ -34,6 +34,6 @@ public class KimJongUn2Plugin extends JavaPlugin {
 
     private void registerCommand() {
         KimJongUnCommand command = new KimJongUnCommand(this, items, spawner);
-        registerCommand("kimjongun2", command);
+        registerCommand("kimjongun2", "Kim Jong Un 2 admin command.", command);
     }
 }
