@@ -9,7 +9,7 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 from generate_textures import generate_textures
 
-PACK_FORMAT = 94.1
+PACK_FORMAT = 75
 
 
 def ensure_pack_format(resourcepack_dir: Path) -> None:
