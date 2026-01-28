@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  test-kim-jong-un-2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Run tests
+        run: mvn -f kim-jong-un-2/pom.xml test
+      - name: Package jar
+        run: mvn -f kim-jong-un-2/pom.xml -DskipTests package
+      - name: Upload jar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kim-jong-un-2-jar
+          path: kim-jong-un-2/target/kim-jong-un-2-1.0.0.jar
