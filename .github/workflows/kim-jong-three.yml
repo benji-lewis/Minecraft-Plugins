@@ -25,4 +25,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: kim-jong-un-3-addon
-          path: kim-jong-un-3/build/addons/kim-jong-un-3-1.0.0.jar
+          path: kim-jong-un-3/build/libs/kim-jong-un-3-1.0.0.jar
