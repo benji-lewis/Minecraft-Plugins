@@ -16,6 +16,9 @@ object KimJongUn3Addon : Addon() {
      * @return the registered item holder
      */
     fun registerItems(): KimJongUn3AddonItems {
+        if (!isReady()) {
+            error("Kim Jong Un 3 addon metadata is not initialized yet.")
+        }
         if (registeredItems != null) {
             return registeredItems as KimJongUn3AddonItems
         }
@@ -31,6 +34,17 @@ object KimJongUn3Addon : Addon() {
         )
         registeredItems = KimJongUn3AddonItems(items)
         return registeredItems as KimJongUn3AddonItems
+    }
+
+    /**
+     * Returns whether Nova has initialized addon metadata for this addon.
+     *
+     * @return true if the addon metadata is ready
+     */
+    fun isReady(): Boolean {
+        val field = Addon::class.java.getDeclaredField("pluginMeta")
+        field.isAccessible = true
+        return field.get(this) != null
     }
 
     /**
