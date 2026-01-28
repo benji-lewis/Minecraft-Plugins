@@ -1,6 +1,5 @@
 name: KimJongUn3
 main: uk.co.xfour.kimjongun3.KimJongUn3Plugin
-bootstrapper: uk.co.xfour.kimjongun3.KimJongUn3Bootstrap
 version: 1.0.0
 api-version: "1.21"
 dependencies:

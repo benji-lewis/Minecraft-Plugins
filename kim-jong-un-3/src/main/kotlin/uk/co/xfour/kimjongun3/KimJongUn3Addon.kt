@@ -1,6 +1,7 @@
 package uk.co.xfour.kimjongun3
 
 import net.kyori.adventure.text.Component
+import org.bukkit.plugin.java.JavaPlugin
 import xyz.xenondevs.nova.addon.Addon
 import xyz.xenondevs.nova.world.item.NovaItem
 
@@ -9,6 +10,7 @@ import xyz.xenondevs.nova.world.item.NovaItem
  */
 object KimJongUn3Addon : Addon() {
     private var registeredItems: KimJongUn3AddonItems? = null
+    private var metadataInitialized = false
 
     /**
      * Registers the Nova items used by this addon if they are not registered yet.
@@ -16,9 +18,6 @@ object KimJongUn3Addon : Addon() {
      * @return the registered item holder
      */
     fun registerItems(): KimJongUn3AddonItems {
-        if (!isReady()) {
-            error("Kim Jong Un 3 addon metadata is not initialized yet.")
-        }
         if (registeredItems != null) {
             return registeredItems as KimJongUn3AddonItems
         }
@@ -37,14 +36,28 @@ object KimJongUn3Addon : Addon() {
     }
 
     /**
-     * Returns whether Nova has initialized addon metadata for this addon.
+     * Initializes Nova addon metadata from the owning JavaPlugin if needed.
      *
-     * @return true if the addon metadata is ready
+     * @param plugin the owning JavaPlugin instance
      */
-    fun isReady(): Boolean {
-        val field = Addon::class.java.getDeclaredField("pluginMeta")
-        field.isAccessible = true
-        return field.get(this) != null
+    fun initializeFrom(plugin: JavaPlugin) {
+        if (metadataInitialized) {
+            return
+        }
+        val addonClass = Addon::class.java
+        addonClass.getDeclaredMethod("setPluginMeta\$nova", plugin.pluginMeta.javaClass)
+            .invoke(this, plugin.pluginMeta)
+        val fileField = JavaPlugin::class.java.getDeclaredField("file").apply { isAccessible = true }
+        val pluginFile = fileField.get(plugin) as java.io.File
+        addonClass.getDeclaredMethod("setFile\$nova", java.nio.file.Path::class.java)
+            .invoke(this, pluginFile.toPath())
+        addonClass.getDeclaredMethod("setDataFolder\$nova", java.nio.file.Path::class.java)
+            .invoke(this, plugin.dataFolder.toPath())
+        addonClass.getDeclaredMethod("setLogger\$nova", plugin.componentLogger.javaClass)
+            .invoke(this, plugin.componentLogger)
+        addonClass.getDeclaredMethod("setPlugin\$nova", JavaPlugin::class.java)
+            .invoke(this, plugin)
+        metadataInitialized = true
     }
 
     /**
