@@ -8,7 +8,6 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 from generate_textures import generate_textures
 
-
 def build_resource_pack(output_path: Path, resourcepack_dir: Path) -> None:
     texture_dir = resourcepack_dir / "assets" / "kimjongun2" / "textures" / "item"
     generate_textures(str(texture_dir))
