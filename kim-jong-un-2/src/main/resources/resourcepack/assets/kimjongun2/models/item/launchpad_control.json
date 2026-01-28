@@ -1,0 +1,19 @@
+{
+  "textures": {
+    "0": "kimjongun2:item/launchpad_part"
+  },
+  "elements": [
+    {
+      "from": [3, 2, 3],
+      "to": [13, 6, 13],
+      "faces": {
+        "north": {"texture": "#0"},
+        "south": {"texture": "#0"},
+        "east": {"texture": "#0"},
+        "west": {"texture": "#0"},
+        "up": {"texture": "#0"},
+        "down": {"texture": "#0"}
+      }
+    }
+  ]
+}
