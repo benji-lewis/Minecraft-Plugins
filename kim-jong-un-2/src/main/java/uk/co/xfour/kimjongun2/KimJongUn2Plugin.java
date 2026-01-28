@@ -1,7 +1,6 @@
 package uk.co.xfour.kimjongun2;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class KimJongUn2Plugin extends JavaPlugin {
@@ -34,10 +33,7 @@ public class KimJongUn2Plugin extends JavaPlugin {
     }
 
     private void registerCommand() {
-        PluginCommand command = getCommand("kimjongun2");
-        if (command != null) {
-            command.setExecutor(new KimJongUnCommand(this, items, spawner));
-            command.setTabCompleter(new KimJongUnCommand(this, items, spawner));
-        }
+        KimJongUnCommand command = new KimJongUnCommand(this, items, spawner);
+        registerCommand("kimjongun2", command);
     }
 }

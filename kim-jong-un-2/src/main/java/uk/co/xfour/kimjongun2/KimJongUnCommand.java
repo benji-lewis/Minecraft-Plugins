@@ -7,25 +7,29 @@ import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-public class KimJongUnCommand implements CommandExecutor, TabCompleter {
+public class KimJongUnCommand extends Command implements PluginIdentifiableCommand {
     private final KimJongUn2Plugin plugin;
     private final KimJongUnItems items;
     private final KimJongUnSpawner spawner;
 
     public KimJongUnCommand(KimJongUn2Plugin plugin, KimJongUnItems items, KimJongUnSpawner spawner) {
+        super("kimjongun2");
         this.plugin = plugin;
         this.items = items;
         this.spawner = spawner;
+        setDescription("Kim Jong Un 2 admin command.");
+        setUsage("/kimjongun2 <give|spawn> [player] [item]");
+        setPermission("kimjongun2.admin");
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         if (args.length == 0) {
             sender.sendMessage("Usage: /kimjongun2 <give|spawn> [player] [item]");
             return true;
@@ -69,7 +73,8 @@ public class KimJongUnCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias,
+                                             @NotNull String[] args) {
         if (args.length == 1) {
             return List.of("give", "spawn").stream()
                     .filter(entry -> entry.startsWith(args[0].toLowerCase()))
@@ -93,5 +98,10 @@ public class KimJongUnCommand implements CommandExecutor, TabCompleter {
                     .collect(Collectors.toList());
         }
         return List.of();
+    }
+
+    @Override
+    public @NotNull KimJongUn2Plugin getPlugin() {
+        return plugin;
     }
 }
