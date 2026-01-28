@@ -12,6 +12,8 @@
 ## Resource Pack Notes
 Kim Jong Un 3 is a Nova addon, so its items are integrated into Nova's generated resource pack. You can add custom textures and models under
 `kim-jong-un-3/src/main/resources/resourcepack/` if you want bespoke visuals, then regenerate Nova's resource pack as you normally would.
+The texture generator writes to `kim-jong-un-3/build/generated/resourcepack/` by default and is invoked automatically during `processResources`.
+Run `python3 kim-jong-un-3/scripts/generate_textures.py` to regenerate the shipped textures before rebuilding the addon or Nova pack.
 
 ## Configuration
 See `plugins/KimJongUn3/config.yml`:
