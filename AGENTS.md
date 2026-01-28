@@ -6,3 +6,4 @@
 - When new blocks/ machines are needed create a Nova addon. (https://docs.xenondevs.xyz/nova/addon/)
 - Use uk.co.xfour.{projectName} as a standard identifier format. Where uk.co is not allowed use com.xfour...
 - Unit tests should be written & integrated with GitHub CI
+- Write doc comments for the Javadoc tool as instructed by Oracle (https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html)
