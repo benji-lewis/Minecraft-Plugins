@@ -96,6 +96,7 @@ public class KimJongUnItems {
     public void registerRecipes() {
         registerMissileRecipe();
         registerLaunchpadRecipe();
+        registerIcbmRecipe();
     }
 
     private void registerMissileRecipe() {
@@ -116,6 +117,14 @@ public class KimJongUnItems {
         Bukkit.addRecipe(recipe);
     }
 
+    private void registerIcbmRecipe() {
+        ItemStack result = createItem(KimJongUnItem.ICBM);
+        ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(plugin, "icbm"), result);
+        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.MISSILE)));
+        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.ICBM_CORE)));
+        Bukkit.addRecipe(recipe);
+    }
+
     public enum KimJongUnItem {
         MISSILE_NOSE("missile_nose", "Missile Nose Cone", List.of("A precision-guided nose cone.")),
         MISSILE_BODY("missile_body", "Missile Body", List.of("Reinforced fuselage plating.")),
@@ -123,7 +132,9 @@ public class KimJongUnItems {
         LAUNCHPAD_BASE("launchpad_base", "Launchpad Base", List.of("Stabilized platform core.")),
         LAUNCHPAD_CONTROL("launchpad_control", "Launchpad Control", List.of("Guidance and ignition panel.")),
         LAUNCHPAD_SUPPORT("launchpad_support", "Launchpad Support", List.of("Hydraulic support struts.")),
+        ICBM_CORE("icbm_core", "ICBM Core", List.of("Encrypted guidance matrix.")),
         MISSILE("missile", "Assembled Missile", List.of("Handle with care.")),
+        ICBM("icbm", "Assembled ICBM", List.of("Strategic payload authorized.")),
         LAUNCHPAD("launchpad", "Assembled Launchpad", List.of("Place on flat ground."));
 
         private final String id;

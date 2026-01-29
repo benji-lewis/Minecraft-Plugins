@@ -28,7 +28,9 @@ object KimJongUn3Addon : Addon() {
             KimJongUnItems.KimJongUnItem.LAUNCHPAD_BASE to buildItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD_BASE),
             KimJongUnItems.KimJongUnItem.LAUNCHPAD_CONTROL to buildItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD_CONTROL),
             KimJongUnItems.KimJongUnItem.LAUNCHPAD_SUPPORT to buildItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD_SUPPORT),
+            KimJongUnItems.KimJongUnItem.ICBM_CORE to buildItem(KimJongUnItems.KimJongUnItem.ICBM_CORE),
             KimJongUnItems.KimJongUnItem.MISSILE to buildItem(KimJongUnItems.KimJongUnItem.MISSILE),
+            KimJongUnItems.KimJongUnItem.ICBM to buildItem(KimJongUnItems.KimJongUnItem.ICBM),
             KimJongUnItems.KimJongUnItem.LAUNCHPAD to buildItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD)
         )
         registeredItems = KimJongUn3AddonItems(items)

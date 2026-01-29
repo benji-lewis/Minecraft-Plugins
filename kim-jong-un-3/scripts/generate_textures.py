@@ -196,6 +196,26 @@ def launchpad(width: int, height: int) -> list[list[tuple[int, int, int]]]:
     return base
 
 
+def icbm_core(width: int, height: int) -> list[list[tuple[int, int, int]]]:
+    base = metal_plate(width, height, (60, 190, 120), (100, 220, 160), (40, 120, 80), seed=23)
+    for y in range(height):
+        for x in range(width):
+            if (x - 8) ** 2 + (y - 8) ** 2 <= 10:
+                base[y][x] = blend(base[y][x], (220, 250, 210), 0.6)
+    return base
+
+
+def icbm(width: int, height: int) -> list[list[tuple[int, int, int]]]:
+    base = missile_body(width, height)
+    for y in range(height):
+        for x in range(width):
+            if y < 4:
+                base[y][x] = blend(base[y][x], (80, 180, 120), 0.6)
+            if y > height - 4:
+                base[y][x] = blend(base[y][x], (30, 50, 70), 0.7)
+    return base
+
+
 def ensure_dir(path: str) -> None:
     os.makedirs(path, exist_ok=True)
 
@@ -213,6 +233,8 @@ def generate_textures(output_dir: str) -> None:
         "launchpad_support.png": launchpad_support,
         "missile.png": missile,
         "launchpad.png": launchpad,
+        "icbm_core.png": icbm_core,
+        "icbm.png": icbm,
     }
 
     for name, generator in texture_generators.items():

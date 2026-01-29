@@ -12,6 +12,12 @@ class KimJongUnItemsTest {
     }
 
     @Test
+    void fromIdMatchesIcbmItems() {
+        assertTrue(KimJongUnItems.KimJongUnItem.fromId("ICBM").isPresent());
+        assertTrue(KimJongUnItems.KimJongUnItem.fromId("icbm_core").isPresent());
+    }
+
+    @Test
     void partItemsContainsAllParts() {
         assertEquals(6, KimJongUnItems.KimJongUnItem.partItems().size());
     }

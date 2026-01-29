@@ -22,7 +22,10 @@ See `plugins/KimJongUn3/config.yml`:
 - `spawn.max-active`: maximum simultaneous Kim Jong Un 3 mobs.
 - `spawn.min-distance-from-player` / `spawn.max-distance-from-player`:
   spawn distance range.
+- `drops.icbm-core-chance`: chance for the ICBM core to drop per mob kill.
 - `launch.*`: missile ascent ticks, step size, explosion power, fireworks.
+- `icbm.*`: ICBM flight profile, nuclear blast, mushroom cloud, and fallout tuning.
+- `auto-update.*`: GitHub Actions artifact auto-updater settings (optional GitHub token).
 - `skin.player-name`: Minecraft username whose skin is rendered on Kim Jong Un 3.
 - `skin.custom-model-data`: optional custom model data for the mob head.
 
@@ -30,7 +33,8 @@ See `plugins/KimJongUn3/config.yml`:
 ### `/kimjongun3 give <player> <item>`
 Gives a part or assembled item.
 - Permission: `kimjongun3.admin`
-- Items: `missile_nose`, `missile_body`, `missile_engine`, `launchpad_base`, `launchpad_control`, `launchpad_support`, `missile`, `launchpad`
+- Items: `missile_nose`, `missile_body`, `missile_engine`, `launchpad_base`, `launchpad_control`, `launchpad_support`, `icbm_core`, `missile`, `icbm`, `launchpad`
+- Radiation suit items: `radiation_helmet`, `radiation_chestplate`, `radiation_leggings`, `radiation_boots`
 
 ### `/kimjongun3 spawn`
 Spawns the mob at your location.
@@ -39,3 +43,8 @@ Spawns the mob at your location.
 ### Permissions Summary
 - `kimjongun3.admin` — admin commands (including spawn).
 - `kimjongun3.use` — place launchpads and launch missiles.
+
+## Auto-updater Notes
+The auto-updater checks the latest successful `main` workflow run for the `kim-jong-un-3-addon` artifact and
+stages the jar in the `plugins/update/` folder. For private workflows or stricter rate limits, set
+`auto-update.github-token` to a GitHub token with `actions:read` access.
