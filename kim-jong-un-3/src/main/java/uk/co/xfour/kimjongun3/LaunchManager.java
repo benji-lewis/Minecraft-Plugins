@@ -154,7 +154,9 @@ public class LaunchManager {
                             world.playSound(start, Sound.ENTITY_ENDER_DRAGON_GROWL, 2.0f, 0.6f);
                         }
                         double nextY = Math.min(current.getY() + ascentStep, cruiseHeight);
-                        missile.teleport(current.clone().setY(nextY));
+                        Location ascentLocation = current.clone();
+                        ascentLocation.setY(nextY);
+                        missile.teleport(ascentLocation);
                         ticks++;
                         if (ticks >= ascentTicks || nextY >= cruiseHeight) {
                             phase = Phase.CRUISE;
@@ -171,7 +173,9 @@ public class LaunchManager {
                             phase = Phase.DESCENT;
                         } else {
                             horizontal.normalize().multiply(cruiseSpeed);
-                            missile.teleport(current.clone().add(horizontal).setY(cruiseHeight));
+                            Location cruiseLocation = current.clone().add(horizontal);
+                            cruiseLocation.setY(cruiseHeight);
+                            missile.teleport(cruiseLocation);
                         }
                     }
                     case DESCENT -> {
@@ -224,7 +228,7 @@ public class LaunchManager {
         float power = (float) plugin.getConfig().getDouble("icbm.impact-explosion-power", 18.0);
         boolean createFire = plugin.getConfig().getBoolean("icbm.impact-fire", true);
         world.createExplosion(location, power, createFire, false);
-        world.spawnParticle(Particle.EXPLOSION_HUGE, location, 1);
+        world.spawnParticle(Particle.EXPLOSION, location, 1);
         world.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 3.0f, 0.4f);
         spawnMushroomCloud(location);
         double radius = plugin.getConfig().getDouble("icbm.fallout.radius", 40.0);
