@@ -15,17 +15,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.Vector;
 
 public class KimJongUnListener implements Listener {
     private final KimJongUn3Plugin plugin;
     private final KimJongUnItems items;
     private final LaunchManager launchManager;
+    private final IcbmTargetingManager targetingManager;
 
-    public KimJongUnListener(KimJongUn3Plugin plugin, KimJongUnItems items, LaunchManager launchManager) {
+    public KimJongUnListener(KimJongUn3Plugin plugin, KimJongUnItems items, LaunchManager launchManager,
+                             IcbmTargetingManager targetingManager) {
         this.plugin = plugin;
         this.items = items;
         this.launchManager = launchManager;
+        this.targetingManager = targetingManager;
     }
 
     @EventHandler
@@ -91,10 +93,6 @@ public class KimJongUnListener implements Listener {
             return;
         }
         event.setCancelled(true);
-        Vector direction = event.getPlayer().getLocation().getDirection();
-        launchManager.launchMissile(stand.getLocation(), direction);
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-            held.setAmount(held.getAmount() - 1);
-        }
+        targetingManager.openTargeting(event.getPlayer(), stand);
     }
 }

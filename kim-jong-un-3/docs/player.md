@@ -13,7 +13,19 @@ Use any crafting grid (shapeless):
 ## Launching a Missile
 1. Hold the **Assembled Launchpad** and right-click a block to place it.
 2. Hold the **Assembled Missile** and right-click the launchpad.
-3. Enjoy the dramatic launch sequence.
+3. Use the **ICBM Targeting** GUI to set X/Y/Z coordinates:
+   - Left click to add +1, right click to subtract -1, and shift-click for +/-10.
+   - Click **Use Current Location** to auto-fill your current coordinates.
+4. Click **Launch ICBM** to send it to the target.
+5. Enjoy the dramatic launch sequence, mushroom cloud, and fallout.
+
+## Radiation Suit
+Craft a full radiation suit to protect yourself from fallout.
+Use glowstone dust with leather armor pieces in the crafting grid to make:
+- **Radiation Suit Helmet**
+- **Radiation Suit Chestplate**
+- **Radiation Suit Leggings**
+- **Radiation Suit Boots**
 
 ## Tips
 - Launchpads and missiles use Nova-managed item visuals.

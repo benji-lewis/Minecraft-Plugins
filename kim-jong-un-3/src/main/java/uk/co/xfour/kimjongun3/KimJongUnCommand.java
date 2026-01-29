@@ -17,11 +17,14 @@ public class KimJongUnCommand implements BasicCommand {
     private final KimJongUn3Plugin plugin;
     private final KimJongUnItems items;
     private final KimJongUnSpawner spawner;
+    private final RadiationSuit radiationSuit;
 
-    public KimJongUnCommand(KimJongUn3Plugin plugin, KimJongUnItems items, KimJongUnSpawner spawner) {
+    public KimJongUnCommand(KimJongUn3Plugin plugin, KimJongUnItems items, KimJongUnSpawner spawner,
+                            RadiationSuit radiationSuit) {
         this.plugin = plugin;
         this.items = items;
         this.spawner = spawner;
+        this.radiationSuit = radiationSuit;
     }
 
     @Override
@@ -53,16 +56,24 @@ public class KimJongUnCommand implements BasicCommand {
                 return;
             }
             Optional<KimJongUnItems.KimJongUnItem> itemType = KimJongUnItems.KimJongUnItem.fromId(args[2]);
-            if (itemType.isEmpty()) {
-                sender.sendMessage("Unknown item. Try: " +
-                        KimJongUnItems.KimJongUnItem.partItems().stream()
-                                .map(KimJongUnItems.KimJongUnItem::id)
-                                .collect(Collectors.joining(", ")) + ", missile, launchpad.");
+            if (itemType.isPresent()) {
+                ItemStack itemStack = items.createItem(itemType.get());
+                target.getInventory().addItem(itemStack);
+                sender.sendMessage("Gave " + itemType.get().displayName() + " to " + target.getName() + ".");
                 return;
             }
-            ItemStack itemStack = items.createItem(itemType.get());
-            target.getInventory().addItem(itemStack);
-            sender.sendMessage("Gave " + itemType.get().displayName() + " to " + target.getName() + ".");
+            Optional<RadiationSuit.Piece> suitPiece = radiationSuit.pieceFromId(args[2]);
+            if (suitPiece.isPresent()) {
+                ItemStack itemStack = radiationSuit.createPiece(suitPiece.get());
+                target.getInventory().addItem(itemStack);
+                sender.sendMessage("Gave " + suitPiece.get().displayName() + " to " + target.getName() + ".");
+                return;
+            }
+            sender.sendMessage("Unknown item. Try: " +
+                    KimJongUnItems.KimJongUnItem.partItems().stream()
+                            .map(KimJongUnItems.KimJongUnItem::id)
+                            .collect(Collectors.joining(", ")) + ", missile, launchpad, radiation_helmet, "
+                    + "radiation_chestplate, radiation_leggings, radiation_boots.");
             return;
         }
         sender.sendMessage("Unknown subcommand.");
@@ -92,6 +103,9 @@ public class KimJongUnCommand implements BasicCommand {
                     .collect(Collectors.toList()));
             ids.add("missile");
             ids.add("launchpad");
+            for (RadiationSuit.Piece piece : RadiationSuit.Piece.values()) {
+                ids.add(piece.id());
+            }
             return ids.stream()
                     .filter(id -> id.startsWith(args[2].toLowerCase()))
                     .collect(Collectors.toList());

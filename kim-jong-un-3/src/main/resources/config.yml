@@ -15,6 +15,38 @@ launch:
   explosion-power: 6.0
   show-firework: true
 
+icbm:
+  enabled: true
+  ascent-ticks: 120
+  ascent-step: 0.8
+  cruise-height: 180
+  cruise-speed: 2.6
+  descent-speed: 3.2
+  impact-explosion-power: 18.0
+  impact-fire: true
+  show-firework: true
+  mushroom-cloud:
+    duration-ticks: 220
+    max-radius: 20.0
+    max-height: 34.0
+  fallout:
+    radius: 42.0
+    duration-ticks: 1600
+    tick-interval: 20
+    damage-per-tick: 1.5
+    effect-duration-ticks: 120
+    wither-amplifier: 1
+    nausea-amplifier: 0
+
+auto-update:
+  enabled: true
+  repository: "benji-lewis/Minecraft-Plugins"
+  workflow: "kim-jong-three.yml"
+  artifact-name: "kim-jong-un-3-addon"
+  update-file-name: "kim-jong-un-3.jar"
+  github-token: ""
+  timeout-seconds: 15
+
 skin:
   player-name: kimyou12345
   custom-model-data: 5012
