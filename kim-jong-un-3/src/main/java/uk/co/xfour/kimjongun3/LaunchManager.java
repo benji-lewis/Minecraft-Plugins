@@ -66,7 +66,7 @@ public class LaunchManager {
         missile.setSmall(true);
         missile.setSilent(true);
         missile.setInvulnerable(true);
-        missile.getEquipment().setHelmet(items.createItem(KimJongUnItems.KimJongUnItem.MISSILE));
+        missile.getEquipment().setHelmet(items.createItem(KimJongUnItems.KimJongUnItem.ICBM));
         missile.getPersistentDataContainer().set(items.keys().missileKey, PersistentDataType.BYTE, (byte) 1);
         activeMissiles.add(missile);
 

@@ -130,7 +130,7 @@ public class IcbmTargetingManager implements Listener {
 
     private void handleLaunch(Player player, TargetingSession session) {
         if (!consumeMissile(player)) {
-            player.sendMessage("You must hold an assembled missile to launch an ICBM.");
+            player.sendMessage("You must hold an assembled ICBM to launch.");
             return;
         }
         Entity launchpadEntity = Bukkit.getEntity(session.launchpadId);
@@ -149,7 +149,7 @@ public class IcbmTargetingManager implements Listener {
         }
         ItemStack held = player.getInventory().getItemInMainHand();
         return items.identify(held)
-            .filter(item -> item == KimJongUnItems.KimJongUnItem.MISSILE)
+            .filter(item -> item == KimJongUnItems.KimJongUnItem.ICBM)
             .map(item -> {
                 held.setAmount(held.getAmount() - 1);
                 return true;

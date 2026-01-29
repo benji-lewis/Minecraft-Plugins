@@ -8,6 +8,7 @@ spawn:
 
 drops:
   parts-per-kill: 1
+  icbm-core-chance: 0.15
 
 launch:
   ascent-ticks: 80

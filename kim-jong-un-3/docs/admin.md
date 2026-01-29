@@ -22,6 +22,7 @@ See `plugins/KimJongUn3/config.yml`:
 - `spawn.max-active`: maximum simultaneous Kim Jong Un 3 mobs.
 - `spawn.min-distance-from-player` / `spawn.max-distance-from-player`:
   spawn distance range.
+- `drops.icbm-core-chance`: chance for the ICBM core to drop per mob kill.
 - `launch.*`: missile ascent ticks, step size, explosion power, fireworks.
 - `icbm.*`: ICBM flight profile, nuclear blast, mushroom cloud, and fallout tuning.
 - `auto-update.*`: GitHub Actions artifact auto-updater settings (optional GitHub token).
@@ -32,7 +33,7 @@ See `plugins/KimJongUn3/config.yml`:
 ### `/kimjongun3 give <player> <item>`
 Gives a part or assembled item.
 - Permission: `kimjongun3.admin`
-- Items: `missile_nose`, `missile_body`, `missile_engine`, `launchpad_base`, `launchpad_control`, `launchpad_support`, `missile`, `launchpad`
+- Items: `missile_nose`, `missile_body`, `missile_engine`, `launchpad_base`, `launchpad_control`, `launchpad_support`, `icbm_core`, `missile`, `icbm`, `launchpad`
 - Radiation suit items: `radiation_helmet`, `radiation_chestplate`, `radiation_leggings`, `radiation_boots`
 
 ### `/kimjongun3 spawn`

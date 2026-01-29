@@ -42,6 +42,11 @@ public class KimJongUnListener implements Listener {
             ItemStack part = items.createItem(items.randomPart());
             entity.getWorld().dropItemNaturally(entity.getLocation(), part);
         }
+        double icbmChance = plugin.getConfig().getDouble("drops.icbm-core-chance", 0.15);
+        if (Math.random() <= icbmChance) {
+            ItemStack core = items.createItem(KimJongUnItems.KimJongUnItem.ICBM_CORE);
+            entity.getWorld().dropItemNaturally(entity.getLocation(), core);
+        }
     }
 
     @EventHandler
@@ -89,10 +94,19 @@ public class KimJongUnListener implements Listener {
         }
         ItemStack held = event.getPlayer().getInventory().getItemInMainHand();
         Optional<KimJongUnItems.KimJongUnItem> itemType = items.identify(held);
-        if (itemType.isEmpty() || itemType.get() != KimJongUnItems.KimJongUnItem.MISSILE) {
+        if (itemType.isEmpty()) {
             return;
         }
         event.setCancelled(true);
-        targetingManager.openTargeting(event.getPlayer(), stand);
+        if (itemType.get() == KimJongUnItems.KimJongUnItem.ICBM) {
+            targetingManager.openTargeting(event.getPlayer(), stand);
+            return;
+        }
+        if (itemType.get() == KimJongUnItems.KimJongUnItem.MISSILE) {
+            launchManager.launchMissile(stand.getLocation(), event.getPlayer().getLocation().getDirection());
+            if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                held.setAmount(held.getAmount() - 1);
+            }
+        }
     }
 }

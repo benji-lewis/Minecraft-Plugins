@@ -72,8 +72,8 @@ public class KimJongUnCommand implements BasicCommand {
             sender.sendMessage("Unknown item. Try: " +
                     KimJongUnItems.KimJongUnItem.partItems().stream()
                             .map(KimJongUnItems.KimJongUnItem::id)
-                            .collect(Collectors.joining(", ")) + ", missile, launchpad, radiation_helmet, "
-                    + "radiation_chestplate, radiation_leggings, radiation_boots.");
+                            .collect(Collectors.joining(", ")) + ", icbm_core, missile, icbm, launchpad, "
+                    + "radiation_helmet, radiation_chestplate, radiation_leggings, radiation_boots.");
             return;
         }
         sender.sendMessage("Unknown subcommand.");
@@ -102,6 +102,8 @@ public class KimJongUnCommand implements BasicCommand {
                     .map(KimJongUnItems.KimJongUnItem::id)
                     .collect(Collectors.toList()));
             ids.add("missile");
+            ids.add("icbm");
+            ids.add("icbm_core");
             ids.add("launchpad");
             for (RadiationSuit.Piece piece : RadiationSuit.Piece.values()) {
                 ids.add(piece.id());
