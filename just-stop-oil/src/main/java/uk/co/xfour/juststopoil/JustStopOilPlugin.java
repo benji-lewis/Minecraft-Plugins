@@ -88,12 +88,7 @@ public class JustStopOilPlugin extends JavaPlugin implements Listener {
      * Registers plugin commands with the server command map.
      */
     private void registerCommands() {
-        org.bukkit.command.PluginCommand command = getCommand("juststopoil");
-        if (command == null) {
-            getLogger().warning("Command 'juststopoil' could not be registered. Check plugin.yml metadata.");
-            return;
-        }
-        command.setExecutor(this);
+        registerCommand("juststopoil", (source, args) -> handleCommand(source.getSender(), args));
     }
 
     private void loadConfigValues() {
@@ -196,28 +191,33 @@ public class JustStopOilPlugin extends JavaPlugin implements Listener {
         if (!command.getName().equalsIgnoreCase("juststopoil")) {
             return false;
         }
+        handleCommand(sender, args);
+        return true;
+    }
+
+    private void handleCommand(org.bukkit.command.CommandSender sender, String[] args) {
         if (!sender.hasPermission("juststopoil.admin")) {
             sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
-            return true;
+            return;
         }
         if (args.length < 2 || !args[0].equalsIgnoreCase("spawn")) {
             sender.sendMessage(ChatColor.RED + "Usage: /juststopoil spawn <count>");
-            return true;
+            return;
         }
         int count;
         try {
             count = Integer.parseInt(args[1]);
         } catch (NumberFormatException ex) {
             sender.sendMessage(ChatColor.RED + "Count must be a number.");
-            return true;
+            return;
         }
         if (count < 1) {
             sender.sendMessage(ChatColor.RED + "Count must be at least 1.");
-            return true;
+            return;
         }
         if (count > commandMaxSpawn) {
             sender.sendMessage(ChatColor.RED + "Count must be " + commandMaxSpawn + " or less.");
-            return true;
+            return;
         }
         Location baseLocation;
         if (sender instanceof Player player) {
@@ -226,13 +226,12 @@ public class JustStopOilPlugin extends JavaPlugin implements Listener {
             baseLocation = blockSender.getBlock().getLocation();
         } else {
             sender.sendMessage(ChatColor.RED + "Console must specify a command block location.");
-            return true;
+            return;
         }
         for (int i = 0; i < count; i++) {
             spawnProtester(baseLocation, null);
         }
         sender.sendMessage(ChatColor.GREEN + "Spawned " + count + " protesters.");
-        return true;
     }
 
     private void spawnProtester(Location location, Player trigger) {
