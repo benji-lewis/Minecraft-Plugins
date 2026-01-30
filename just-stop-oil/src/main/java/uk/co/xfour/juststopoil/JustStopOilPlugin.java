@@ -45,6 +45,7 @@ public class JustStopOilPlugin extends JavaPlugin implements Listener {
     private static final String CONFIG_SPRAY_DURATION_TICKS = "protest.spray.duration-ticks";
     private static final String CONFIG_SPRAY_BLOCKS_PER_BURST = "protest.spray.blocks-per-burst";
     private static final String CONFIG_SPRAY_PAINT_TICKS = "protest.spray.paint-ticks";
+    private static final String CONFIG_COMMAND_MAX_SPAWN = "protest.command.max-spawn";
 
     private static final double FLEE_SPEED = 0.35;
     private static final double WALK_SPEED = 0.1;
@@ -68,6 +69,7 @@ public class JustStopOilPlugin extends JavaPlugin implements Listener {
     private int sprayDurationTicks;
     private int sprayBlocksPerBurst;
     private int sprayPaintTicks;
+    private int commandMaxSpawn;
 
     /**
      * Loads configuration and registers event handlers.
@@ -96,6 +98,7 @@ public class JustStopOilPlugin extends JavaPlugin implements Listener {
         sprayDurationTicks = Math.max(40, getConfig().getInt(CONFIG_SPRAY_DURATION_TICKS, 200));
         sprayBlocksPerBurst = Math.max(1, getConfig().getInt(CONFIG_SPRAY_BLOCKS_PER_BURST, 4));
         sprayPaintTicks = Math.max(40, getConfig().getInt(CONFIG_SPRAY_PAINT_TICKS, 200));
+        commandMaxSpawn = Math.max(1, getConfig().getInt(CONFIG_COMMAND_MAX_SPAWN, 5));
 
         if (messages.isEmpty()) {
             getLogger().warning("No protest messages configured. Protesters will remain silent.");
@@ -163,6 +166,62 @@ public class JustStopOilPlugin extends JavaPlugin implements Listener {
         scheduleDespawn(villager);
     }
 
+    /**
+     * Handles the /juststopoil command.
+     *
+     * @param sender the command sender
+     * @param command the command
+     * @param label the command label
+     * @param args command arguments
+     * @return true if handled
+     */
+    @Override
+    public boolean onCommand(org.bukkit.command.CommandSender sender,
+                             org.bukkit.command.Command command,
+                             String label,
+                             String[] args) {
+        if (!command.getName().equalsIgnoreCase("juststopoil")) {
+            return false;
+        }
+        if (!sender.hasPermission("juststopoil.admin")) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
+            return true;
+        }
+        if (args.length < 2 || !args[0].equalsIgnoreCase("spawn")) {
+            sender.sendMessage(ChatColor.RED + "Usage: /juststopoil spawn <count>");
+            return true;
+        }
+        int count;
+        try {
+            count = Integer.parseInt(args[1]);
+        } catch (NumberFormatException ex) {
+            sender.sendMessage(ChatColor.RED + "Count must be a number.");
+            return true;
+        }
+        if (count < 1) {
+            sender.sendMessage(ChatColor.RED + "Count must be at least 1.");
+            return true;
+        }
+        if (count > commandMaxSpawn) {
+            sender.sendMessage(ChatColor.RED + "Count must be " + commandMaxSpawn + " or less.");
+            return true;
+        }
+        Location baseLocation;
+        if (sender instanceof Player player) {
+            baseLocation = player.getLocation();
+        } else if (sender instanceof org.bukkit.command.BlockCommandSender blockSender) {
+            baseLocation = blockSender.getBlock().getLocation();
+        } else {
+            sender.sendMessage(ChatColor.RED + "Console must specify a command block location.");
+            return true;
+        }
+        for (int i = 0; i < count; i++) {
+            spawnProtester(baseLocation, null);
+        }
+        sender.sendMessage(ChatColor.GREEN + "Spawned " + count + " protesters.");
+        return true;
+    }
+
     private void spawnProtester(Location location, Player trigger) {
         if (location.getWorld() == null) {
             return;
@@ -183,7 +242,9 @@ public class JustStopOilPlugin extends JavaPlugin implements Listener {
         scheduleNextShout(villager);
         scheduleSpraySequence(villager);
         scheduleDespawn(villager);
-        playProtestSound(trigger.getLocation());
+        if (trigger != null) {
+            playProtestSound(trigger.getLocation());
+        }
     }
 
     private double randomOffset() {

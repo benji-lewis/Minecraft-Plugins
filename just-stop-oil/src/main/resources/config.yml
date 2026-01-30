@@ -18,3 +18,5 @@ protest:
     duration-ticks: 200
     blocks-per-burst: 4
     paint-ticks: 200
+  command:
+    max-spawn: 5

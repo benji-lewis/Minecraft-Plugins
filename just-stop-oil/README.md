@@ -7,6 +7,7 @@ Just Stop Oil is a PaperMC plugin that reacts to players placing lava by spawnin
 - Sends configurable protest messages to nearby players.
 - Protesters flee and shout when attacked.
 - Protesters spray temporary orange wool onto nearby blocks with particles.
+- `/juststopoil spawn <count>` spawns protesters at your location (up to a configurable limit).
 
 ## Configuration
 The following settings are available in `src/main/resources/config.yml`:
@@ -24,3 +25,4 @@ The following settings are available in `src/main/resources/config.yml`:
 - `protest.spray.duration-ticks`: Total duration for the spray animation.
 - `protest.spray.blocks-per-burst`: Number of blocks painted per burst.
 - `protest.spray.paint-ticks`: How long sprayed blocks stay orange before reverting.
+- `protest.command.max-spawn`: Max number of protesters that can be spawned by command.
