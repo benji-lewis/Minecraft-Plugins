@@ -81,6 +81,19 @@ public class JustStopOilPlugin extends JavaPlugin implements Listener {
         protesterKey = new NamespacedKey(this, "just_stop_oil_protester");
         fleeingKey = new NamespacedKey(this, "just_stop_oil_fleeing");
         getServer().getPluginManager().registerEvents(this, this);
+        registerCommands();
+    }
+
+    /**
+     * Registers plugin commands with the server command map.
+     */
+    private void registerCommands() {
+        org.bukkit.command.PluginCommand command = getCommand("juststopoil");
+        if (command == null) {
+            getLogger().warning("Command 'juststopoil' could not be registered. Check plugin.yml metadata.");
+            return;
+        }
+        command.setExecutor(this);
     }
 
     private void loadConfigValues() {
