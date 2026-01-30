@@ -1,0 +1,28 @@
+name: Just Stop Oil
+
+on:
+  push:
+    branches: ["main", "develop"]
+    paths: ["just-stop-oil/**"]
+  pull_request:
+    paths: ["just-stop-oil/**"]
+
+jobs:
+  test-just-stop-oil:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Run tests
+        run: mvn -f just-stop-oil/pom.xml test
+      - name: Package jar
+        run: mvn -f just-stop-oil/pom.xml -DskipTests package
+      - name: Upload jar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: just-stop-oil-jar
+          path: just-stop-oil/target/just-stop-oil-1.0.0.jar
