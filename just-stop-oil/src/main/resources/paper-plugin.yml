@@ -1,0 +1,8 @@
+name: JustStopOil
+main: uk.co.xfour.juststopoil.JustStopOilPlugin
+version: 1.0.0
+api-version: "1.21"
+permissions:
+  juststopoil.admin:
+    description: Allows spawning protesters via command.
+    default: op

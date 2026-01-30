@@ -1,0 +1,22 @@
+protest:
+  spawn-chance: 0.35
+  radius: 18
+  prefix: "&2[Just Stop Oil]"
+  messages:
+    - "&eThe planet is on fire. Stop the oil!"
+    - "&eNo new oil permits!"
+    - "&eProtect the climate for future miners."
+    - "&eYour lava habit is wrecking the world."
+  shout-interval-min-ticks: 80
+  shout-interval-max-ticks: 260
+  shout-chance: 0.45
+  despawn-delay-ticks: 400
+  spray:
+    enabled: true
+    radius: 6
+    interval-ticks: 30
+    duration-ticks: 200
+    blocks-per-burst: 4
+    paint-ticks: 200
+  command:
+    max-spawn: 5
