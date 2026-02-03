@@ -2,11 +2,11 @@
 	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "ICBM:icbmside",
-		"1": "ICBM:icbmbooster",
-		"2": "ICBM:icbmsubtop",
-		"3": "ICBM:icbmtip",
-		"particle": "ICBM:icbmside"
+		"0": "kimjongun3:item/icbm_side",
+		"1": "kimjongun3:item/icbm_booster",
+		"2": "kimjongun3:item/icbm_subtop",
+		"3": "kimjongun3:item/icbm_tip",
+		"particle": "kimjongun3:item/icbm_side"
 	},
 	"elements": [
 		{
