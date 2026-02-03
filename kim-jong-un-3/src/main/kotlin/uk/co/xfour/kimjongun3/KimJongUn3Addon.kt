@@ -3,6 +3,8 @@ package uk.co.xfour.kimjongun3
 import net.kyori.adventure.text.Component
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.xenondevs.nova.addon.Addon
+import xyz.xenondevs.nova.resources.builder.layout.block.BackingStateCategory
+import xyz.xenondevs.nova.world.block.NovaBlock
 import xyz.xenondevs.nova.world.item.NovaItem
 
 /**
@@ -10,6 +12,7 @@ import xyz.xenondevs.nova.world.item.NovaItem
  */
 object KimJongUn3Addon : Addon() {
     private var registeredItems: KimJongUn3AddonItems? = null
+    private var registeredBlocks: KimJongUn3AddonBlocks? = null
     private var metadataInitialized = false
 
     /**
@@ -21,6 +24,7 @@ object KimJongUn3Addon : Addon() {
         if (registeredItems != null) {
             return registeredItems as KimJongUn3AddonItems
         }
+        val blocks = registerBlocks()
         val items = mapOf(
             KimJongUnItems.KimJongUnItem.MISSILE_NOSE to buildItem(KimJongUnItems.KimJongUnItem.MISSILE_NOSE),
             KimJongUnItems.KimJongUnItem.MISSILE_BODY to buildItem(KimJongUnItems.KimJongUnItem.MISSILE_BODY),
@@ -29,12 +33,28 @@ object KimJongUn3Addon : Addon() {
             KimJongUnItems.KimJongUnItem.LAUNCHPAD_CONTROL to buildItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD_CONTROL),
             KimJongUnItems.KimJongUnItem.LAUNCHPAD_SUPPORT to buildItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD_SUPPORT),
             KimJongUnItems.KimJongUnItem.ICBM_CORE to buildItem(KimJongUnItems.KimJongUnItem.ICBM_CORE),
-            KimJongUnItems.KimJongUnItem.MISSILE to buildItem(KimJongUnItems.KimJongUnItem.MISSILE),
-            KimJongUnItems.KimJongUnItem.ICBM to buildItem(KimJongUnItems.KimJongUnItem.ICBM),
-            KimJongUnItems.KimJongUnItem.LAUNCHPAD to buildItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD)
+            KimJongUnItems.KimJongUnItem.MISSILE to buildBlockItem(blocks.missile, KimJongUnItems.KimJongUnItem.MISSILE),
+            KimJongUnItems.KimJongUnItem.ICBM to buildBlockItem(blocks.icbm, KimJongUnItems.KimJongUnItem.ICBM),
+            KimJongUnItems.KimJongUnItem.LAUNCHPAD to buildBlockItem(blocks.launchpad, KimJongUnItems.KimJongUnItem.LAUNCHPAD)
         )
         registeredItems = KimJongUn3AddonItems(items)
         return registeredItems as KimJongUn3AddonItems
+    }
+
+    /**
+     * Registers the Nova blocks used by this addon if they are not registered yet.
+     *
+     * @return the registered block holder
+     */
+    fun registerBlocks(): KimJongUn3AddonBlocks {
+        if (registeredBlocks != null) {
+            return registeredBlocks as KimJongUn3AddonBlocks
+        }
+        val launchpad = buildBlock(KimJongUnItems.KimJongUnItem.LAUNCHPAD, "block/launchpadbase")
+        val missile = buildBlock(KimJongUnItems.KimJongUnItem.MISSILE, "block/missileside")
+        val icbm = buildBlock(KimJongUnItems.KimJongUnItem.ICBM, "block/icbmside")
+        registeredBlocks = KimJongUn3AddonBlocks(launchpad, missile, icbm)
+        return registeredBlocks as KimJongUn3AddonBlocks
     }
 
     /**
@@ -94,10 +114,39 @@ object KimJongUn3Addon : Addon() {
         return registeredItems ?: error("Kim Jong Un 3 items have not been registered yet.")
     }
 
+    /**
+     * Provides access to the registered block holder.
+     *
+     * @return the registered block holder
+     * @throws IllegalStateException if blocks were not registered yet
+     */
+    fun getBlocks(): KimJongUn3AddonBlocks {
+        return registeredBlocks ?: error("Kim Jong Un 3 blocks have not been registered yet.")
+    }
+
     private fun buildItem(item: KimJongUnItems.KimJongUnItem): NovaItem {
         return item(item.id()) {
             name(Component.text(item.displayName()))
             val loreComponents = item.lore().map { Component.text(it) }
+            if (loreComponents.isNotEmpty()) {
+                lore(*loreComponents.toTypedArray())
+            }
+        }
+    }
+
+    private fun buildBlock(item: KimJongUnItems.KimJongUnItem, modelPath: String): NovaBlock {
+        return block(item.id()) {
+            name(Component.text(item.displayName()))
+            stateBacked(BackingStateCategory.NOTE_BLOCK) {
+                createCubeModel(modelPath)
+            }
+        }
+    }
+
+    private fun buildBlockItem(block: NovaBlock, definition: KimJongUnItems.KimJongUnItem): NovaItem {
+        return item(block, definition.id()) {
+            name(Component.text(definition.displayName()))
+            val loreComponents = definition.lore().map { Component.text(it) }
             if (loreComponents.isNotEmpty()) {
                 lore(*loreComponents.toTypedArray())
             }

@@ -8,8 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,12 +33,15 @@ public class IcbmTargetingManager implements Listener {
 
     private final KimJongUn3Plugin plugin;
     private final KimJongUnItems items;
+    private final KimJongUnBlocks blocks;
     private final LaunchManager launchManager;
     private final Map<UUID, TargetingSession> sessions = new HashMap<>();
 
-    public IcbmTargetingManager(KimJongUn3Plugin plugin, KimJongUnItems items, LaunchManager launchManager) {
+    public IcbmTargetingManager(KimJongUn3Plugin plugin, KimJongUnItems items, KimJongUnBlocks blocks,
+                                LaunchManager launchManager) {
         this.plugin = plugin;
         this.items = items;
+        this.blocks = blocks;
         this.launchManager = launchManager;
     }
 
@@ -48,16 +49,17 @@ public class IcbmTargetingManager implements Listener {
      * Opens the targeting interface for the given player and launchpad.
      *
      * @param player the player initiating the launch
-     * @param launchpad the launchpad armor stand
+     * @param launchpadLocation the launchpad block location
      */
-    public void openTargeting(Player player, ArmorStand launchpad) {
+    public void openTargeting(Player player, Location launchpadLocation) {
         if (!plugin.getConfig().getBoolean("icbm.enabled", true)) {
             Vector direction = player.getLocation().getDirection();
-            launchManager.launchMissile(launchpad.getLocation(), direction);
+            Location launchLocation = launchpadLocation.clone().add(0.5, 0.0, 0.5);
+            launchManager.launchMissile(launchLocation, direction);
             consumeMissile(player);
             return;
         }
-        TargetingSession session = new TargetingSession(player, launchpad);
+        TargetingSession session = new TargetingSession(player, launchpadLocation);
         sessions.put(player.getUniqueId(), session);
         player.openInventory(session.inventory);
     }
@@ -133,13 +135,13 @@ public class IcbmTargetingManager implements Listener {
             player.sendMessage("You must hold an assembled ICBM to launch.");
             return;
         }
-        Entity launchpadEntity = Bukkit.getEntity(session.launchpadId);
-        if (!(launchpadEntity instanceof ArmorStand stand) || !launchManager.isLaunchpad(stand)) {
+        if (!blocks.isLaunchpad(session.launchpadLocation)) {
             player.sendMessage("The launchpad is no longer available.");
             closeSession(player);
             return;
         }
-        launchManager.launchIcbm(stand.getLocation(), session.targetLocation());
+        Location launchLocation = session.launchpadLocation.clone().add(0.5, 0.0, 0.5);
+        launchManager.launchIcbm(launchLocation, session.targetLocation());
         closeSession(player);
     }
 
@@ -176,17 +178,17 @@ public class IcbmTargetingManager implements Listener {
 
     private final class TargetingSession {
         private final Player player;
-        private final UUID launchpadId;
+        private final Location launchpadLocation;
         private final World world;
         private int targetX;
         private int targetY;
         private int targetZ;
         private final Inventory inventory;
 
-        private TargetingSession(Player player, ArmorStand launchpad) {
+        private TargetingSession(Player player, Location launchpadLocation) {
             this.player = player;
-            this.launchpadId = launchpad.getUniqueId();
-            this.world = launchpad.getWorld();
+            this.launchpadLocation = launchpadLocation;
+            this.world = launchpadLocation.getWorld();
             setTarget(player.getLocation());
             TargetingHolder holder = new TargetingHolder(player.getUniqueId());
             this.inventory = Bukkit.createInventory(holder, 27, Component.text("ICBM Targeting"));
