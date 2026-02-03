@@ -72,6 +72,45 @@ public class KimJongUnBlocks {
         return placeBlockById(location, LAUNCHPAD_ID, source);
     }
 
+    /**
+     * Attempts to place a missile block at the given location.
+     *
+     * @param location the target location
+     * @param source the placement source (player or plugin)
+     * @return true when the block is placed successfully
+     */
+    public boolean placeMissile(Location location, Object source) {
+        return placeBlockById(location, MISSILE_ID, source);
+    }
+
+    /**
+     * Attempts to place an ICBM block at the given location.
+     *
+     * @param location the target location
+     * @param source the placement source (player or plugin)
+     * @return true when the block is placed successfully
+     */
+    public boolean placeIcbm(Location location, Object source) {
+        return placeBlockById(location, ICBM_ID, source);
+    }
+
+    /**
+     * Checks whether any Nova block is present at the given location.
+     *
+     * @param location the location to inspect
+     * @return true if a Nova block is present
+     */
+    public boolean hasNovaBlock(Location location) {
+        if (!available) {
+            return false;
+        }
+        try {
+            return (boolean) hasBlockMethod.invoke(blockManager, location);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            return false;
+        }
+    }
+
     private boolean hasBlockId(Location location, String id) {
         if (!available) {
             return false;

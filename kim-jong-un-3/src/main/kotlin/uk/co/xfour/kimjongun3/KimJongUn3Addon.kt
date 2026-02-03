@@ -50,9 +50,9 @@ object KimJongUn3Addon : Addon() {
         if (registeredBlocks != null) {
             return registeredBlocks as KimJongUn3AddonBlocks
         }
-        val launchpad = buildBlock(KimJongUnItems.KimJongUnItem.LAUNCHPAD, "block/launchpadbase")
-        val missile = buildBlock(KimJongUnItems.KimJongUnItem.MISSILE, "block/missileside")
-        val icbm = buildBlock(KimJongUnItems.KimJongUnItem.ICBM, "block/icbmside")
+        val launchpad = buildBlock(KimJongUnItems.KimJongUnItem.LAUNCHPAD, "block/launchpad")
+        val missile = buildBlock(KimJongUnItems.KimJongUnItem.MISSILE, "block/missile")
+        val icbm = buildBlock(KimJongUnItems.KimJongUnItem.ICBM, "block/icbm")
         registeredBlocks = KimJongUn3AddonBlocks(launchpad, missile, icbm)
         return registeredBlocks as KimJongUn3AddonBlocks
     }
@@ -138,7 +138,7 @@ object KimJongUn3Addon : Addon() {
         return block(item.id()) {
             name(Component.text(item.displayName()))
             stateBacked(BackingStateCategory.NOTE_BLOCK) {
-                createCubeModel(modelPath)
+                getModel(modelPath)
             }
         }
     }
