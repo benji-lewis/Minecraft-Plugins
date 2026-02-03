@@ -84,4 +84,4 @@ jobs:
           password: $SFTP_PASSWORD
           port: $SFTP_PORT
           uploads: |
-          ./dist => ./plugins/
+            ./dist => ./plugins/
