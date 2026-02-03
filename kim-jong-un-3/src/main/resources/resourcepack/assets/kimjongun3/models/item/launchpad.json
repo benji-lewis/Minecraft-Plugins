@@ -3,13 +3,13 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "kimjongun3:launchpadcontrolpanel",
-		"1": "kimjongun3:launchpadcontrolpanelpole",
-		"2": "kimjongun3:launchpadbase",
-		"3": "kimjongun3:launchpadarm",
-		"4": "kimjongun3:launchpadarms",
-		"5": "kimjongun3:launchpadbrace",
-		"particle": "kimjongun3:launchpadcontrolpanel"
+		"0": "kimjongun3:item/launchpadcontrolpanel",
+		"1": "kimjongun3:item/launchpadcontrolpanelpole",
+		"2": "kimjongun3:item/launchpadbase",
+		"3": "kimjongun3:item/launchpadarm",
+		"4": "kimjongun3:item/launchpadarms",
+		"5": "kimjongun3:item/launchpadbrace",
+		"particle": "kimjongun3:item/launchpadcontrolpanel"
 	},
 	"elements": [
 		{
