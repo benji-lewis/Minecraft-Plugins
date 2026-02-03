@@ -21,23 +21,39 @@ public class KimJongUnBlocks {
     private final Method placeBlockMethod;
     private final Object blockRegistry;
     private final Method getBlockByIdMethod;
+    private final boolean available;
 
     public KimJongUnBlocks() {
+        Object manager = null;
+        Method hasBlock = null;
+        Method getBlock = null;
+        Method placeBlock = null;
+        Object registry = null;
+        Method getBlockById = null;
+        boolean isAvailable = false;
         try {
             Class<?> managerClass = Class.forName(BLOCK_MANAGER_CLASS);
             Field instanceField = managerClass.getField("INSTANCE");
-            this.blockManager = instanceField.get(null);
-            this.hasBlockMethod = managerClass.getMethod("hasBlock", Location.class);
-            this.getBlockMethod = managerClass.getMethod("getBlock", Location.class);
-            this.placeBlockMethod = managerClass.getMethod("placeBlock", Location.class, Object.class, Object.class,
-                boolean.class);
+            manager = instanceField.get(null);
+            hasBlock = managerClass.getMethod("hasBlock", Location.class);
+            getBlock = managerClass.getMethod("getBlock", Location.class);
+            placeBlock = resolvePlaceBlockMethod(managerClass);
             Class<?> registryClass = Class.forName(BLOCK_REGISTRY_CLASS);
             Field registryInstanceField = registryClass.getField("INSTANCE");
-            this.blockRegistry = registryInstanceField.get(null);
-            this.getBlockByIdMethod = registryClass.getMethod("get", String.class);
+            registry = registryInstanceField.get(null);
+            getBlockById = registryClass.getMethod("get", String.class);
+            isAvailable = manager != null && hasBlock != null && getBlock != null && placeBlock != null
+                && registry != null && getBlockById != null;
         } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException("Nova block manager is unavailable.", e);
+            isAvailable = false;
         }
+        this.blockManager = manager;
+        this.hasBlockMethod = hasBlock;
+        this.getBlockMethod = getBlock;
+        this.placeBlockMethod = placeBlock;
+        this.blockRegistry = registry;
+        this.getBlockByIdMethod = getBlockById;
+        this.available = isAvailable;
     }
 
     public boolean isLaunchpad(Location location) {
@@ -57,6 +73,9 @@ public class KimJongUnBlocks {
     }
 
     private boolean hasBlockId(Location location, String id) {
+        if (!available) {
+            return false;
+        }
         try {
             boolean hasBlock = (boolean) hasBlockMethod.invoke(blockManager, location);
             if (!hasBlock) {
@@ -78,6 +97,9 @@ public class KimJongUnBlocks {
     }
 
     private boolean placeBlockById(Location location, String id, Object source) {
+        if (!available) {
+            return false;
+        }
         try {
             Object block = getBlockByIdMethod.invoke(blockRegistry, id);
             if (block == null) {
@@ -98,5 +120,18 @@ public class KimJongUnBlocks {
         } catch (NoSuchMethodException e) {
             return null;
         }
+    }
+
+    private Method resolvePlaceBlockMethod(Class<?> managerClass) {
+        for (Method method : managerClass.getMethods()) {
+            if (!method.getName().equals("placeBlock")) {
+                continue;
+            }
+            Class<?>[] params = method.getParameterTypes();
+            if (params.length == 4 && params[0] == Location.class && params[3] == boolean.class) {
+                return method;
+            }
+        }
+        return null;
     }
 }
