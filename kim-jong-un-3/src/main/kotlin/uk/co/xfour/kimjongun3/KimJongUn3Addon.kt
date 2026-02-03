@@ -138,7 +138,7 @@ object KimJongUn3Addon : Addon() {
         return block(item.id()) {
             name(Component.text(item.displayName()))
             stateBacked(BackingStateCategory.NOTE_BLOCK) {
-                getModel(modelPath)
+                createCubeModel(modelPath)
             }
         }
     }
