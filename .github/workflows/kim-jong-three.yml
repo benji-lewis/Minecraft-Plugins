@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test-kim-jong-un-3
     if: github.event_name == 'pull_request'
-    environment: testing
+    environment: Testing Server
     steps:
       - uses: actions/download-artifact@v4
         with:
