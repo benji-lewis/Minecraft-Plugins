@@ -13,10 +13,14 @@ public class KimJongUnBlocks {
     private static final String MISSILE_ID = "kimjongun3:missile";
     private static final String ICBM_ID = "kimjongun3:icbm";
     private static final String BLOCK_MANAGER_CLASS = "xyz.xenondevs.nova.api.ApiBlockManager";
+    private static final String BLOCK_REGISTRY_CLASS = "xyz.xenondevs.nova.api.ApiBlockRegistry";
 
     private final Object blockManager;
     private final Method hasBlockMethod;
     private final Method getBlockMethod;
+    private final Method placeBlockMethod;
+    private final Object blockRegistry;
+    private final Method getBlockByIdMethod;
 
     public KimJongUnBlocks() {
         try {
@@ -25,6 +29,12 @@ public class KimJongUnBlocks {
             this.blockManager = instanceField.get(null);
             this.hasBlockMethod = managerClass.getMethod("hasBlock", Location.class);
             this.getBlockMethod = managerClass.getMethod("getBlock", Location.class);
+            this.placeBlockMethod = managerClass.getMethod("placeBlock", Location.class, Object.class, Object.class,
+                boolean.class);
+            Class<?> registryClass = Class.forName(BLOCK_REGISTRY_CLASS);
+            Field registryInstanceField = registryClass.getField("INSTANCE");
+            this.blockRegistry = registryInstanceField.get(null);
+            this.getBlockByIdMethod = registryClass.getMethod("get", String.class);
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException("Nova block manager is unavailable.", e);
         }
@@ -40,6 +50,10 @@ public class KimJongUnBlocks {
 
     public boolean isIcbm(Location location) {
         return hasBlockId(location, ICBM_ID);
+    }
+
+    public boolean placeLaunchpad(Location location, Object source) {
+        return placeBlockById(location, LAUNCHPAD_ID, source);
     }
 
     private boolean hasBlockId(Location location, String id) {
@@ -58,6 +72,19 @@ public class KimJongUnBlocks {
             }
             Object blockId = invokeNoArg(block, "getId");
             return blockId != null && blockId.toString().equals(id);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            return false;
+        }
+    }
+
+    private boolean placeBlockById(Location location, String id, Object source) {
+        try {
+            Object block = getBlockByIdMethod.invoke(blockRegistry, id);
+            if (block == null) {
+                return false;
+            }
+            placeBlockMethod.invoke(blockManager, location, block, source, true);
+            return true;
         } catch (IllegalAccessException | InvocationTargetException e) {
             return false;
         }

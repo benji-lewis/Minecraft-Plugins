@@ -3,6 +3,7 @@ package uk.co.xfour.kimjongun3;
 import java.util.Optional;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -59,12 +60,26 @@ public class KimJongUnListener implements Listener {
         if (event.getClickedBlock() == null) {
             return;
         }
-        Location blockLocation = event.getClickedBlock().getLocation();
+        ItemStack held = event.getPlayer().getInventory().getItemInMainHand();
+        Optional<KimJongUnItems.KimJongUnItem> itemType = items.identify(held);
+        Block clickedBlock = event.getClickedBlock();
+        Location blockLocation = clickedBlock.getLocation();
+        if (itemType.isPresent() && itemType.get() == KimJongUnItems.KimJongUnItem.LAUNCHPAD) {
+            Block targetBlock = clickedBlock.getRelative(event.getBlockFace());
+            if (targetBlock.isReplaceable()) {
+                Location targetLocation = targetBlock.getLocation();
+                if (blocks.placeLaunchpad(targetLocation, event.getPlayer())) {
+                    event.setCancelled(true);
+                    if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                        held.setAmount(held.getAmount() - 1);
+                    }
+                    return;
+                }
+            }
+        }
         if (!blocks.isLaunchpad(blockLocation)) {
             return;
         }
-        ItemStack held = event.getPlayer().getInventory().getItemInMainHand();
-        Optional<KimJongUnItems.KimJongUnItem> itemType = items.identify(held);
         if (itemType.isEmpty()) {
             return;
         }
