@@ -10,7 +10,6 @@ import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,31 +25,6 @@ public class LaunchManager {
         this.plugin = plugin;
         this.items = items;
         this.falloutManager = falloutManager;
-    }
-
-    public ArmorStand spawnLaunchpad(Location location) {
-        World world = location.getWorld();
-        if (world == null) {
-            return null;
-        }
-        ArmorStand stand = (ArmorStand) world.spawnEntity(location, EntityType.ARMOR_STAND);
-        stand.setInvisible(true);
-        stand.setMarker(false);
-        stand.setGravity(false);
-        stand.setSmall(true);
-        stand.setSilent(true);
-        stand.setInvulnerable(true);
-        stand.setBasePlate(false);
-        stand.setArms(false);
-        stand.setCollidable(false);
-        stand.setCanPickupItems(false);
-        stand.getEquipment().setHelmet(items.createItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD));
-        stand.getPersistentDataContainer().set(items.keys().launchpadKey, PersistentDataType.BYTE, (byte) 1);
-        return stand;
-    }
-
-    public boolean isLaunchpad(ArmorStand stand) {
-        return stand.getPersistentDataContainer().has(items.keys().launchpadKey, PersistentDataType.BYTE);
     }
 
     public void launchMissile(Location launchLocation, Vector direction) {

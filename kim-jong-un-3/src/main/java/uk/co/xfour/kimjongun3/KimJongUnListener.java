@@ -3,29 +3,28 @@ package uk.co.xfour.kimjongun3;
 import java.util.Optional;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 
 public class KimJongUnListener implements Listener {
     private final KimJongUn3Plugin plugin;
     private final KimJongUnItems items;
+    private final KimJongUnBlocks blocks;
     private final LaunchManager launchManager;
     private final IcbmTargetingManager targetingManager;
 
-    public KimJongUnListener(KimJongUn3Plugin plugin, KimJongUnItems items, LaunchManager launchManager,
-                             IcbmTargetingManager targetingManager) {
+    public KimJongUnListener(KimJongUn3Plugin plugin, KimJongUnItems items, KimJongUnBlocks blocks,
+                             LaunchManager launchManager, IcbmTargetingManager targetingManager) {
         this.plugin = plugin;
         this.items = items;
+        this.blocks = blocks;
         this.launchManager = launchManager;
         this.targetingManager = targetingManager;
     }
@@ -50,46 +49,18 @@ public class KimJongUnListener implements Listener {
     }
 
     @EventHandler
-    public void onLaunchpadPlace(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND || event.getItem() == null) {
+    public void onLaunchpadInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND || !event.getAction().isRightClick()) {
             return;
         }
         if (!event.getPlayer().hasPermission("kimjongun3.use")) {
-            return;
-        }
-        Optional<KimJongUnItems.KimJongUnItem> itemType = items.identify(event.getItem());
-        if (itemType.isEmpty() || itemType.get() != KimJongUnItems.KimJongUnItem.LAUNCHPAD) {
-            return;
-        }
-        if (!event.getAction().isRightClick()) {
             return;
         }
         if (event.getClickedBlock() == null) {
             return;
         }
-        event.setCancelled(true);
-        Location location = event.getClickedBlock().getLocation().add(0.5, 1.0, 0.5);
-        ArmorStand stand = launchManager.spawnLaunchpad(location);
-        if (stand == null) {
-            return;
-        }
-        if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
-            ItemStack stack = event.getItem();
-            stack.setAmount(stack.getAmount() - 1);
-        }
-    }
-
-    @EventHandler
-    public void onLaunchpadInteract(PlayerInteractAtEntityEvent event) {
-        Entity entity = event.getRightClicked();
-        if (entity.getType() != EntityType.ARMOR_STAND) {
-            return;
-        }
-        ArmorStand stand = (ArmorStand) entity;
-        if (!launchManager.isLaunchpad(stand)) {
-            return;
-        }
-        if (!event.getPlayer().hasPermission("kimjongun3.use")) {
+        Location blockLocation = event.getClickedBlock().getLocation();
+        if (!blocks.isLaunchpad(blockLocation)) {
             return;
         }
         ItemStack held = event.getPlayer().getInventory().getItemInMainHand();
@@ -98,12 +69,14 @@ public class KimJongUnListener implements Listener {
             return;
         }
         event.setCancelled(true);
+        Location launchLocation = blockLocation.clone().add(0.5, 0.0, 0.5);
         if (itemType.get() == KimJongUnItems.KimJongUnItem.ICBM) {
-            targetingManager.openTargeting(event.getPlayer(), stand);
+            targetingManager.openTargeting(event.getPlayer(), blockLocation);
             return;
         }
         if (itemType.get() == KimJongUnItems.KimJongUnItem.MISSILE) {
-            launchManager.launchMissile(stand.getLocation(), event.getPlayer().getLocation().getDirection());
+            Vector direction = event.getPlayer().getLocation().getDirection();
+            launchManager.launchMissile(launchLocation, direction);
             if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
                 held.setAmount(held.getAmount() - 1);
             }

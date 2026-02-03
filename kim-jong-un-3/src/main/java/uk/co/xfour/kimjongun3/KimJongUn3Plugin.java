@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class KimJongUn3Plugin extends JavaPlugin {
     private KimJongUnItems items;
+    private KimJongUnBlocks blocks;
     private KimJongUnSpawner spawner;
     private LaunchManager launchManager;
     private RadiationSuit radiationSuit;
@@ -41,13 +42,17 @@ public class KimJongUn3Plugin extends JavaPlugin {
     private void initializeAddon() {
         KimJongUn3AddonItems addonItems = KimJongUn3Addon.INSTANCE.registerItems();
         items = new KimJongUnItems(this, addonItems);
+        blocks = new KimJongUnBlocks();
         radiationSuit = new RadiationSuit(this, items.keys());
         falloutManager = new FalloutManager(this, radiationSuit);
         launchManager = new LaunchManager(this, items, falloutManager);
         spawner = new KimJongUnSpawner(this, items);
-        targetingManager = new IcbmTargetingManager(this, items, launchManager);
+        targetingManager = new IcbmTargetingManager(this, items, blocks, launchManager);
 
-        Bukkit.getPluginManager().registerEvents(new KimJongUnListener(this, items, launchManager, targetingManager), this);
+        Bukkit.getPluginManager().registerEvents(
+            new KimJongUnListener(this, items, blocks, launchManager, targetingManager),
+            this
+        );
         Bukkit.getPluginManager().registerEvents(targetingManager, this);
 
         registerCommand();
