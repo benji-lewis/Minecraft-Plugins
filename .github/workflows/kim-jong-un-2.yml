@@ -33,3 +33,65 @@ jobs:
         with:
           name: kim-jong-un-2-resourcepack
           path: kim-jong-un-2/build/kim-jong-un-2-resourcepack.zip
+
+  deploy-testing:
+    runs-on: ubuntu-latest
+    needs: test-kim-jong-un-2
+    if: github.event_name == 'pull_request'
+    environment: testing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: kim-jong-un-2-jar
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: kim-jong-un-2-resourcepack
+          path: dist
+      - name: Upload artifacts to testing server
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ vars.SFTP_URL }}
+          username: ${{ vars.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ vars.SFTP_PORT }}
+          uploads: ./dist/kim-jong-un-2-1.0.0.jar => ./plugins/
+      - name: Upload resource pack to testing server
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ vars.SFTP_URL }}
+          username: ${{ vars.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ vars.SFTP_PORT }}
+          uploads: ./dist/kim-jong-un-2-resourcepack.zip => ./plugins/
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: test-kim-jong-un-2
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: kim-jong-un-2-jar
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: kim-jong-un-2-resourcepack
+          path: dist
+      - name: Upload artifacts to production server
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ vars.SFTP_URL }}
+          username: ${{ vars.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ vars.SFTP_PORT }}
+          uploads: ./dist/kim-jong-un-2-1.0.0.jar => ./plugins/
+      - name: Upload resource pack to production server
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ vars.SFTP_URL }}
+          username: ${{ vars.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ vars.SFTP_PORT }}
+          uploads: ./dist/kim-jong-un-2-resourcepack.zip => ./plugins/

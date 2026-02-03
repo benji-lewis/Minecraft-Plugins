@@ -26,3 +26,41 @@ jobs:
         with:
           name: kim-jong-un-3-addon
           path: kim-jong-un-3/build/libs/kim-jong-un-3-1.0.0.jar
+
+  deploy-testing:
+    runs-on: ubuntu-latest
+    needs: test-kim-jong-un-3
+    if: github.event_name == 'pull_request'
+    environment: testing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: kim-jong-un-3-addon
+          path: dist
+      - name: Upload addon to testing server
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ vars.SFTP_URL }}
+          username: ${{ vars.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ vars.SFTP_PORT }}
+          uploads: ./dist/kim-jong-un-3-1.0.0.jar => ./plugins/
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: test-kim-jong-un-3
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: kim-jong-un-3-addon
+          path: dist
+      - name: Upload addon to production server
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ vars.SFTP_URL }}
+          username: ${{ vars.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ vars.SFTP_PORT }}
+          uploads: ./dist/kim-jong-un-3-1.0.0.jar => ./plugins/
