@@ -1,11 +1,12 @@
 name: Kim Jong Un 2
 
-on:
-  push:
-    branches: ["main", "develop"]
-    paths: ["kim-jong-un-2/**"]
-  pull_request:
-    paths: ["kim-jong-un-2/**"]
+on: workflow_dispatch
+# on:
+#   push:
+#     branches: ["main", "develop"]
+#     paths: ["kim-jong-un-2/**"]
+#   pull_request:
+#     paths: ["kim-jong-un-2/**"]
 
 jobs:
   test-kim-jong-un-2:
