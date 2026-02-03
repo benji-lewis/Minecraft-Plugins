@@ -56,7 +56,7 @@ jobs:
           SFTP_URL: ${{ vars.SFTP_URL }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
         run: |
-          lftp -c "set sftp:auto-confirm yes; set cmd:fail-exit yes; open -u \"$SFTP_USERNAME\",\"$SFTP_PASSWORD\" sftp://$SFTP_URL; cd plugins; put dist/kim-jong-un-2-1.0.0.jar; put dist/kim-jong-un-2-resourcepack.zip"
+          lftp -c "set sftp:auto-confirm yes; set cmd:fail-exit yes; open -u \"$SFTP_USERNAME\",\"$SFTP_PASSWORD\" $SFTP_URL; cd plugins; put dist/kim-jong-un-2-1.0.0.jar; put dist/kim-jong-un-2-resourcepack.zip"
   deploy-production:
     runs-on: ubuntu-latest
     needs: test-kim-jong-un-2
@@ -79,4 +79,4 @@ jobs:
           SFTP_URL: ${{ vars.SFTP_URL }}
           SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
         run: |
-          lftp -c "set sftp:auto-confirm yes; set cmd:fail-exit yes; open -u \"$SFTP_USERNAME\",\"$SFTP_PASSWORD\" sftp://$SFTP_URL; cd plugins; put dist/kim-jong-un-2-1.0.0.jar; put dist/kim-jong-un-2-resourcepack.zip"
+          lftp -c "set sftp:auto-confirm yes; set cmd:fail-exit yes; open -u \"$SFTP_USERNAME\",\"$SFTP_PASSWORD\" $SFTP_URL; cd plugins; put dist/kim-jong-un-2-1.0.0.jar; put dist/kim-jong-un-2-resourcepack.zip"
