@@ -105,7 +105,11 @@ public class KimJongUnBlocks {
             if (block == null) {
                 return false;
             }
-            placeBlockMethod.invoke(blockManager, location, block, source, true);
+            Method method = resolvePlaceBlockMethod(placeBlockMethod, block.getClass());
+            if (method == null) {
+                return false;
+            }
+            method.invoke(blockManager, location, block, source, true);
             return true;
         } catch (IllegalAccessException | InvocationTargetException e) {
             return false;
@@ -129,6 +133,29 @@ public class KimJongUnBlocks {
             }
             Class<?>[] params = method.getParameterTypes();
             if (params.length == 4 && params[0] == Location.class && params[3] == boolean.class) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    private Method resolvePlaceBlockMethod(Method current, Class<?> blockClass) {
+        if (current != null) {
+            Class<?>[] params = current.getParameterTypes();
+            if (params.length == 4 && params[1].isAssignableFrom(blockClass)) {
+                return current;
+            }
+        }
+        if (blockManager == null) {
+            return null;
+        }
+        for (Method method : blockManager.getClass().getMethods()) {
+            if (!method.getName().equals("placeBlock")) {
+                continue;
+            }
+            Class<?>[] params = method.getParameterTypes();
+            if (params.length == 4 && params[0] == Location.class && params[3] == boolean.class
+                && params[1].isAssignableFrom(blockClass)) {
                 return method;
             }
         }
