@@ -3,7 +3,9 @@
 - Each plugin must live in its own top-level folder.
 - Every plugin folder must include its own `AGENTS.md` with scoped instructions for that plugin.
 - Plugins must be built for PaperMC not Spigot or bukkit
-- When new blocks/ machines are needed create a Nova addon. (https://docs.xenondevs.xyz/nova/addon/ - Docs also available at <docs/Nova-Docs/docs/nova/addon>)
+- When new blocks/ machines are needed create a Nova addon. 
+    - Nova docs: https://docs.xenondevs.xyz/nova/addon/ - Docs also available at <docs/Nova-Docs/docs/nova/addon>
+    - Nova Kdocs: https://nova.dokka.xenondevs.xyz/index.html
 - Use uk.co.xfour.{projectName} as a standard identifier format. Where uk.co is not allowed use com.xfour...
 - Unit tests should be written & integrated with GitHub CI
 - GitHub CI should also publish the built JARs ready for distribution as artifacts. 
