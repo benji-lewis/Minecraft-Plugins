@@ -50,9 +50,9 @@ object KimJongUn3Addon : Addon() {
         if (registeredBlocks != null) {
             return registeredBlocks as KimJongUn3AddonBlocks
         }
-        val launchpad = buildBlock(KimJongUnItems.KimJongUnItem.LAUNCHPAD, "kimjongun3:block/launchpad")
-        val missile = buildBlock(KimJongUnItems.KimJongUnItem.MISSILE, "kimjongun3:block/missile")
-        val icbm = buildBlock(KimJongUnItems.KimJongUnItem.ICBM, "kimjongun3:block/ICBM")
+        val launchpad = buildBlock(KimJongUnItems.KimJongUnItem.LAUNCHPAD, "block/launchpad")
+        val missile = buildBlock(KimJongUnItems.KimJongUnItem.MISSILE, "block/missile")
+        val icbm = buildBlock(KimJongUnItems.KimJongUnItem.ICBM, "block/icbm")
         registeredBlocks = KimJongUn3AddonBlocks(launchpad, missile, icbm)
         return registeredBlocks as KimJongUn3AddonBlocks
     }
