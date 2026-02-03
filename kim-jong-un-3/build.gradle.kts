@@ -43,20 +43,7 @@ sourceSets {
     }
 }
 
-val generateResourcePackTextures = tasks.register<Exec>("generateResourcePackTextures") {
-    group = "build"
-    description = "Generates Nova resource pack textures for the addon."
-    val outputDir = generatedResourcePackDir.map { it.dir("assets/kimjongun3/textures/item").asFile }
-    commandLine(
-        "python3",
-        "scripts/generate_textures.py",
-        "--output-dir",
-        outputDir.get().absolutePath
-    )
-}
-
 tasks.processResources {
-    dependsOn(generateResourcePackTextures)
 }
 
 tasks.test {
