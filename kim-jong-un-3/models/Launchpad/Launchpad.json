@@ -3,13 +3,13 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "models:textures/launchpadControlPanel",
-		"1": "models:controlPanelPole",
-		"2": "models:launchpadBase",
-		"3": "models:launchpadArm",
-		"4": "models:launchpadArms",
-		"5": "models:launchpadBrace",
-		"particle": "models:textures/launchpadControlPanel"
+		"0": "Launchpad:launchpadcontrolpanel",
+		"1": "Launchpad:launchpadcontrolpanelpole",
+		"2": "Launchpad:launchpadbase",
+		"3": "Launchpad:launchpadarm",
+		"4": "Launchpad:launchpadarms",
+		"5": "Launchpad:launchpadbrace",
+		"particle": "Launchpad:launchpadcontrolpanel"
 	},
 	"elements": [
 		{
@@ -108,6 +108,20 @@
 			"rotation": [70, 90, 0],
 			"translation": [0, 4.25, 0],
 			"scale": [0.5, 0.5, 0.5]
+		},
+		"gui": {
+			"rotation": [0, -90, 0],
+			"translation": [0, -4, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [0, 0, -8.5]
+		},
+		"on_shelf": {
+			"rotation": [0, -90, 0],
+			"translation": [0, 0, 5],
+			"scale": [0.75, 0.75, 0.75]
 		}
 	}
 }

@@ -46,6 +46,7 @@ docs/site/plugins/Utility/floodgate/index.html
 docs/site/plugins/Waypoints/index.html
 docs/site/plugins/voicechat/index.html
 *.jar
+!gradle-wrapper.jar
 target/
 kim-jong-un-2/build/
 kim-jong-un-3/.gradle/
