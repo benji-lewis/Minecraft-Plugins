@@ -2,11 +2,11 @@
 	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "textures/missileSide",
-		"1": "textures/missileBooster",
-		"2": "textures/missileSubtop",
-		"3": "textures/missileTip",
-		"particle": "textures/missileSide"
+		"0": "Missile:missileSide",
+		"1": "Missile:missileBooster",
+		"2": "Missile:missileSubtop",
+		"3": "Missile:missileTip",
+		"particle": "Missile:missileSide"
 	},
 	"elements": [
 		{
