@@ -26,3 +26,41 @@ jobs:
         with:
           name: just-stop-oil-jar
           path: just-stop-oil/target/just-stop-oil-1.0.0.jar
+
+  deploy-testing:
+    runs-on: ubuntu-latest
+    needs: test-just-stop-oil
+    if: github.event_name == 'pull_request'
+    environment: Testing Server
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: just-stop-oil-jar
+          path: dist
+      - name: Upload jar to testing server
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ vars.SFTP_URL }}
+          username: ${{ vars.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ vars.SFTP_PORT }}
+          uploads: ./dist/just-stop-oil-1.0.0.jar => ./plugins/
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: test-just-stop-oil
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: Production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: just-stop-oil-jar
+          path: dist
+      - name: Upload jar to production server
+        uses: Dylan700/sftp-upload-action@latest
+        with:
+          server: ${{ vars.SFTP_URL }}
+          username: ${{ vars.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ vars.SFTP_PORT }}
+          uploads: ./dist/just-stop-oil-1.0.0.jar => ./plugins/
