@@ -17,9 +17,14 @@ public class KimJongUn3Plugin extends JavaPlugin {
     private AutoUpdater autoUpdater;
 
     @Override
+    public void onLoad() {
+        KimJongUn3Addon.INSTANCE.initializeFrom(this);
+        KimJongUn3Addon.INSTANCE.registerItems();
+    }
+
+    @Override
     public void onEnable() {
         saveDefaultConfig();
-        KimJongUn3Addon.INSTANCE.initializeFrom(this);
         initializeAddon();
     }
 
