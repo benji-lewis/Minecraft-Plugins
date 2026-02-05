@@ -15,3 +15,5 @@
 - Player documentation must go in <docs/MC-Docs/docs/plugins>
 - Each plugin must have a top-level README. 
 - CI deployments use GitHub environments: pull request builds deploy to the testing environment and main branch builds deploy to production using SFTP into the plugins/ directory (vars: SFTP_USERNAME, SFTP_URL, SFTP_PORT; secret: SFTP_PASSWORD).
+- CI workflows should set a unique per-build plugin version (for example using github.run_number) and deployments must remove older plugin JAR versions before uploading the new one.
+
