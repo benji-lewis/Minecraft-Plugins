@@ -9,33 +9,33 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import xyz.xenondevs.nova.world.item.NovaItem;
 
 /**
- * Handles Nova item creation and identification for the Kim Jong Un 3 addon.
+ * Handles custom item creation and identification for the Kim Jong Un 3 plugin.
  */
 public class KimJongUnItems {
     private final KimJongUnKeys keys;
     private final Random random = new Random();
-    private final KimJongUn3AddonItems addonItems;
+    private final FileConfiguration config;
 
     /**
      * Creates a new Kim Jong Un item helper.
      *
      * @param plugin owning plugin instance
-     * @param addonItems registered Nova item mappings
      */
-    public KimJongUnItems(KimJongUn3Plugin plugin, KimJongUn3AddonItems addonItems) {
+    public KimJongUnItems(KimJongUn3Plugin plugin) {
         this.keys = new KimJongUnKeys(plugin);
-        this.addonItems = addonItems;
+        this.config = plugin.getConfig();
     }
 
     /**
-     * Returns the persistent data keys used by the addon.
+     * Returns the persistent data keys used by the plugin.
      *
      * @return the keys used by Kim Jong Un 3
      */
@@ -44,17 +44,22 @@ public class KimJongUnItems {
     }
 
     /**
-     * Creates a configured Nova-backed ItemStack for the requested item.
+     * Creates a configured ItemStack for the requested item.
      *
      * @param item the Kim Jong Un item definition
      * @return a matching ItemStack
      */
     public ItemStack createItem(KimJongUnItem item) {
-        NovaItem novaItem = addonItems.itemFor(item);
-        ItemStack stack = novaItem.createItemStack(1);
+        ItemStack stack = new ItemStack(item.material());
         ItemMeta meta = stack.getItemMeta();
         if (meta != null) {
+            meta.setDisplayName(item.displayName());
+            meta.setLore(item.lore());
             meta.getPersistentDataContainer().set(keys.itemKey, PersistentDataType.STRING, item.id());
+            int modelData = modelData(item);
+            if (modelData > 0) {
+                meta.setCustomModelData(modelData);
+            }
             stack.setItemMeta(meta);
         }
         return stack;
@@ -152,25 +157,50 @@ public class KimJongUnItems {
         return true;
     }
 
+    private int modelData(KimJongUnItem item) {
+        String path = "models." + item.configKey();
+        if (config.contains(path)) {
+            return config.getInt(path, 0);
+        }
+        return item.defaultModelData();
+    }
+
     public enum KimJongUnItem {
-        MISSILE_NOSE("missile_nose", "Missile Nose Cone", List.of("A precision-guided nose cone.")),
-        MISSILE_BODY("missile_body", "Missile Body", List.of("Reinforced fuselage plating.")),
-        MISSILE_ENGINE("missile_engine", "Missile Engine", List.of("Thrust vectoring engine.")),
-        LAUNCHPAD_BASE("launchpad_base", "Launchpad Base", List.of("Stabilized platform core.")),
-        LAUNCHPAD_CONTROL("launchpad_control", "Launchpad Control", List.of("Guidance and ignition panel.")),
-        LAUNCHPAD_SUPPORT("launchpad_support", "Launchpad Support", List.of("Hydraulic support struts.")),
-        ICBM_CORE("icbm_core", "ICBM Core", List.of("Encrypted guidance matrix.")),
-        MISSILE("missile", "Assembled Missile", List.of("Handle with care.")),
-        ICBM("icbm", "Assembled ICBM", List.of("Strategic payload authorized.")),
-        LAUNCHPAD("launchpad", "Assembled Launchpad", List.of("Place on flat ground."));
+        MISSILE_NOSE("missile_nose", "Missile Nose Cone", Material.IRON_INGOT,
+            "missile-nose-custom-model-data", 5101, List.of("A precision-guided nose cone.")),
+        MISSILE_BODY("missile_body", "Missile Body", Material.IRON_INGOT,
+            "missile-body-custom-model-data", 5102, List.of("Reinforced fuselage plating.")),
+        MISSILE_ENGINE("missile_engine", "Missile Engine", Material.IRON_INGOT,
+            "missile-engine-custom-model-data", 5103, List.of("Thrust vectoring engine.")),
+        LAUNCHPAD_BASE("launchpad_base", "Launchpad Base", Material.NETHERITE_SCRAP,
+            "launchpad-base-custom-model-data", 5104, List.of("Stabilized platform core.")),
+        LAUNCHPAD_CONTROL("launchpad_control", "Launchpad Control", Material.NETHERITE_SCRAP,
+            "launchpad-control-custom-model-data", 5105, List.of("Guidance and ignition panel.")),
+        LAUNCHPAD_SUPPORT("launchpad_support", "Launchpad Support", Material.NETHERITE_SCRAP,
+            "launchpad-support-custom-model-data", 5106, List.of("Hydraulic support struts.")),
+        ICBM_CORE("icbm_core", "ICBM Core", Material.NETHER_STAR,
+            "icbm-core-custom-model-data", 5107, List.of("Encrypted guidance matrix.")),
+        MISSILE("missile", "Assembled Missile", Material.NETHER_STAR,
+            "missile-custom-model-data", 5110, List.of("Handle with care.")),
+        ICBM("icbm", "Assembled ICBM", Material.NETHER_STAR,
+            "icbm-custom-model-data", 5111, List.of("Strategic payload authorized.")),
+        LAUNCHPAD("launchpad", "Assembled Launchpad", Material.NETHER_STAR,
+            "launchpad-custom-model-data", 5112, List.of("Place on flat ground."));
 
         private final String id;
         private final String displayName;
+        private final Material material;
+        private final String configKey;
+        private final int defaultModelData;
         private final List<String> lore;
 
-        KimJongUnItem(String id, String displayName, List<String> lore) {
+        KimJongUnItem(String id, String displayName, Material material, String configKey,
+                      int defaultModelData, List<String> lore) {
             this.id = id;
             this.displayName = displayName;
+            this.material = material;
+            this.configKey = configKey;
+            this.defaultModelData = defaultModelData;
             this.lore = lore;
         }
 
@@ -180,6 +210,18 @@ public class KimJongUnItems {
 
         public String displayName() {
             return displayName;
+        }
+
+        public Material material() {
+            return material;
+        }
+
+        public String configKey() {
+            return configKey;
+        }
+
+        public int defaultModelData() {
+            return defaultModelData;
         }
 
         public List<String> lore() {

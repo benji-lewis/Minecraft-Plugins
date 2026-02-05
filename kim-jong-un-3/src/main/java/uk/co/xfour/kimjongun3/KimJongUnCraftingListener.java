@@ -22,7 +22,7 @@ public class KimJongUnCraftingListener implements Listener {
     }
 
     /**
-     * Replaces crafting outputs with addon items when valid ingredient IDs are present.
+     * Replaces crafting outputs with plugin items when valid ingredient IDs are present.
      *
      * @param event crafting preparation event
      */

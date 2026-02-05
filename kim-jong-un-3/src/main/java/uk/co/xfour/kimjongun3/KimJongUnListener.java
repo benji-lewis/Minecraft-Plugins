@@ -88,7 +88,7 @@ public class KimJongUnListener implements Listener {
             || itemType.get() == KimJongUnItems.KimJongUnItem.ICBM) {
             Block mountBlock = clickedBlock.getRelative(BlockFace.UP);
             Location mountLocation = mountBlock.getLocation();
-            if (mountBlock.isReplaceable() && !blocks.hasNovaBlock(mountLocation)) {
+            if (mountBlock.isReplaceable() && !blocks.hasPlacedBlock(mountLocation)) {
                 boolean placed = itemType.get() == KimJongUnItems.KimJongUnItem.ICBM
                     ? blocks.placeIcbm(mountLocation, event.getPlayer())
                     : blocks.placeMissile(mountLocation, event.getPlayer());

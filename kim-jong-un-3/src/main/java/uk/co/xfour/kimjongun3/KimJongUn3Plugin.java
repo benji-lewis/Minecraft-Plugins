@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Paper plugin entry point for the Kim Jong Un 3 Nova addon.
+ * Paper plugin entry point for Kim Jong Un 3.
  */
 public class KimJongUn3Plugin extends JavaPlugin {
     private KimJongUnItems items;
@@ -17,15 +17,9 @@ public class KimJongUn3Plugin extends JavaPlugin {
     private AutoUpdater autoUpdater;
 
     @Override
-    public void onLoad() {
-        KimJongUn3Addon.INSTANCE.initializeFrom(this);
-        KimJongUn3Addon.INSTANCE.registerItems();
-    }
-
-    @Override
     public void onEnable() {
         saveDefaultConfig();
-        initializeAddon();
+        initializePlugin();
     }
 
     @Override
@@ -44,9 +38,8 @@ public class KimJongUn3Plugin extends JavaPlugin {
         }
     }
 
-    private void initializeAddon() {
-        KimJongUn3AddonItems addonItems = KimJongUn3Addon.INSTANCE.registerItems();
-        items = new KimJongUnItems(this, addonItems);
+    private void initializePlugin() {
+        items = new KimJongUnItems(this);
         blocks = new KimJongUnBlocks();
         radiationSuit = new RadiationSuit(this, items.keys());
         falloutManager = new FalloutManager(this, radiationSuit);

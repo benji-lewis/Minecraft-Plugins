@@ -34,5 +34,5 @@ Use glowstone dust with leather armor pieces in the crafting grid to make:
 - **Radiation Suit Boots**
 
 ## Tips
-- Launchpads and missiles use Nova-managed item visuals.
+- Launchpads and missiles use custom-model item visuals from the plugin resource pack.
 - You need the `kimjongun3.use` permission to place and launch.

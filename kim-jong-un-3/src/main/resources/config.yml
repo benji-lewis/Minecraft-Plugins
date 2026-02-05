@@ -43,7 +43,7 @@ auto-update:
   enabled: true
   repository: "benji-lewis/Minecraft-Plugins"
   workflow: "kim-jong-three.yml"
-  artifact-name: "kim-jong-un-3-addon"
+  artifact-name: "kim-jong-un-3-plugin"
   update-file-name: "kim-jong-un-3.jar"
   github-token: ""
   timeout-seconds: 15
