@@ -3,7 +3,7 @@ import org.gradle.api.provider.Property
 import org.gradle.jvm.toolchain.JavaLauncher
 
 group = "uk.co.xfour.kimjongun3"
-version = "1.0.0"
+version = findProperty("pluginVersion")?.toString() ?: "1.0.0"
 
 plugins {
     alias(libs.plugins.kotlin)
