@@ -3,17 +3,17 @@
 ## Requirements
 - PaperMC 1.21+ (built against 1.21.4)
 - Java 21+
-- Nova 0.22+
+- No additional plugin dependencies required
 
 ## Installation
-1. Build the addon: `./gradlew addonJar -PoutDir="<path to your server addons folder>"` (from `kim-jong-un-3/`).
-2. Start the server to load the addon and generate `plugins/KimJongUn3/config.yml`.
+1. Build the plugin: `./gradlew jar` (from `kim-jong-un-3/`).
+2. Start the server to load the plugin and generate `plugins/KimJongUn3/config.yml`.
 
 ## Resource Pack Notes
-Kim Jong Un 3 is a Nova addon, so its items are integrated into Nova's generated resource pack. You can add custom textures and models under
-`kim-jong-un-3/src/main/resources/resourcepack/` if you want bespoke visuals, then regenerate Nova's resource pack as you normally would.
+Kim Jong Un 3 ships with resource-pack assets. You can add custom textures and models under
+`kim-jong-un-3/src/main/resources/resourcepack/` if you want bespoke visuals, then regenerate and distribute your resource pack.
 The texture generator writes to `kim-jong-un-3/build/generated/resourcepack/` by default and is invoked automatically during `processResources`.
-Run `python3 kim-jong-un-3/scripts/generate_textures.py` to regenerate the shipped textures before rebuilding the addon or Nova pack.
+Run `python3 kim-jong-un-3/scripts/generate_textures.py` to regenerate the shipped textures before rebuilding the plugin or resource pack.
 
 ## Configuration
 See `plugins/KimJongUn3/config.yml`:
@@ -45,6 +45,6 @@ Spawns the mob at your location.
 - `kimjongun3.use` — place launchpads and launch missiles.
 
 ## Auto-updater Notes
-The auto-updater checks the latest successful `main` workflow run for the `kim-jong-un-3-addon` artifact and
+The auto-updater checks the latest successful `main` workflow run for the `kim-jong-un-3-plugin` artifact and
 stages the jar in the `plugins/update/` folder. For private workflows or stricter rate limits, set
 `auto-update.github-token` to a GitHub token with `actions:read` access.

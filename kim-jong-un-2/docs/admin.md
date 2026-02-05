@@ -3,7 +3,6 @@
 ## Requirements
 - PaperMC 1.20+ (built against 1.21.4)
 - Java 17+
-- Optional: Nova (plugin will run without it; custom models rely on a resource pack, not Nova)
 
 ## Installation
 1. Build the plugin: `mvn -f kim-jong-un-2/pom.xml package`.
@@ -22,7 +21,6 @@ The pack includes `pack.mcmeta` (pack format 15 for 1.20+ compatibility) and the
 ```
 kim-jong-un-2/src/main/resources/resourcepack/
 ```
-Run `python3 kim-jong-un-2/scripts/build_resource_pack.py` to generate a ready-to-zip resource pack (including placeholder textures). Nova is not required for the visuals; the resource pack alone drives the 3D appearance.
 
 This repository intentionally excludes binary texture files. Add your own PNG textures at:
 - `assets/kimjongun2/textures/item/missile.png`
@@ -31,11 +29,6 @@ This repository intentionally excludes binary texture files. Add your own PNG te
 - `assets/kimjongun2/textures/item/launchpad_part.png`
 You can also generate placeholder textures by running
 `python3 kim-jong-un-2/scripts/generate_textures.py`, which writes PNGs into the resource pack folder.
-
-### Nova Resource Pack Users (No Config Changes)
-If your server already uses the Nova resource pack, you do not need to change Nova configuration. Just merge the files from
-`kim-jong-un-2/src/main/resources/resourcepack/` into the Nova resource pack folder and regenerate/redistribute the pack as you normally would for Nova.
-The custom model data values in `config.yml` are already aligned with the provided overrides, so no Nova item config edits are required.
 
 ## Configuration
 See `plugins/KimJongUn2/config.yml`:
@@ -62,6 +55,3 @@ Spawns the mob at your location.
 - `kimjongun2.admin` — admin commands.
 - `kimjongun2.spawn` — spawn command access.
 - `kimjongun2.use` — place launchpads and launch missiles.
-
-## Nova Note
-If you want to treat the launchpad/missile as Nova items/blocks, the provided custom model data files are compatible with Nova item packs. Map the same model data IDs in your Nova addon configuration as needed.

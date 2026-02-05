@@ -21,12 +21,12 @@ jobs:
           cache: gradle
       - name: Run tests
         run: gradle -p kim-jong-un-3 test --no-daemon
-      - name: Package addon jar
-        run: gradle -p kim-jong-un-3 addonJar -PpluginVersion=${PLUGIN_VERSION} -PoutDir=kim-jong-un-3/build/addons --no-daemon
-      - name: Upload addon artifact
+      - name: Package plugin jar
+        run: gradle -p kim-jong-un-3 jar -PpluginVersion=${PLUGIN_VERSION} --no-daemon
+      - name: Upload plugin artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kim-jong-un-3-addon
+          name: kim-jong-un-3-plugin
           path: kim-jong-un-3/build/libs/kim-jong-un-3-${{ env.PLUGIN_VERSION }}.jar
 
   deploy-testing:
@@ -39,9 +39,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: kim-jong-un-3-addon
+          name: kim-jong-un-3-plugin
           path: dist
-      - name: Delete old addon versions on testing server
+      - name: Delete old plugin versions on testing server
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ vars.SFTP_URL }}
@@ -49,7 +49,7 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
           script: rm -f ./plugins/kim-jong-un-3-*.jar
-      - name: Upload addon to testing server
+      - name: Upload plugin to testing server
         uses: Dylan700/sftp-upload-action@latest
         with:
           server: ${{ vars.SFTP_URL }}
@@ -68,9 +68,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: kim-jong-un-3-addon
+          name: kim-jong-un-3-plugin
           path: dist
-      - name: Delete old addon versions on production server
+      - name: Delete old plugin versions on production server
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ vars.SFTP_URL }}
@@ -78,7 +78,7 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
           script: rm -f ./plugins/kim-jong-un-3-*.jar
-      - name: Upload addon to production server
+      - name: Upload plugin to production server
         uses: Dylan700/sftp-upload-action@latest
         with:
           server: ${{ vars.SFTP_URL }}

@@ -53,7 +53,7 @@ public class AutoUpdater {
     private void updateIfNeeded() throws IOException, InterruptedException {
         String repo = plugin.getConfig().getString("auto-update.repository", DEFAULT_REPOSITORY);
         String workflow = plugin.getConfig().getString("auto-update.workflow", "kim-jong-three.yml");
-        String artifactName = plugin.getConfig().getString("auto-update.artifact-name", "kim-jong-un-3-addon");
+        String artifactName = plugin.getConfig().getString("auto-update.artifact-name", "kim-jong-un-3-plugin");
         String token = plugin.getConfig().getString("auto-update.github-token", "");
         plugin.getDataFolder().mkdirs();
         Optional<String> runId = fetchLatestRunId(repo, workflow, token);
