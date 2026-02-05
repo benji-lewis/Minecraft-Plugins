@@ -3,12 +3,12 @@ name: Kim Jong Un 3
 on:
   push:
     branches: ["main", "develop"]
-    paths: ["kim-jong-un-3/**"]
+    paths: ["kim-jong-un/**"]
   pull_request:
-    paths: ["kim-jong-un-3/**"]
+    paths: ["kim-jong-un/**"]
 
 jobs:
-  test-kim-jong-un-3:
+  test-kim-jong-un:
     runs-on: ubuntu-latest
     env:
       PLUGIN_VERSION: 1.0.${{ github.run_number }}
@@ -20,18 +20,18 @@ jobs:
           java-version: '21'
           cache: gradle
       - name: Run tests
-        run: gradle -p kim-jong-un-3 test --no-daemon
+        run: gradle -p kim-jong-un test --no-daemon
       - name: Package plugin jar
-        run: gradle -p kim-jong-un-3 jar -PpluginVersion=${PLUGIN_VERSION} --no-daemon
+        run: gradle -p kim-jong-un jar -PpluginVersion=${PLUGIN_VERSION} --no-daemon
       - name: Upload plugin artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kim-jong-un-3-plugin
-          path: kim-jong-un-3/build/libs/kim-jong-un-3-${{ env.PLUGIN_VERSION }}.jar
+          name: kim-jong-un-plugin
+          path: kim-jong-un/build/libs/kim-jong-un-${{ env.PLUGIN_VERSION }}.jar
 
   deploy-testing:
     runs-on: ubuntu-latest
-    needs: test-kim-jong-un-3
+    needs: test-kim-jong-un
     if: github.event_name == 'pull_request'
     environment: Testing Server
     env:
@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: kim-jong-un-3-plugin
+          name: kim-jong-un-plugin
           path: dist
       - name: Upload plugin to testing server
         uses: Dylan700/sftp-upload-action@latest
@@ -48,11 +48,11 @@ jobs:
           username: ${{ vars.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
-          uploads: ./dist/kim-jong-un-3-${{ env.PLUGIN_VERSION }}.jar => ./plugins/kim-jong-un-3.jar
+          uploads: ./dist/kim-jong-un-${{ env.PLUGIN_VERSION }}.jar => ./plugins/kim-jong-un.jar
 
   deploy-production:
     runs-on: ubuntu-latest
-    needs: test-kim-jong-un-3
+    needs: test-kim-jong-un
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: Production
     env:
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: kim-jong-un-3-plugin
+          name: kim-jong-un-plugin
           path: dist
       - name: Upload plugin to production server
         uses: Dylan700/sftp-upload-action@latest
@@ -69,4 +69,4 @@ jobs:
           username: ${{ vars.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
-          uploads: ./dist/kim-jong-un-3-${{ env.PLUGIN_VERSION }}.jar => ./plugins/kim-jong-un-3.jar
+          uploads: ./dist/kim-jong-un-${{ env.PLUGIN_VERSION }}.jar => ./plugins/kim-jong-un.jar
