@@ -6,6 +6,7 @@ on:
     paths: ["kim-jong-un/**"]
   pull_request:
     paths: ["kim-jong-un/**"]
+  workflow_dispatch:
 
 jobs:
   test-kim-jong-un:
