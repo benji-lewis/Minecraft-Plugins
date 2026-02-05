@@ -43,14 +43,6 @@ jobs:
         with:
           name: just-stop-oil-jar
           path: dist
-      - name: Delete old plugin versions on testing server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ vars.SFTP_URL }}
-          username: ${{ vars.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: ${{ vars.SFTP_PORT }}
-          script: rm -f ./plugins/just-stop-oil-*.jar
       - name: Upload jar to testing server
         uses: Dylan700/sftp-upload-action@latest
         with:
@@ -58,7 +50,7 @@ jobs:
           username: ${{ vars.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
-          uploads: ./dist/just-stop-oil-${{ env.PLUGIN_VERSION }}.jar => ./plugins/
+          uploads: ./dist/just-stop-oil-${{ env.PLUGIN_VERSION }}.jar => ./plugins/just-stop-oil.jar
 
   deploy-production:
     runs-on: ubuntu-latest
@@ -72,14 +64,6 @@ jobs:
         with:
           name: just-stop-oil-jar
           path: dist
-      - name: Delete old plugin versions on production server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ vars.SFTP_URL }}
-          username: ${{ vars.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: ${{ vars.SFTP_PORT }}
-          script: rm -f ./plugins/just-stop-oil-*.jar
       - name: Upload jar to production server
         uses: Dylan700/sftp-upload-action@latest
         with:
@@ -87,4 +71,4 @@ jobs:
           username: ${{ vars.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
-          uploads: ./dist/just-stop-oil-${{ env.PLUGIN_VERSION }}.jar => ./plugins/
+          uploads: ./dist/just-stop-oil-${{ env.PLUGIN_VERSION }}.jar => ./plugins/just-stop-oil.jar

@@ -41,14 +41,6 @@ jobs:
         with:
           name: kim-jong-un-3-plugin
           path: dist
-      - name: Delete old plugin versions on testing server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ vars.SFTP_URL }}
-          username: ${{ vars.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: ${{ vars.SFTP_PORT }}
-          script: rm -f ./plugins/kim-jong-un-3-*.jar
       - name: Upload plugin to testing server
         uses: Dylan700/sftp-upload-action@latest
         with:
@@ -56,7 +48,7 @@ jobs:
           username: ${{ vars.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
-          uploads: ./dist/kim-jong-un-3-${{ env.PLUGIN_VERSION }}.jar => ./plugins/
+          uploads: ./dist/kim-jong-un-3-${{ env.PLUGIN_VERSION }}.jar => ./plugins/kim-jong-un-3.jar
 
   deploy-production:
     runs-on: ubuntu-latest
@@ -70,14 +62,6 @@ jobs:
         with:
           name: kim-jong-un-3-plugin
           path: dist
-      - name: Delete old plugin versions on production server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ vars.SFTP_URL }}
-          username: ${{ vars.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: ${{ vars.SFTP_PORT }}
-          script: rm -f ./plugins/kim-jong-un-3-*.jar
       - name: Upload plugin to production server
         uses: Dylan700/sftp-upload-action@latest
         with:
@@ -85,4 +69,4 @@ jobs:
           username: ${{ vars.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
-          uploads: ./dist/kim-jong-un-3-${{ env.PLUGIN_VERSION }}.jar => ./plugins/
+          uploads: ./dist/kim-jong-un-3-${{ env.PLUGIN_VERSION }}.jar => ./plugins/kim-jong-un-3.jar

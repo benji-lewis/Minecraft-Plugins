@@ -54,14 +54,6 @@ jobs:
         with:
           name: kim-jong-un-2-resourcepack
           path: dist
-      - name: Delete old plugin versions on testing server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ vars.SFTP_URL }}
-          username: ${{ vars.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: ${{ vars.SFTP_PORT }}
-          script: rm -f ./plugins/kim-jong-un-2-*.jar
       - name: Upload artifacts to testing server
         uses: Dylan700/sftp-upload-action@latest
         with:
@@ -69,7 +61,7 @@ jobs:
           username: ${{ vars.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
-          uploads: ./dist/kim-jong-un-2-${{ env.PLUGIN_VERSION }}.jar => ./plugins/
+          uploads: ./dist/kim-jong-un-2-${{ env.PLUGIN_VERSION }}.jar => ./plugins/kim-jong-un-2.jar
       - name: Upload resource pack to testing server
         uses: Dylan700/sftp-upload-action@latest
         with:
@@ -95,14 +87,6 @@ jobs:
         with:
           name: kim-jong-un-2-resourcepack
           path: dist
-      - name: Delete old plugin versions on production server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ vars.SFTP_URL }}
-          username: ${{ vars.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: ${{ vars.SFTP_PORT }}
-          script: rm -f ./plugins/kim-jong-un-2-*.jar
       - name: Upload artifacts to production server
         uses: Dylan700/sftp-upload-action@latest
         with:
@@ -110,7 +94,7 @@ jobs:
           username: ${{ vars.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ vars.SFTP_PORT }}
-          uploads: ./dist/kim-jong-un-2-${{ env.PLUGIN_VERSION }}.jar => ./plugins/
+          uploads: ./dist/kim-jong-un-2-${{ env.PLUGIN_VERSION }}.jar => ./plugins/kim-jong-un-2.jar
       - name: Upload resource pack to production server
         uses: Dylan700/sftp-upload-action@latest
         with:
