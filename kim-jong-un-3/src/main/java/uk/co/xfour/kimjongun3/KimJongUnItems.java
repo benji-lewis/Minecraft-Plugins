@@ -4,16 +4,12 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -23,14 +19,17 @@ import xyz.xenondevs.nova.world.item.NovaItem;
  * Handles Nova item creation and identification for the Kim Jong Un 3 addon.
  */
 public class KimJongUnItems {
-    private final KimJongUn3Plugin plugin;
     private final KimJongUnKeys keys;
     private final Random random = new Random();
     private final KimJongUn3AddonItems addonItems;
-    private static final Material RECIPE_PLACEHOLDER_MATERIAL = Material.PAPER;
 
+    /**
+     * Creates a new Kim Jong Un item helper.
+     *
+     * @param plugin owning plugin instance
+     * @param addonItems registered Nova item mappings
+     */
     public KimJongUnItems(KimJongUn3Plugin plugin, KimJongUn3AddonItems addonItems) {
-        this.plugin = plugin;
         this.keys = new KimJongUnKeys(plugin);
         this.addonItems = addonItems;
     }
@@ -94,41 +93,6 @@ public class KimJongUnItems {
     }
 
     /**
-     * Registers crafting recipes for the assembled launchpad and missile.
-     */
-    public void registerRecipes() {
-        registerMissileRecipe();
-        registerLaunchpadRecipe();
-        registerIcbmRecipe();
-    }
-
-    private void registerMissileRecipe() {
-        ItemStack result = createItem(KimJongUnItem.MISSILE);
-        ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(plugin, "missile"), result);
-        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
-        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
-        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
-        Bukkit.addRecipe(recipe);
-    }
-
-    private void registerLaunchpadRecipe() {
-        ItemStack result = createItem(KimJongUnItem.LAUNCHPAD);
-        ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(plugin, "launchpad"), result);
-        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
-        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
-        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
-        Bukkit.addRecipe(recipe);
-    }
-
-    private void registerIcbmRecipe() {
-        ItemStack result = createItem(KimJongUnItem.ICBM);
-        ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(plugin, "icbm"), result);
-        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
-        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
-        Bukkit.addRecipe(recipe);
-    }
-
-    /**
      * Resolves custom craft outputs based on item IDs in the crafting matrix.
      *
      * @param matrix the current crafting matrix
@@ -136,21 +100,21 @@ public class KimJongUnItems {
      */
     public Optional<KimJongUnItem> resolveCustomCraft(ItemStack[] matrix) {
         Map<KimJongUnItem, Integer> counts = new HashMap<>();
-        int ingredientCount = 0;
+        int ingredientSlots = 0;
         for (ItemStack stack : matrix) {
             if (stack == null || stack.getType().isAir()) {
                 continue;
             }
-            ingredientCount++;
+            ingredientSlots++;
             Optional<KimJongUnItem> identified = identify(stack);
             if (identified.isEmpty()) {
                 return Optional.empty();
             }
             KimJongUnItem item = identified.get();
-            counts.put(item, counts.getOrDefault(item, 0) + stack.getAmount());
+            counts.put(item, counts.getOrDefault(item, 0) + 1);
         }
 
-        if (ingredientCount == 3
+        if (ingredientSlots == 3
             && hasCounts(counts, Map.of(
                 KimJongUnItem.MISSILE_NOSE, 1,
                 KimJongUnItem.MISSILE_BODY, 1,
@@ -158,7 +122,7 @@ public class KimJongUnItems {
             return Optional.of(KimJongUnItem.MISSILE);
         }
 
-        if (ingredientCount == 3
+        if (ingredientSlots == 3
             && hasCounts(counts, Map.of(
                 KimJongUnItem.LAUNCHPAD_BASE, 1,
                 KimJongUnItem.LAUNCHPAD_CONTROL, 1,
@@ -166,7 +130,7 @@ public class KimJongUnItems {
             return Optional.of(KimJongUnItem.LAUNCHPAD);
         }
 
-        if (ingredientCount == 2
+        if (ingredientSlots == 2
             && hasCounts(counts, Map.of(
                 KimJongUnItem.MISSILE, 1,
                 KimJongUnItem.ICBM_CORE, 1))) {
@@ -228,8 +192,8 @@ public class KimJongUnItems {
             }
             String normal = id.toLowerCase(Locale.ROOT);
             return Arrays.stream(values())
-                    .filter(item -> item.id.equals(normal))
-                    .findFirst();
+                .filter(item -> item.id.equals(normal))
+                .findFirst();
         }
 
         public static List<KimJongUnItem> partItems() {

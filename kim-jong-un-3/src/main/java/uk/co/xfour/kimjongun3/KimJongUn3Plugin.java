@@ -62,7 +62,6 @@ public class KimJongUn3Plugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new KimJongUnCraftingListener(items), this);
 
         registerCommand();
-        items.registerRecipes();
         radiationSuit.registerRecipes();
         spawner.start();
         falloutManager.start();
