@@ -59,6 +59,7 @@ public class KimJongUn3Plugin extends JavaPlugin {
             this
         );
         Bukkit.getPluginManager().registerEvents(targetingManager, this);
+        Bukkit.getPluginManager().registerEvents(new KimJongUnCraftingListener(items), this);
 
         registerCommand();
         items.registerRecipes();

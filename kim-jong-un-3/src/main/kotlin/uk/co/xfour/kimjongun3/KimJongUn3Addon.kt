@@ -24,7 +24,7 @@ object KimJongUn3Addon : Addon() {
         if (registeredItems != null) {
             return registeredItems as KimJongUn3AddonItems
         }
-        val blocks = registerBlocks()
+        registerBlocks()
         val items = mapOf(
             KimJongUnItems.KimJongUnItem.MISSILE_NOSE to buildItem(KimJongUnItems.KimJongUnItem.MISSILE_NOSE),
             KimJongUnItems.KimJongUnItem.MISSILE_BODY to buildItem(KimJongUnItems.KimJongUnItem.MISSILE_BODY),
@@ -33,9 +33,9 @@ object KimJongUn3Addon : Addon() {
             KimJongUnItems.KimJongUnItem.LAUNCHPAD_CONTROL to buildItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD_CONTROL),
             KimJongUnItems.KimJongUnItem.LAUNCHPAD_SUPPORT to buildItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD_SUPPORT),
             KimJongUnItems.KimJongUnItem.ICBM_CORE to buildItem(KimJongUnItems.KimJongUnItem.ICBM_CORE),
-            KimJongUnItems.KimJongUnItem.MISSILE to buildBlockItem(blocks.missile, KimJongUnItems.KimJongUnItem.MISSILE),
-            KimJongUnItems.KimJongUnItem.ICBM to buildBlockItem(blocks.icbm, KimJongUnItems.KimJongUnItem.ICBM),
-            KimJongUnItems.KimJongUnItem.LAUNCHPAD to buildBlockItem(blocks.launchpad, KimJongUnItems.KimJongUnItem.LAUNCHPAD)
+            KimJongUnItems.KimJongUnItem.MISSILE to buildBlockItem(KimJongUnItems.KimJongUnItem.MISSILE),
+            KimJongUnItems.KimJongUnItem.ICBM to buildBlockItem(KimJongUnItems.KimJongUnItem.ICBM),
+            KimJongUnItems.KimJongUnItem.LAUNCHPAD to buildBlockItem(KimJongUnItems.KimJongUnItem.LAUNCHPAD)
         )
         registeredItems = KimJongUn3AddonItems(items)
         return registeredItems as KimJongUn3AddonItems
@@ -143,8 +143,8 @@ object KimJongUn3Addon : Addon() {
         }
     }
 
-    private fun buildBlockItem(block: NovaBlock, definition: KimJongUnItems.KimJongUnItem): NovaItem {
-        return item(block, definition.id()) {
+    private fun buildBlockItem(definition: KimJongUnItems.KimJongUnItem): NovaItem {
+        return item(definition.id()) {
             name(Component.text(definition.displayName()))
             val loreComponents = definition.lore().map { Component.text(it) }
             if (loreComponents.isNotEmpty()) {

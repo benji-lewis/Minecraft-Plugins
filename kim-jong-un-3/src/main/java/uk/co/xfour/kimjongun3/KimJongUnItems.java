@@ -2,15 +2,17 @@ package uk.co.xfour.kimjongun3;
 
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -25,6 +27,7 @@ public class KimJongUnItems {
     private final KimJongUnKeys keys;
     private final Random random = new Random();
     private final KimJongUn3AddonItems addonItems;
+    private static final Material RECIPE_PLACEHOLDER_MATERIAL = Material.PAPER;
 
     public KimJongUnItems(KimJongUn3Plugin plugin, KimJongUn3AddonItems addonItems) {
         this.plugin = plugin;
@@ -102,27 +105,87 @@ public class KimJongUnItems {
     private void registerMissileRecipe() {
         ItemStack result = createItem(KimJongUnItem.MISSILE);
         ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(plugin, "missile"), result);
-        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.MISSILE_NOSE)));
-        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.MISSILE_BODY)));
-        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.MISSILE_ENGINE)));
+        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
+        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
+        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
         Bukkit.addRecipe(recipe);
     }
 
     private void registerLaunchpadRecipe() {
         ItemStack result = createItem(KimJongUnItem.LAUNCHPAD);
         ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(plugin, "launchpad"), result);
-        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.LAUNCHPAD_BASE)));
-        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.LAUNCHPAD_CONTROL)));
-        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.LAUNCHPAD_SUPPORT)));
+        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
+        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
+        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
         Bukkit.addRecipe(recipe);
     }
 
     private void registerIcbmRecipe() {
         ItemStack result = createItem(KimJongUnItem.ICBM);
         ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(plugin, "icbm"), result);
-        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.MISSILE)));
-        recipe.addIngredient(new RecipeChoice.ExactChoice(createItem(KimJongUnItem.ICBM_CORE)));
+        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
+        recipe.addIngredient(RECIPE_PLACEHOLDER_MATERIAL);
         Bukkit.addRecipe(recipe);
+    }
+
+    /**
+     * Resolves custom craft outputs based on item IDs in the crafting matrix.
+     *
+     * @param matrix the current crafting matrix
+     * @return the crafted Kim Jong Un item if a recipe matches
+     */
+    public Optional<KimJongUnItem> resolveCustomCraft(ItemStack[] matrix) {
+        Map<KimJongUnItem, Integer> counts = new HashMap<>();
+        int ingredientCount = 0;
+        for (ItemStack stack : matrix) {
+            if (stack == null || stack.getType().isAir()) {
+                continue;
+            }
+            ingredientCount++;
+            Optional<KimJongUnItem> identified = identify(stack);
+            if (identified.isEmpty()) {
+                return Optional.empty();
+            }
+            KimJongUnItem item = identified.get();
+            counts.put(item, counts.getOrDefault(item, 0) + stack.getAmount());
+        }
+
+        if (ingredientCount == 3
+            && hasCounts(counts, Map.of(
+                KimJongUnItem.MISSILE_NOSE, 1,
+                KimJongUnItem.MISSILE_BODY, 1,
+                KimJongUnItem.MISSILE_ENGINE, 1))) {
+            return Optional.of(KimJongUnItem.MISSILE);
+        }
+
+        if (ingredientCount == 3
+            && hasCounts(counts, Map.of(
+                KimJongUnItem.LAUNCHPAD_BASE, 1,
+                KimJongUnItem.LAUNCHPAD_CONTROL, 1,
+                KimJongUnItem.LAUNCHPAD_SUPPORT, 1))) {
+            return Optional.of(KimJongUnItem.LAUNCHPAD);
+        }
+
+        if (ingredientCount == 2
+            && hasCounts(counts, Map.of(
+                KimJongUnItem.MISSILE, 1,
+                KimJongUnItem.ICBM_CORE, 1))) {
+            return Optional.of(KimJongUnItem.ICBM);
+        }
+
+        return Optional.empty();
+    }
+
+    private boolean hasCounts(Map<KimJongUnItem, Integer> actual, Map<KimJongUnItem, Integer> expected) {
+        if (actual.size() != expected.size()) {
+            return false;
+        }
+        for (Map.Entry<KimJongUnItem, Integer> entry : expected.entrySet()) {
+            if (!entry.getValue().equals(actual.get(entry.getKey()))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public enum KimJongUnItem {
