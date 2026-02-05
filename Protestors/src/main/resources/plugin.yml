@@ -1,0 +1,7 @@
+name: Protestors
+version: ${project.version}
+main: uk.co.xfour.protestors.ProtestorsPlugin
+api-version: '1.21'
+author: xfour
+website: https://github.com/xfour/Minecraft-Plugins
+description: Monoplugin that combines all protest-themed modules.

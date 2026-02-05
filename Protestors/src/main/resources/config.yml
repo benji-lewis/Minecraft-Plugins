@@ -1,0 +1,23 @@
+modules:
+  just-stop-oil:
+    enabled: true
+    spawn-chance: 0.35
+    despawn-ticks: 300
+    radius: 16.0
+    prefix: '&6[Just Stop Oil]'
+    messages:
+      - '&eNo more oil!'
+      - '&cProtect the planet!'
+  peta-volunteers:
+    enabled: true
+    spawn-chance: 0.30
+  debt-collector:
+    enabled: true
+    mock-balance-threshold: 5.0
+  asbestos-hazard:
+    enabled: true
+    max-y: 32
+    drop-chance: 0.12
+  kim-jong-un:
+    enabled: true
+    fire-charge-launch-enabled: true
