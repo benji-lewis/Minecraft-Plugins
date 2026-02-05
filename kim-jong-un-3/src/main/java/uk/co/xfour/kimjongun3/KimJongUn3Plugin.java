@@ -17,9 +17,14 @@ public class KimJongUn3Plugin extends JavaPlugin {
     private AutoUpdater autoUpdater;
 
     @Override
+    public void onLoad() {
+        KimJongUn3Addon.INSTANCE.initializeFrom(this);
+        KimJongUn3Addon.INSTANCE.registerItems();
+    }
+
+    @Override
     public void onEnable() {
         saveDefaultConfig();
-        KimJongUn3Addon.INSTANCE.initializeFrom(this);
         initializeAddon();
     }
 
@@ -54,9 +59,9 @@ public class KimJongUn3Plugin extends JavaPlugin {
             this
         );
         Bukkit.getPluginManager().registerEvents(targetingManager, this);
+        Bukkit.getPluginManager().registerEvents(new KimJongUnCraftingListener(items), this);
 
         registerCommand();
-        items.registerRecipes();
         radiationSuit.registerRecipes();
         spawner.start();
         falloutManager.start();

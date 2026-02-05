@@ -4,6 +4,7 @@ import java.util.Optional;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -82,6 +83,23 @@ public class KimJongUnListener implements Listener {
         }
         if (itemType.isEmpty()) {
             return;
+        }
+        if (itemType.get() == KimJongUnItems.KimJongUnItem.MISSILE
+            || itemType.get() == KimJongUnItems.KimJongUnItem.ICBM) {
+            Block mountBlock = clickedBlock.getRelative(BlockFace.UP);
+            Location mountLocation = mountBlock.getLocation();
+            if (mountBlock.isReplaceable() && !blocks.hasNovaBlock(mountLocation)) {
+                boolean placed = itemType.get() == KimJongUnItems.KimJongUnItem.ICBM
+                    ? blocks.placeIcbm(mountLocation, event.getPlayer())
+                    : blocks.placeMissile(mountLocation, event.getPlayer());
+                if (placed) {
+                    event.setCancelled(true);
+                    if (event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+                        held.setAmount(held.getAmount() - 1);
+                    }
+                    return;
+                }
+            }
         }
         event.setCancelled(true);
         Location launchLocation = blockLocation.clone().add(0.5, 0.0, 0.5);

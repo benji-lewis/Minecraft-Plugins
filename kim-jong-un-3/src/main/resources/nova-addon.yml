@@ -2,5 +2,5 @@ id: kimjongun3
 name: Kim Jong Un 3
 version: 1.0.0
 main: uk.co.xfour.kimjongun3.KimJongUn3Addon
-nova_version: 0.22.0
+nova_version: 0.22.1
 minecraft_version: "1.21.11"
