@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import java.util.List;
 import java.util.Locale;
@@ -20,12 +20,12 @@ import org.bukkit.scheduler.BukkitRunnable;
  * Manages periodic spawning of the Kim Jong Un mob.
  */
 public class KimJongUnSpawner {
-    private final KimJongUn3Plugin plugin;
+    private final KimJongUnPlugin plugin;
     private final KimJongUnItems items;
     private BukkitRunnable task;
     private final Random random = new Random();
 
-    public KimJongUnSpawner(KimJongUn3Plugin plugin, KimJongUnItems items) {
+    public KimJongUnSpawner(KimJongUnPlugin plugin, KimJongUnItems items) {
         this.plugin = plugin;
         this.items = items;
     }

@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -17,7 +17,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 /**
- * Handles custom item creation and identification for the Kim Jong Un 3 plugin.
+ * Handles custom item creation and identification for the Kim Jong Un plugin.
  */
 public class KimJongUnItems {
     private final KimJongUnKeys keys;
@@ -29,7 +29,7 @@ public class KimJongUnItems {
      *
      * @param plugin owning plugin instance
      */
-    public KimJongUnItems(KimJongUn3Plugin plugin) {
+    public KimJongUnItems(KimJongUnPlugin plugin) {
         this.keys = new KimJongUnKeys(plugin);
         this.config = plugin.getConfig();
     }
@@ -37,7 +37,7 @@ public class KimJongUnItems {
     /**
      * Returns the persistent data keys used by the plugin.
      *
-     * @return the keys used by Kim Jong Un 3
+     * @return the keys used by Kim Jong Un
      */
     public KimJongUnKeys keys() {
         return keys;

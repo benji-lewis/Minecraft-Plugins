@@ -1,4 +1,4 @@
-group = "uk.co.xfour.kimjongun3"
+group = "uk.co.xfour.kimjongun"
 version = findProperty("pluginVersion")?.toString() ?: "1.0.0"
 
 plugins {

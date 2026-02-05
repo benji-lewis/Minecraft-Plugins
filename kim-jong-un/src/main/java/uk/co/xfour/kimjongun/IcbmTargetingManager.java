@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +31,13 @@ public class IcbmTargetingManager implements Listener {
     private static final int SLOT_LAUNCH = 22;
     private static final int SLOT_CANCEL = 26;
 
-    private final KimJongUn3Plugin plugin;
+    private final KimJongUnPlugin plugin;
     private final KimJongUnItems items;
     private final KimJongUnBlocks blocks;
     private final LaunchManager launchManager;
     private final Map<UUID, TargetingSession> sessions = new HashMap<>();
 
-    public IcbmTargetingManager(KimJongUn3Plugin plugin, KimJongUnItems items, KimJongUnBlocks blocks,
+    public IcbmTargetingManager(KimJongUnPlugin plugin, KimJongUnItems items, KimJongUnBlocks blocks,
                                 LaunchManager launchManager) {
         this.plugin = plugin;
         this.items = items;

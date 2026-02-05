@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

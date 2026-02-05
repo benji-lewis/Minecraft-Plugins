@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -16,12 +16,12 @@ import org.bukkit.scheduler.BukkitRunnable;
  * Tracks active fallout zones and applies radiation damage to nearby players.
  */
 public class FalloutManager {
-    private final KimJongUn3Plugin plugin;
+    private final KimJongUnPlugin plugin;
     private final RadiationSuit radiationSuit;
     private final List<FalloutZone> zones = new ArrayList<>();
     private BukkitRunnable task;
 
-    public FalloutManager(KimJongUn3Plugin plugin, RadiationSuit radiationSuit) {
+    public FalloutManager(KimJongUnPlugin plugin, RadiationSuit radiationSuit) {
         this.plugin = plugin;
         this.radiationSuit = radiationSuit;
     }

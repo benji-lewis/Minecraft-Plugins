@@ -1,11 +1,11 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 /**
- * Provides helpers for interacting with Kim Jong Un 3 placed blocks.
+ * Provides helpers for interacting with Kim Jong Un placed blocks.
  */
 public class KimJongUnBlocks {
     private static final Material LAUNCHPAD_BLOCK = Material.RESPAWN_ANCHOR;

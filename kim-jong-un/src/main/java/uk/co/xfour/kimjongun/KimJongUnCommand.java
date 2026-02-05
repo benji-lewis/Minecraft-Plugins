@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +14,12 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class KimJongUnCommand implements BasicCommand {
-    private final KimJongUn3Plugin plugin;
+    private final KimJongUnPlugin plugin;
     private final KimJongUnItems items;
     private final KimJongUnSpawner spawner;
     private final RadiationSuit radiationSuit;
 
-    public KimJongUnCommand(KimJongUn3Plugin plugin, KimJongUnItems items, KimJongUnSpawner spawner,
+    public KimJongUnCommand(KimJongUnPlugin plugin, KimJongUnItems items, KimJongUnSpawner spawner,
                             RadiationSuit radiationSuit) {
         this.plugin = plugin;
         this.items = items;
@@ -31,23 +31,23 @@ public class KimJongUnCommand implements BasicCommand {
     public void execute(@NotNull CommandSourceStack stack, @NotNull String[] args) {
         CommandSender sender = stack.getSender();
         if (args.length == 0) {
-            sender.sendMessage("Usage: /kimjongun3 <give|spawn> [player] [item]");
+            sender.sendMessage("Usage: /kimjongun <give|spawn> [player] [item]");
             return;
         }
         String sub = args[0].toLowerCase();
         if (sub.equals("spawn")) {
             if (!(sender instanceof Player player)) {
-                sender.sendMessage("Only players can use /kimjongun3 spawn.");
+                sender.sendMessage("Only players can use /kimjongun spawn.");
                 return;
             }
             Location location = player.getLocation();
             spawner.spawnMob(location);
-            sender.sendMessage("Spawned Kim Jong Un 3.");
+            sender.sendMessage("Spawned Kim Jong Un.");
             return;
         }
         if (sub.equals("give")) {
             if (args.length < 3) {
-                sender.sendMessage("Usage: /kimjongun3 give <player> <item>");
+                sender.sendMessage("Usage: /kimjongun give <player> <item>");
                 return;
             }
             Player target = Bukkit.getPlayer(args[1]);
@@ -117,7 +117,7 @@ public class KimJongUnCommand implements BasicCommand {
 
     @Override
     public @NotNull String permission() {
-        return "kimjongun3.admin";
+        return "kimjongun.admin";
     }
 
     @Override
@@ -125,7 +125,7 @@ public class KimJongUnCommand implements BasicCommand {
         return sender.hasPermission(permission());
     }
 
-    public @NotNull KimJongUn3Plugin plugin() {
+    public @NotNull KimJongUnPlugin plugin() {
         return plugin;
     }
 }

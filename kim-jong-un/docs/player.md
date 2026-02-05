@@ -1,7 +1,7 @@
-# Kim Jong Un 3 — Player Guide
+# Kim Jong Un — Player Guide
 
 ## How it works
-- A special Kim Jong Un 3 mob can spawn randomly in the world.
+- A special Kim Jong Un mob can spawn randomly in the world.
 - When defeated, it drops **one random part** (missile part or launchpad part).
 - It can also drop an **ICBM Core** for crafting strategic missiles.
 - Collect the parts to craft an **Assembled Missile** and **Assembled Launchpad**.
@@ -35,4 +35,4 @@ Use glowstone dust with leather armor pieces in the crafting grid to make:
 
 ## Tips
 - Launchpads and missiles use custom-model item visuals from the plugin resource pack.
-- You need the `kimjongun3.use` permission to place and launch.
+- You need the `kimjongun.use` permission to place and launch.
