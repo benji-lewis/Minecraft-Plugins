@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,12 +16,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class LaunchManager {
-    private final KimJongUn3Plugin plugin;
+    private final KimJongUnPlugin plugin;
     private final KimJongUnItems items;
     private final FalloutManager falloutManager;
     private final Set<ArmorStand> activeMissiles = new HashSet<>();
 
-    public LaunchManager(KimJongUn3Plugin plugin, KimJongUnItems items, FalloutManager falloutManager) {
+    public LaunchManager(KimJongUnPlugin plugin, KimJongUnItems items, FalloutManager falloutManager) {
         this.plugin = plugin;
         this.items = items;
         this.falloutManager = falloutManager;

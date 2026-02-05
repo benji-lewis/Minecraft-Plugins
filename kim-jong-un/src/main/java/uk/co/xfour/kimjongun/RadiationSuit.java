@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -24,11 +24,11 @@ public class RadiationSuit {
     private static final Color SUIT_COLOR = Color.fromRGB(242, 214, 57);
     private static final List<String> BASE_LORE = List.of("Protects against nuclear fallout.");
 
-    private final KimJongUn3Plugin plugin;
+    private final KimJongUnPlugin plugin;
     private final KimJongUnKeys keys;
     private final Map<Piece, ItemStack> cachedPieces = new EnumMap<>(Piece.class);
 
-    public RadiationSuit(KimJongUn3Plugin plugin, KimJongUnKeys keys) {
+    public RadiationSuit(KimJongUnPlugin plugin, KimJongUnKeys keys) {
         this.plugin = plugin;
         this.keys = keys;
     }

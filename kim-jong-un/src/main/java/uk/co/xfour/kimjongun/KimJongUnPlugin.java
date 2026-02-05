@@ -1,12 +1,12 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Paper plugin entry point for Kim Jong Un 3.
+ * Paper plugin entry point for Kim Jong Un.
  */
-public class KimJongUn3Plugin extends JavaPlugin {
+public class KimJongUnPlugin extends JavaPlugin {
     private KimJongUnItems items;
     private KimJongUnBlocks blocks;
     private KimJongUnSpawner spawner;
@@ -64,6 +64,6 @@ public class KimJongUn3Plugin extends JavaPlugin {
 
     private void registerCommand() {
         KimJongUnCommand command = new KimJongUnCommand(this, items, spawner, radiationSuit);
-        registerCommand("kimjongun3", "Kim Jong Un 3 admin command.", command);
+        registerCommand("kimjongun", "Kim Jong Un admin command.", command);
     }
 }

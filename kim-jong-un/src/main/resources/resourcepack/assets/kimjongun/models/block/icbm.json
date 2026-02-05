@@ -2,11 +2,11 @@
 	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "kimjongun3:block/missileside",
-		"1": "kimjongun3:block/missilebooster",
-		"2": "kimjongun3:block/missilesubtop",
-		"3": "kimjongun3:block/missiletip",
-		"particle": "kimjongun3:block/missileside"
+		"0": "kimjongun:block/icbmside",
+		"1": "kimjongun:block/icbmbooster",
+		"2": "kimjongun:block/icbmsubtop",
+		"3": "kimjongun:block/icbmtip",
+		"particle": "kimjongun:block/icbmside"
 	},
 	"elements": [
 		{

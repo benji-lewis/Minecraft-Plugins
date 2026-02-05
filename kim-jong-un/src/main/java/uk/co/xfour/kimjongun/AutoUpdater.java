@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -21,10 +21,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class AutoUpdater {
     private static final String DEFAULT_REPOSITORY = "benji-lewis/Minecraft-Plugins";
 
-    private final KimJongUn3Plugin plugin;
+    private final KimJongUnPlugin plugin;
     private final HttpClient httpClient;
 
-    public AutoUpdater(KimJongUn3Plugin plugin) {
+    public AutoUpdater(KimJongUnPlugin plugin) {
         this.plugin = plugin;
         this.httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(plugin.getConfig().getInt("auto-update.timeout-seconds", 15)))
@@ -53,7 +53,7 @@ public class AutoUpdater {
     private void updateIfNeeded() throws IOException, InterruptedException {
         String repo = plugin.getConfig().getString("auto-update.repository", DEFAULT_REPOSITORY);
         String workflow = plugin.getConfig().getString("auto-update.workflow", "kim-jong-three.yml");
-        String artifactName = plugin.getConfig().getString("auto-update.artifact-name", "kim-jong-un-3-plugin");
+        String artifactName = plugin.getConfig().getString("auto-update.artifact-name", "kim-jong-un-plugin");
         String token = plugin.getConfig().getString("auto-update.github-token", "");
         plugin.getDataFolder().mkdirs();
         Optional<String> runId = fetchLatestRunId(repo, workflow, token);
@@ -75,7 +75,7 @@ public class AutoUpdater {
         }
         File updateDir = new File(plugin.getDataFolder().getParentFile(), "update");
         updateDir.mkdirs();
-        String updateName = plugin.getConfig().getString("auto-update.update-file-name", "kim-jong-un-3.jar");
+        String updateName = plugin.getConfig().getString("auto-update.update-file-name", "kim-jong-un.jar");
         File output = new File(updateDir, updateName);
         downloadArtifact(repo, artifactInfo.id, token, output);
         java.nio.file.Files.writeString(marker.toPath(), artifactInfo.id, StandardCharsets.UTF_8);
@@ -167,7 +167,7 @@ public class AutoUpdater {
             .uri(URI.create(url))
             .timeout(Duration.ofSeconds(plugin.getConfig().getInt("auto-update.timeout-seconds", 15)))
             .header("Accept", "application/vnd.github+json")
-            .header("User-Agent", "KimJongUn3-AutoUpdater");
+            .header("User-Agent", "KimJongUn-AutoUpdater");
         if (token != null && !token.isBlank()) {
             builder.header("Authorization", "Bearer " + token);
         }

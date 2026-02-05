@@ -1,4 +1,4 @@
-package uk.co.xfour.kimjongun3;
+package uk.co.xfour.kimjongun;
 
 import java.util.Optional;
 import org.bukkit.GameMode;
@@ -16,13 +16,13 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
 public class KimJongUnListener implements Listener {
-    private final KimJongUn3Plugin plugin;
+    private final KimJongUnPlugin plugin;
     private final KimJongUnItems items;
     private final KimJongUnBlocks blocks;
     private final LaunchManager launchManager;
     private final IcbmTargetingManager targetingManager;
 
-    public KimJongUnListener(KimJongUn3Plugin plugin, KimJongUnItems items, KimJongUnBlocks blocks,
+    public KimJongUnListener(KimJongUnPlugin plugin, KimJongUnItems items, KimJongUnBlocks blocks,
                              LaunchManager launchManager, IcbmTargetingManager targetingManager) {
         this.plugin = plugin;
         this.items = items;
@@ -55,7 +55,7 @@ public class KimJongUnListener implements Listener {
         if (event.getHand() != EquipmentSlot.HAND || !event.getAction().isRightClick()) {
             return;
         }
-        if (!event.getPlayer().hasPermission("kimjongun3.use")) {
+        if (!event.getPlayer().hasPermission("kimjongun.use")) {
             return;
         }
         if (event.getClickedBlock() == null) {

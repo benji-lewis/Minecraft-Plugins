@@ -1,6 +1,6 @@
-# Kim Jong Un 3 (Paper Plugin)
+# Kim Jong Un (Paper Plugin)
 
-Kim Jong Un 3 is a PaperMC plugin that spawns a themed mob which drops randomized missile or launchpad parts plus an ICBM core. Players can assemble the parts into a launchpad and missile, then combine the missile with the core to build an ICBM and target a strike via an in-game GUI. The blast produces a mushroom cloud, lingering fallout, and can be mitigated with a radiation suit.
+Kim Jong Un is a PaperMC plugin that spawns a themed mob which drops randomized missile or launchpad parts plus an ICBM core. Players can assemble the parts into a launchpad and missile, then combine the missile with the core to build an ICBM and target a strike via an in-game GUI. The blast produces a mushroom cloud, lingering fallout, and can be mitigated with a radiation suit.
 
 ## Docs
 - [Admin Guide](docs/admin.md)
