@@ -1,5 +1,7 @@
 # Root Agent Instructions
 
+- Plugins are created for general themes (e.g. protestors, space travel, country flags, etc.)
+- Within each plugin is a number of configurable modules (e.g. for a protestors plugin, there could be modules for different types of protestors, each with their own configuration options).
 - Each plugin must live in its own top-level folder.
 - Every plugin folder must include its own `AGENTS.md` with scoped instructions for that plugin.
 - Plugins must be built for PaperMC not Spigot or bukkit
