@@ -31,7 +31,7 @@ jobs:
       - name: Upload JavaDocs artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: Protestors/target/site/apidocs
+          path: Protestors/target/reports/apidocs
 
   deploy-javadocs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
