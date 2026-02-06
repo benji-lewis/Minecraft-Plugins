@@ -1,0 +1,14 @@
+name: Worldcraft
+main: uk.co.xfour.worldcraft.WorldcraftPlugin
+version: 1.0.0
+api-version: '1.21'
+description: Adds world flags and flag poles to Minecraft.
+commands:
+  worldcraft:
+    description: Manage Worldcraft flags and flag poles.
+    usage: /worldcraft <flag|flagpole|reload> <country>
+    permission: worldcraft.use
+permissions:
+  worldcraft.use:
+    description: Allows players to use Worldcraft commands.
+    default: true

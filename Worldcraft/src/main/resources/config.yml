@@ -1,0 +1,10 @@
+modules:
+  countries:
+    enabled: true
+    countries-source-url: "https://flagcdn.com/en/codes.json"
+    texture-mode: "hybrid"
+    flag-texture-url-template: "https://flagcdn.com/w320/{code}.png"
+    cache-ttl-hours: 168
+    pole-height: 3
+    pole-material: "OAK_FENCE"
+    pole-mount-material: "SMOOTH_STONE"
