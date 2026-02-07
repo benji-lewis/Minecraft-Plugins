@@ -8,4 +8,4 @@ description: Interplanetary travel systems with launch pads, stations, and route
 commands:
   spacetravel:
     description: Manage the SpaceTravel plugin modules.
-    usage: /<command> <status|reload>
+    usage: /<command> <status|reload|give>

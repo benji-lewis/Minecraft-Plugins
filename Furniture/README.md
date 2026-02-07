@@ -5,6 +5,7 @@ Furniture adds a large catalog of decorative items split into themed modules. En
 ## Commands
 - `/furniture status` - lists module enablement and loaded module count.
 - `/furniture reload` - reloads the configuration file.
+- `/furniture give <player> <item> [amount]` - gives a furniture item to a player (omit `<player>` to give to yourself).
 
 ## Crafting & Usage
 Furniture items are crafted via themed recipes and placed by right-clicking blocks. See the player documentation for full recipes and placement guidance.

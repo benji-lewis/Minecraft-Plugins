@@ -5,6 +5,7 @@ SpaceTravel adds configurable interplanetary travel systems such as launch pads,
 ## Commands
 - `/spacetravel status` - lists module enablement and loaded module count.
 - `/spacetravel reload` - reloads the configuration file.
+- `/spacetravel give <player> <item> [amount]` - gives a space travel item to a player (omit `<player>` to give to yourself).
 
 ## Crafting & Usage
 Space travel tools are crafted via custom recipes and used by right-clicking with the crafted item. See the player documentation for full recipes and usage guidance.

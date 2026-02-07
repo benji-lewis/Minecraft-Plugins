@@ -33,7 +33,7 @@ public final class SpaceTravelPlugin extends JavaPlugin {
 
         PluginCommand command = getCommand("spacetravel");
         if (command != null) {
-            SpaceTravelCommand spaceTravelCommand = new SpaceTravelCommand(this, modules);
+            SpaceTravelCommand spaceTravelCommand = new SpaceTravelCommand(this, modules, itemFactory);
             command.setExecutor(spaceTravelCommand);
             command.setTabCompleter(spaceTravelCommand);
         }

@@ -8,4 +8,4 @@ description: Expansive furniture catalogue with modular decor packs.
 commands:
   furniture:
     description: Manage the Furniture plugin modules.
-    usage: /<command> <status|reload>
+    usage: /<command> <status|reload|give>

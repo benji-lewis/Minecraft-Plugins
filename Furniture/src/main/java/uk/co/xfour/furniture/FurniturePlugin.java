@@ -41,7 +41,7 @@ public final class FurniturePlugin extends JavaPlugin {
 
         PluginCommand command = getCommand("furniture");
         if (command != null) {
-            FurnitureCommand furnitureCommand = new FurnitureCommand(this, modules);
+            FurnitureCommand furnitureCommand = new FurnitureCommand(this, modules, itemFactory);
             command.setExecutor(furnitureCommand);
             command.setTabCompleter(furnitureCommand);
         }
