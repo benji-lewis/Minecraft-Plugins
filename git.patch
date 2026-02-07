@@ -1,0 +1,2077 @@
+diff --git a/.github/workflows/furniture.yml b/.github/workflows/furniture.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..31c0ef59add25daef3090f84df351e299b42221b
+--- /dev/null
++++ b/.github/workflows/furniture.yml
+@@ -0,0 +1,78 @@
++name: Furniture
++
++on:
++  push:
++    branches: ["main", "develop"]
++    paths: ["Furniture/**", "docs/MC-Docs/docs/plugins/furniture.md", ".github/workflows/furniture.yml"]
++  pull_request:
++    paths: ["Furniture/**", "docs/MC-Docs/docs/plugins/furniture.md", ".github/workflows/furniture.yml"]
++
++jobs:
++  test-furniture:
++    runs-on: ubuntu-latest
++    env:
++      PLUGIN_VERSION: 1.0.${{ github.run_number }}
++    steps:
++      - uses: actions/checkout@v4
++      - uses: actions/setup-java@v4
++        with:
++          distribution: temurin
++          java-version: '21'
++          cache: maven
++      - name: Run tests
++        run: mvn -f Furniture/pom.xml test
++      - name: Set build version
++        run: mvn -f Furniture/pom.xml versions:set -DnewVersion=${PLUGIN_VERSION} -DgenerateBackupPoms=false
++      - name: Package jar
++        run: mvn -f Furniture/pom.xml -DskipTests package
++      - name: Upload jar artifact
++        uses: actions/upload-artifact@v4
++        with:
++          name: furniture-jar
++          path: Furniture/target/furniture-${{ env.PLUGIN_VERSION }}.jar
++
++  deploy-testing:
++    runs-on: ubuntu-latest
++    needs: test-furniture
++    if: github.event_name == 'pull_request'
++    environment: testing
++    env:
++      PLUGIN_VERSION: 1.0.${{ github.run_number }}
++    steps:
++      - uses: actions/download-artifact@v4
++        with:
++          name: furniture-jar
++          path: dist
++      - name: Remove previous deployment jar
++        run: rm -f dist/furniture.jar
++      - name: Upload jar to testing server
++        uses: Dylan700/sftp-upload-action@latest
++        with:
++          server: ${{ vars.SFTP_URL }}
++          username: ${{ vars.SFTP_USERNAME }}
++          password: ${{ secrets.SFTP_PASSWORD }}
++          port: ${{ vars.SFTP_PORT }}
++          uploads: ./dist/furniture-${{ env.PLUGIN_VERSION }}.jar => ./plugins/furniture.jar
++
++  deploy-production:
++    runs-on: ubuntu-latest
++    needs: test-furniture
++    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
++    environment: production
++    env:
++      PLUGIN_VERSION: 1.0.${{ github.run_number }}
++    steps:
++      - uses: actions/download-artifact@v4
++        with:
++          name: furniture-jar
++          path: dist
++      - name: Remove previous deployment jar
++        run: rm -f dist/furniture.jar
++      - name: Upload jar to production server
++        uses: Dylan700/sftp-upload-action@latest
++        with:
++          server: ${{ vars.SFTP_URL }}
++          username: ${{ vars.SFTP_USERNAME }}
++          password: ${{ secrets.SFTP_PASSWORD }}
++          port: ${{ vars.SFTP_PORT }}
++          uploads: ./dist/furniture-${{ env.PLUGIN_VERSION }}.jar => ./plugins/furniture.jar
+diff --git a/.github/workflows/spacetravel.yml b/.github/workflows/spacetravel.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..b486cdb212daece489ab455886e5ded3636c2d7e
+--- /dev/null
++++ b/.github/workflows/spacetravel.yml
+@@ -0,0 +1,78 @@
++name: SpaceTravel
++
++on:
++  push:
++    branches: ["main", "develop"]
++    paths: ["SpaceTravel/**", "docs/MC-Docs/docs/plugins/space-travel.md", ".github/workflows/spacetravel.yml"]
++  pull_request:
++    paths: ["SpaceTravel/**", "docs/MC-Docs/docs/plugins/space-travel.md", ".github/workflows/spacetravel.yml"]
++
++jobs:
++  test-spacetravel:
++    runs-on: ubuntu-latest
++    env:
++      PLUGIN_VERSION: 1.0.${{ github.run_number }}
++    steps:
++      - uses: actions/checkout@v4
++      - uses: actions/setup-java@v4
++        with:
++          distribution: temurin
++          java-version: '21'
++          cache: maven
++      - name: Run tests
++        run: mvn -f SpaceTravel/pom.xml test
++      - name: Set build version
++        run: mvn -f SpaceTravel/pom.xml versions:set -DnewVersion=${PLUGIN_VERSION} -DgenerateBackupPoms=false
++      - name: Package jar
++        run: mvn -f SpaceTravel/pom.xml -DskipTests package
++      - name: Upload jar artifact
++        uses: actions/upload-artifact@v4
++        with:
++          name: spacetravel-jar
++          path: SpaceTravel/target/spacetravel-${{ env.PLUGIN_VERSION }}.jar
++
++  deploy-testing:
++    runs-on: ubuntu-latest
++    needs: test-spacetravel
++    if: github.event_name == 'pull_request'
++    environment: testing
++    env:
++      PLUGIN_VERSION: 1.0.${{ github.run_number }}
++    steps:
++      - uses: actions/download-artifact@v4
++        with:
++          name: spacetravel-jar
++          path: dist
++      - name: Remove previous deployment jar
++        run: rm -f dist/spacetravel.jar
++      - name: Upload jar to testing server
++        uses: Dylan700/sftp-upload-action@latest
++        with:
++          server: ${{ vars.SFTP_URL }}
++          username: ${{ vars.SFTP_USERNAME }}
++          password: ${{ secrets.SFTP_PASSWORD }}
++          port: ${{ vars.SFTP_PORT }}
++          uploads: ./dist/spacetravel-${{ env.PLUGIN_VERSION }}.jar => ./plugins/spacetravel.jar
++
++  deploy-production:
++    runs-on: ubuntu-latest
++    needs: test-spacetravel
++    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
++    environment: production
++    env:
++      PLUGIN_VERSION: 1.0.${{ github.run_number }}
++    steps:
++      - uses: actions/download-artifact@v4
++        with:
++          name: spacetravel-jar
++          path: dist
++      - name: Remove previous deployment jar
++        run: rm -f dist/spacetravel.jar
++      - name: Upload jar to production server
++        uses: Dylan700/sftp-upload-action@latest
++        with:
++          server: ${{ vars.SFTP_URL }}
++          username: ${{ vars.SFTP_USERNAME }}
++          password: ${{ secrets.SFTP_PASSWORD }}
++          port: ${{ vars.SFTP_PORT }}
++          uploads: ./dist/spacetravel-${{ env.PLUGIN_VERSION }}.jar => ./plugins/spacetravel.jar
+diff --git a/.github/workflows/transport.yml b/.github/workflows/transport.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..9feb81bf62c1c1cbc57770e3c1d8b9c12f6fee66
+--- /dev/null
++++ b/.github/workflows/transport.yml
+@@ -0,0 +1,78 @@
++name: Transport
++
++on:
++  push:
++    branches: ["main", "develop"]
++    paths: ["Transport/**", "docs/MC-Docs/docs/plugins/transport.md", ".github/workflows/transport.yml"]
++  pull_request:
++    paths: ["Transport/**", "docs/MC-Docs/docs/plugins/transport.md", ".github/workflows/transport.yml"]
++
++jobs:
++  test-transport:
++    runs-on: ubuntu-latest
++    env:
++      PLUGIN_VERSION: 1.0.${{ github.run_number }}
++    steps:
++      - uses: actions/checkout@v4
++      - uses: actions/setup-java@v4
++        with:
++          distribution: temurin
++          java-version: '21'
++          cache: maven
++      - name: Run tests
++        run: mvn -f Transport/pom.xml test
++      - name: Set build version
++        run: mvn -f Transport/pom.xml versions:set -DnewVersion=${PLUGIN_VERSION} -DgenerateBackupPoms=false
++      - name: Package jar
++        run: mvn -f Transport/pom.xml -DskipTests package
++      - name: Upload jar artifact
++        uses: actions/upload-artifact@v4
++        with:
++          name: transport-jar
++          path: Transport/target/transport-${{ env.PLUGIN_VERSION }}.jar
++
++  deploy-testing:
++    runs-on: ubuntu-latest
++    needs: test-transport
++    if: github.event_name == 'pull_request'
++    environment: testing
++    env:
++      PLUGIN_VERSION: 1.0.${{ github.run_number }}
++    steps:
++      - uses: actions/download-artifact@v4
++        with:
++          name: transport-jar
++          path: dist
++      - name: Remove previous deployment jar
++        run: rm -f dist/transport.jar
++      - name: Upload jar to testing server
++        uses: Dylan700/sftp-upload-action@latest
++        with:
++          server: ${{ vars.SFTP_URL }}
++          username: ${{ vars.SFTP_USERNAME }}
++          password: ${{ secrets.SFTP_PASSWORD }}
++          port: ${{ vars.SFTP_PORT }}
++          uploads: ./dist/transport-${{ env.PLUGIN_VERSION }}.jar => ./plugins/transport.jar
++
++  deploy-production:
++    runs-on: ubuntu-latest
++    needs: test-transport
++    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
++    environment: production
++    env:
++      PLUGIN_VERSION: 1.0.${{ github.run_number }}
++    steps:
++      - uses: actions/download-artifact@v4
++        with:
++          name: transport-jar
++          path: dist
++      - name: Remove previous deployment jar
++        run: rm -f dist/transport.jar
++      - name: Upload jar to production server
++        uses: Dylan700/sftp-upload-action@latest
++        with:
++          server: ${{ vars.SFTP_URL }}
++          username: ${{ vars.SFTP_USERNAME }}
++          password: ${{ secrets.SFTP_PASSWORD }}
++          port: ${{ vars.SFTP_PORT }}
++          uploads: ./dist/transport-${{ env.PLUGIN_VERSION }}.jar => ./plugins/transport.jar
+diff --git a/Furniture/AGENTS.md b/Furniture/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..c45a7ea34bb653fc25577ae662d7eddfb78b433e
+--- /dev/null
++++ b/Furniture/AGENTS.md
+@@ -0,0 +1,6 @@
++# Furniture Plugin Instructions
++
++- Keep orchestration in `FurniturePlugin.java` and module logic in `modules/` classes.
++- Keep module toggles and tuning values in `config.yml`.
++- Update `README.md`, `plugin.yml`, and player docs when changing player-facing behavior.
++- Use Paper APIs only.
+diff --git a/Furniture/README.md b/Furniture/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..8c74390bc2a4787a45d3a163345bead0df270686
+--- /dev/null
++++ b/Furniture/README.md
+@@ -0,0 +1,20 @@
++# Furniture Plugin
++
++Furniture adds a large catalog of decorative items split into themed modules. Enable the modules you need and customise their item lists in `config.yml`.
++
++## Modules
++- Seating
++- Tables
++- Storage
++- Lighting
++- Decor
++- Outdoor
++- Kitchen
++- Bedroom
++- Bathroom
++
++## Configuration
++See `config.yml` for module toggles and furniture lists.
++
++## Documentation
++Player documentation lives in `docs/MC-Docs/docs/plugins/furniture.md`.
+diff --git a/Furniture/pom.xml b/Furniture/pom.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..852221403c5f259e5c8393195d3224c13f698450
+--- /dev/null
++++ b/Furniture/pom.xml
+@@ -0,0 +1,51 @@
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++
++    <groupId>uk.co.xfour</groupId>
++    <artifactId>furniture</artifactId>
++    <version>1.0.0</version>
++    <packaging>jar</packaging>
++
++    <name>Furniture</name>
++
++    <properties>
++        <maven.compiler.source>21</maven.compiler.source>
++        <maven.compiler.target>21</maven.compiler.target>
++        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <junit.version>5.10.2</junit.version>
++    </properties>
++
++    <repositories>
++        <repository>
++            <id>papermc</id>
++            <url>https://repo.papermc.io/repository/maven-public/</url>
++        </repository>
++    </repositories>
++
++    <dependencies>
++        <dependency>
++            <groupId>io.papermc.paper</groupId>
++            <artifactId>paper-api</artifactId>
++            <version>1.21.11-R0.1-SNAPSHOT</version>
++            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.junit.jupiter</groupId>
++            <artifactId>junit-jupiter</artifactId>
++            <version>${junit.version}</version>
++            <scope>test</scope>
++        </dependency>
++    </dependencies>
++
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-surefire-plugin</artifactId>
++                <version>3.2.5</version>
++            </plugin>
++        </plugins>
++    </build>
++</project>
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/FurniturePlugin.java b/Furniture/src/main/java/uk/co/xfour/furniture/FurniturePlugin.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..db55b51e8b04bba22807eddcad59f3b83d821600
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/FurniturePlugin.java
+@@ -0,0 +1,51 @@
++package uk.co.xfour.furniture;
++
++import java.util.ArrayList;
++import java.util.List;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.modules.BathroomModule;
++import uk.co.xfour.furniture.modules.BedroomModule;
++import uk.co.xfour.furniture.modules.DecorModule;
++import uk.co.xfour.furniture.modules.KitchenModule;
++import uk.co.xfour.furniture.modules.LightingModule;
++import uk.co.xfour.furniture.modules.Module;
++import uk.co.xfour.furniture.modules.OutdoorModule;
++import uk.co.xfour.furniture.modules.SeatingModule;
++import uk.co.xfour.furniture.modules.StorageModule;
++import uk.co.xfour.furniture.modules.TablesModule;
++
++/**
++ * Main plugin entrypoint for Furniture.
++ */
++public final class FurniturePlugin extends JavaPlugin {
++    private final List<Module> modules = new ArrayList<>();
++
++    @Override
++    public void onEnable() {
++        saveDefaultConfig();
++
++        modules.add(new SeatingModule(this));
++        modules.add(new TablesModule(this));
++        modules.add(new StorageModule(this));
++        modules.add(new LightingModule(this));
++        modules.add(new DecorModule(this));
++        modules.add(new OutdoorModule(this));
++        modules.add(new KitchenModule(this));
++        modules.add(new BedroomModule(this));
++        modules.add(new BathroomModule(this));
++
++        for (Module module : modules) {
++            module.start();
++        }
++
++        getLogger().info("Furniture modules initialised.");
++    }
++
++    @Override
++    public void onDisable() {
++        for (Module module : modules) {
++            module.stop();
++        }
++        getLogger().info("Furniture modules stopped.");
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/FurnitureRegistry.java b/Furniture/src/main/java/uk/co/xfour/furniture/FurnitureRegistry.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..c85eb113588850eea022c7a5d5b877a0ae7ece69
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/FurnitureRegistry.java
+@@ -0,0 +1,25 @@
++package uk.co.xfour.furniture;
++
++/**
++ * Utility helpers for furniture module limits.
++ */
++public final class FurnitureRegistry {
++    private FurnitureRegistry() {
++    }
++
++    /**
++     * Normalises the configured maximum items per module.
++     *
++     * @param limit the configured limit
++     * @return the normalised limit between 4 and 48
++     */
++    public static int normaliseLimit(int limit) {
++        if (limit < 4) {
++            return 4;
++        }
++        if (limit > 48) {
++            return 48;
++        }
++        return limit;
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/BathroomModule.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/BathroomModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..2f6c0dc1488509c3c9621cab90494ae176bb99ff
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/BathroomModule.java
+@@ -0,0 +1,47 @@
++package uk.co.xfour.furniture.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.FurnitureRegistry;
++
++/**
++ * Controls bathroom furniture definitions.
++ */
++public final class BathroomModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a bathroom module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public BathroomModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.bathroom.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Bathroom module disabled via config.");
++            return;
++        }
++        List<String> items = config.getStringList("modules.bathroom.items");
++        int limit = FurnitureRegistry.normaliseLimit(config.getInt("modules.tuning.max-items-per-module", 24));
++        int count = Math.min(items.size(), limit);
++        plugin.getLogger().info("Bathroom module enabled with " + count + " items (limit " + limit + ").");
++        if (items.size() > limit) {
++            plugin.getLogger().warning("Bathroom module has more items than the configured limit.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Bathroom module stopped.");
++        }
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/BedroomModule.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/BedroomModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..3d176569cabb2ce2b8249369b19663d84a9c053b
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/BedroomModule.java
+@@ -0,0 +1,47 @@
++package uk.co.xfour.furniture.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.FurnitureRegistry;
++
++/**
++ * Controls bedroom furniture definitions.
++ */
++public final class BedroomModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a bedroom module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public BedroomModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.bedroom.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Bedroom module disabled via config.");
++            return;
++        }
++        List<String> items = config.getStringList("modules.bedroom.items");
++        int limit = FurnitureRegistry.normaliseLimit(config.getInt("modules.tuning.max-items-per-module", 24));
++        int count = Math.min(items.size(), limit);
++        plugin.getLogger().info("Bedroom module enabled with " + count + " items (limit " + limit + ").");
++        if (items.size() > limit) {
++            plugin.getLogger().warning("Bedroom module has more items than the configured limit.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Bedroom module stopped.");
++        }
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/DecorModule.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/DecorModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..b5598a2c0442a8cf1d392f8c60057681baf896a8
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/DecorModule.java
+@@ -0,0 +1,47 @@
++package uk.co.xfour.furniture.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.FurnitureRegistry;
++
++/**
++ * Controls decorative furniture definitions.
++ */
++public final class DecorModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a decor module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public DecorModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.decor.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Decor module disabled via config.");
++            return;
++        }
++        List<String> items = config.getStringList("modules.decor.items");
++        int limit = FurnitureRegistry.normaliseLimit(config.getInt("modules.tuning.max-items-per-module", 24));
++        int count = Math.min(items.size(), limit);
++        plugin.getLogger().info("Decor module enabled with " + count + " items (limit " + limit + ").");
++        if (items.size() > limit) {
++            plugin.getLogger().warning("Decor module has more items than the configured limit.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Decor module stopped.");
++        }
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/KitchenModule.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/KitchenModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..bb8f65d114e47a7866a2c9cad177ffcfd20c2abc
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/KitchenModule.java
+@@ -0,0 +1,47 @@
++package uk.co.xfour.furniture.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.FurnitureRegistry;
++
++/**
++ * Controls kitchen furniture definitions.
++ */
++public final class KitchenModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a kitchen module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public KitchenModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.kitchen.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Kitchen module disabled via config.");
++            return;
++        }
++        List<String> items = config.getStringList("modules.kitchen.items");
++        int limit = FurnitureRegistry.normaliseLimit(config.getInt("modules.tuning.max-items-per-module", 24));
++        int count = Math.min(items.size(), limit);
++        plugin.getLogger().info("Kitchen module enabled with " + count + " items (limit " + limit + ").");
++        if (items.size() > limit) {
++            plugin.getLogger().warning("Kitchen module has more items than the configured limit.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Kitchen module stopped.");
++        }
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/LightingModule.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/LightingModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..5aaba2d5e1544702dfbada0e802dbbdef03f93b0
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/LightingModule.java
+@@ -0,0 +1,47 @@
++package uk.co.xfour.furniture.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.FurnitureRegistry;
++
++/**
++ * Controls lighting furniture definitions.
++ */
++public final class LightingModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a lighting module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public LightingModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.lighting.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Lighting module disabled via config.");
++            return;
++        }
++        List<String> items = config.getStringList("modules.lighting.items");
++        int limit = FurnitureRegistry.normaliseLimit(config.getInt("modules.tuning.max-items-per-module", 24));
++        int count = Math.min(items.size(), limit);
++        plugin.getLogger().info("Lighting module enabled with " + count + " items (limit " + limit + ").");
++        if (items.size() > limit) {
++            plugin.getLogger().warning("Lighting module has more items than the configured limit.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Lighting module stopped.");
++        }
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/Module.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/Module.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..8c8c80cd12debe981a73584da5642854cb93d45a
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/Module.java
+@@ -0,0 +1,16 @@
++package uk.co.xfour.furniture.modules;
++
++/**
++ * Lifecycle contract for a configurable Furniture module.
++ */
++public interface Module {
++    /**
++     * Starts this module.
++     */
++    void start();
++
++    /**
++     * Stops this module.
++     */
++    void stop();
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/OutdoorModule.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/OutdoorModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..f18dfe7982c5b8e75e6c5072bc42b64e9ed9ff25
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/OutdoorModule.java
+@@ -0,0 +1,47 @@
++package uk.co.xfour.furniture.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.FurnitureRegistry;
++
++/**
++ * Controls outdoor furniture definitions.
++ */
++public final class OutdoorModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates an outdoor module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public OutdoorModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.outdoor.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Outdoor module disabled via config.");
++            return;
++        }
++        List<String> items = config.getStringList("modules.outdoor.items");
++        int limit = FurnitureRegistry.normaliseLimit(config.getInt("modules.tuning.max-items-per-module", 24));
++        int count = Math.min(items.size(), limit);
++        plugin.getLogger().info("Outdoor module enabled with " + count + " items (limit " + limit + ").");
++        if (items.size() > limit) {
++            plugin.getLogger().warning("Outdoor module has more items than the configured limit.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Outdoor module stopped.");
++        }
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/SeatingModule.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/SeatingModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..72a6b68830c24b6372fb3633abc58e613931a77f
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/SeatingModule.java
+@@ -0,0 +1,47 @@
++package uk.co.xfour.furniture.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.FurnitureRegistry;
++
++/**
++ * Controls seating furniture definitions.
++ */
++public final class SeatingModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a seating module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public SeatingModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.seating.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Seating module disabled via config.");
++            return;
++        }
++        List<String> items = config.getStringList("modules.seating.items");
++        int limit = FurnitureRegistry.normaliseLimit(config.getInt("modules.tuning.max-items-per-module", 24));
++        int count = Math.min(items.size(), limit);
++        plugin.getLogger().info("Seating module enabled with " + count + " items (limit " + limit + ").");
++        if (items.size() > limit) {
++            plugin.getLogger().warning("Seating module has more items than the configured limit.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Seating module stopped.");
++        }
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/StorageModule.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/StorageModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..86b8b3a6008deaca91e92041659e2165612605fd
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/StorageModule.java
+@@ -0,0 +1,47 @@
++package uk.co.xfour.furniture.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.FurnitureRegistry;
++
++/**
++ * Controls storage furniture definitions.
++ */
++public final class StorageModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a storage module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public StorageModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.storage.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Storage module disabled via config.");
++            return;
++        }
++        List<String> items = config.getStringList("modules.storage.items");
++        int limit = FurnitureRegistry.normaliseLimit(config.getInt("modules.tuning.max-items-per-module", 24));
++        int count = Math.min(items.size(), limit);
++        plugin.getLogger().info("Storage module enabled with " + count + " items (limit " + limit + ").");
++        if (items.size() > limit) {
++            plugin.getLogger().warning("Storage module has more items than the configured limit.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Storage module stopped.");
++        }
++    }
++}
+diff --git a/Furniture/src/main/java/uk/co/xfour/furniture/modules/TablesModule.java b/Furniture/src/main/java/uk/co/xfour/furniture/modules/TablesModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..c00122bdcc2183f91690d5b1a83044b90a598041
+--- /dev/null
++++ b/Furniture/src/main/java/uk/co/xfour/furniture/modules/TablesModule.java
+@@ -0,0 +1,47 @@
++package uk.co.xfour.furniture.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.furniture.FurnitureRegistry;
++
++/**
++ * Controls table furniture definitions.
++ */
++public final class TablesModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a tables module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public TablesModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.tables.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Tables module disabled via config.");
++            return;
++        }
++        List<String> items = config.getStringList("modules.tables.items");
++        int limit = FurnitureRegistry.normaliseLimit(config.getInt("modules.tuning.max-items-per-module", 24));
++        int count = Math.min(items.size(), limit);
++        plugin.getLogger().info("Tables module enabled with " + count + " items (limit " + limit + ").");
++        if (items.size() > limit) {
++            plugin.getLogger().warning("Tables module has more items than the configured limit.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Tables module stopped.");
++        }
++    }
++}
+diff --git a/Furniture/src/main/resources/config.yml b/Furniture/src/main/resources/config.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..e050bf734be2ed5355b9636df9ceb83acccc8063
+--- /dev/null
++++ b/Furniture/src/main/resources/config.yml
+@@ -0,0 +1,66 @@
++modules:
++  seating:
++    enabled: true
++    items:
++      - oak-armchair
++      - spruce-sofa
++      - crimson-bench
++      - leather-recliner
++  tables:
++    enabled: true
++    items:
++      - oak-dining-table
++      - birch-coffee-table
++      - granite-side-table
++      - glass-console-table
++  storage:
++    enabled: true
++    items:
++      - wardrobe
++      - cabinet
++      - dresser
++      - bookshelf
++  lighting:
++    enabled: true
++    items:
++      - chandelier
++      - floor-lamp
++      - wall-sconce
++      - lantern-stand
++  decor:
++    enabled: true
++    items:
++      - rug
++      - wall-clock
++      - vase
++      - painting-set
++  outdoor:
++    enabled: true
++    items:
++      - patio-chair
++      - garden-bench
++      - pergola
++      - firepit
++  kitchen:
++    enabled: true
++    items:
++      - oven-range
++      - kitchen-island
++      - pantry-shelf
++      - sink-unit
++  bedroom:
++    enabled: true
++    items:
++      - canopy-bed
++      - bunk-bed
++      - bedside-table
++      - vanity
++  bathroom:
++    enabled: true
++    items:
++      - bathtub
++      - sink-basin
++      - towel-rack
++      - mirror
++  tuning:
++    max-items-per-module: 24
+diff --git a/Furniture/src/main/resources/plugin.yml b/Furniture/src/main/resources/plugin.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..01fa2ffbe79d3d8a1016652bec321cb0899a3546
+--- /dev/null
++++ b/Furniture/src/main/resources/plugin.yml
+@@ -0,0 +1,7 @@
++name: Furniture
++version: ${project.version}
++main: uk.co.xfour.furniture.FurniturePlugin
++api-version: '1.21'
++author: xfour
++website: https://github.com/xfour/Minecraft-Plugins
++description: Expansive furniture catalogue with modular decor packs.
+diff --git a/Furniture/src/test/java/uk/co/xfour/furniture/FurnitureRegistryTest.java b/Furniture/src/test/java/uk/co/xfour/furniture/FurnitureRegistryTest.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..25cb94e271c8e31588dd0229ea1594fc043536bd
+--- /dev/null
++++ b/Furniture/src/test/java/uk/co/xfour/furniture/FurnitureRegistryTest.java
+@@ -0,0 +1,17 @@
++package uk.co.xfour.furniture;
++
++import static org.junit.jupiter.api.Assertions.assertEquals;
++
++import org.junit.jupiter.api.Test;
++
++/**
++ * Tests for furniture registry helpers.
++ */
++class FurnitureRegistryTest {
++    @Test
++    void normaliseLimit() {
++        assertEquals(4, FurnitureRegistry.normaliseLimit(0));
++        assertEquals(48, FurnitureRegistry.normaliseLimit(100));
++        assertEquals(24, FurnitureRegistry.normaliseLimit(24));
++    }
++}
+diff --git a/SpaceTravel/AGENTS.md b/SpaceTravel/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..181dcefca56d2f985d6e35318e50f93f5ab0f067
+--- /dev/null
++++ b/SpaceTravel/AGENTS.md
+@@ -0,0 +1,6 @@
++# SpaceTravel Plugin Instructions
++
++- Keep orchestration in `SpaceTravelPlugin.java` and module logic in `modules/` classes.
++- Keep module toggles and tuning values in `config.yml`.
++- Update `README.md`, `plugin.yml`, and player docs when changing player-facing behavior.
++- Use Paper APIs only.
+diff --git a/SpaceTravel/README.md b/SpaceTravel/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..fd3a546670eed2bb1bb54db0877f46703d25625f
+--- /dev/null
++++ b/SpaceTravel/README.md
+@@ -0,0 +1,16 @@
++# SpaceTravel Plugin
++
++SpaceTravel adds configurable interplanetary travel systems such as launch pads, orbital stations, and route planners. Each area is modular and can be toggled in `config.yml`.
++
++## Modules
++- Launch pads
++- Orbital stations
++- Planet routes
++- Space suits
++- Asteroid mining
++
++## Configuration
++See `config.yml` for module toggles and tuning options.
++
++## Documentation
++Player documentation lives in `docs/MC-Docs/docs/plugins/space-travel.md`.
+diff --git a/SpaceTravel/pom.xml b/SpaceTravel/pom.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..c8e9ad84c4e48c58ac99cfec38bfeb9c6cea6792
+--- /dev/null
++++ b/SpaceTravel/pom.xml
+@@ -0,0 +1,51 @@
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++
++    <groupId>uk.co.xfour</groupId>
++    <artifactId>spacetravel</artifactId>
++    <version>1.0.0</version>
++    <packaging>jar</packaging>
++
++    <name>SpaceTravel</name>
++
++    <properties>
++        <maven.compiler.source>21</maven.compiler.source>
++        <maven.compiler.target>21</maven.compiler.target>
++        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <junit.version>5.10.2</junit.version>
++    </properties>
++
++    <repositories>
++        <repository>
++            <id>papermc</id>
++            <url>https://repo.papermc.io/repository/maven-public/</url>
++        </repository>
++    </repositories>
++
++    <dependencies>
++        <dependency>
++            <groupId>io.papermc.paper</groupId>
++            <artifactId>paper-api</artifactId>
++            <version>1.21.11-R0.1-SNAPSHOT</version>
++            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.junit.jupiter</groupId>
++            <artifactId>junit-jupiter</artifactId>
++            <version>${junit.version}</version>
++            <scope>test</scope>
++        </dependency>
++    </dependencies>
++
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-surefire-plugin</artifactId>
++                <version>3.2.5</version>
++            </plugin>
++        </plugins>
++    </build>
++</project>
+diff --git a/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/LaunchWindow.java b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/LaunchWindow.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..469ba6d5e4789c5eed82d47e6b19044e83f6def1
+--- /dev/null
++++ b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/LaunchWindow.java
+@@ -0,0 +1,25 @@
++package uk.co.xfour.spacetravel;
++
++/**
++ * Utility helpers for space travel timings.
++ */
++public final class LaunchWindow {
++    private LaunchWindow() {
++    }
++
++    /**
++     * Normalises the window size for travel routes.
++     *
++     * @param hours the configured window size in hours
++     * @return the normalised window size between 1 and 72
++     */
++    public static int normaliseWindowHours(int hours) {
++        if (hours < 1) {
++            return 1;
++        }
++        if (hours > 72) {
++            return 72;
++        }
++        return hours;
++    }
++}
+diff --git a/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/SpaceTravelPlugin.java b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/SpaceTravelPlugin.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..b9620cc20129bbe1e7aee74432b3d18e3c60e31b
+--- /dev/null
++++ b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/SpaceTravelPlugin.java
+@@ -0,0 +1,43 @@
++package uk.co.xfour.spacetravel;
++
++import java.util.ArrayList;
++import java.util.List;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.spacetravel.modules.AsteroidMiningModule;
++import uk.co.xfour.spacetravel.modules.LaunchPadsModule;
++import uk.co.xfour.spacetravel.modules.Module;
++import uk.co.xfour.spacetravel.modules.OrbitalStationsModule;
++import uk.co.xfour.spacetravel.modules.PlanetRoutesModule;
++import uk.co.xfour.spacetravel.modules.SpaceSuitsModule;
++
++/**
++ * Main plugin entrypoint for SpaceTravel.
++ */
++public final class SpaceTravelPlugin extends JavaPlugin {
++    private final List<Module> modules = new ArrayList<>();
++
++    @Override
++    public void onEnable() {
++        saveDefaultConfig();
++
++        modules.add(new LaunchPadsModule(this));
++        modules.add(new OrbitalStationsModule(this));
++        modules.add(new PlanetRoutesModule(this));
++        modules.add(new SpaceSuitsModule(this));
++        modules.add(new AsteroidMiningModule(this));
++
++        for (Module module : modules) {
++            module.start();
++        }
++
++        getLogger().info("SpaceTravel modules initialised.");
++    }
++
++    @Override
++    public void onDisable() {
++        for (Module module : modules) {
++            module.stop();
++        }
++        getLogger().info("SpaceTravel modules stopped.");
++    }
++}
+diff --git a/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/AsteroidMiningModule.java b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/AsteroidMiningModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..7677a99cf5f25c25684e690cdda684a6629681e2
+--- /dev/null
++++ b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/AsteroidMiningModule.java
+@@ -0,0 +1,42 @@
++package uk.co.xfour.spacetravel.modules;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++
++/**
++ * Controls asteroid mining rewards and hazards.
++ */
++public final class AsteroidMiningModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates an asteroid mining module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public AsteroidMiningModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.asteroid-mining.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Asteroid mining module disabled via config.");
++            return;
++        }
++        double bonusOreChance = config.getDouble("modules.asteroid-mining.bonus-ore-chance", 0.35);
++        double hazardRate = config.getDouble("modules.asteroid-mining.hazard-rate", 0.15);
++        plugin.getLogger().info("Asteroid mining module enabled with bonus chance: " + bonusOreChance
++                + ", hazard rate: " + hazardRate + ".");
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Asteroid mining module stopped.");
++        }
++    }
++}
+diff --git a/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/LaunchPadsModule.java b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/LaunchPadsModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b9b621d7579d617a99a55b0c8cff7aefa4dc48b
+--- /dev/null
++++ b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/LaunchPadsModule.java
+@@ -0,0 +1,43 @@
++package uk.co.xfour.spacetravel.modules;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++
++/**
++ * Controls launch pad behaviour and cooldowns.
++ */
++public final class LaunchPadsModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a launch pads module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public LaunchPadsModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.launch-pads.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Launch pads module disabled via config.");
++            return;
++        }
++        int cooldownSeconds = config.getInt("modules.launch-pads.cooldown-seconds", 45);
++        String launchSound = config.getString("modules.launch-pads.launch-sound",
++                "minecraft:entity.ender_dragon.growl");
++        plugin.getLogger().info("Launch pads module enabled with cooldown: " + cooldownSeconds
++                + ", sound: " + launchSound + ".");
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Launch pads module stopped.");
++        }
++    }
++}
+diff --git a/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/Module.java b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/Module.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..058335da3f97a209c24852852b1ded219327a97f
+--- /dev/null
++++ b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/Module.java
+@@ -0,0 +1,16 @@
++package uk.co.xfour.spacetravel.modules;
++
++/**
++ * Lifecycle contract for a configurable SpaceTravel module.
++ */
++public interface Module {
++    /**
++     * Starts this module.
++     */
++    void start();
++
++    /**
++     * Stops this module.
++     */
++    void stop();
++}
+diff --git a/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/OrbitalStationsModule.java b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/OrbitalStationsModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..8c070b1d2087c38e3d9f4bfab84ab381abf615df
+--- /dev/null
++++ b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/OrbitalStationsModule.java
+@@ -0,0 +1,42 @@
++package uk.co.xfour.spacetravel.modules;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++
++/**
++ * Controls orbital station capacity and safety checks.
++ */
++public final class OrbitalStationsModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates an orbital stations module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public OrbitalStationsModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.orbital-stations.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Orbital stations module disabled via config.");
++            return;
++        }
++        int maxDocks = config.getInt("modules.orbital-stations.max-docks", 6);
++        boolean airlocksRequired = config.getBoolean("modules.orbital-stations.airlocks-required", true);
++        plugin.getLogger().info("Orbital stations module enabled with docks: " + maxDocks
++                + ", airlocks required: " + airlocksRequired + ".");
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Orbital stations module stopped.");
++        }
++    }
++}
+diff --git a/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/PlanetRoutesModule.java b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/PlanetRoutesModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..ebcea34dffbd1c28d37f57fb29a78328052f25cd
+--- /dev/null
++++ b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/PlanetRoutesModule.java
+@@ -0,0 +1,44 @@
++package uk.co.xfour.spacetravel.modules;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.spacetravel.LaunchWindow;
++
++/**
++ * Controls planet-to-planet travel routing.
++ */
++public final class PlanetRoutesModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a planet routes module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public PlanetRoutesModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.planet-routes.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Planet routes module disabled via config.");
++            return;
++        }
++        int defaultWindowHours = LaunchWindow.normaliseWindowHours(
++                config.getInt("modules.planet-routes.default-window-hours", 24));
++        int routeLimit = config.getInt("modules.planet-routes.route-limit", 12);
++        plugin.getLogger().info("Planet routes module enabled with window: " + defaultWindowHours
++                + "h, route limit: " + routeLimit + ".");
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Planet routes module stopped.");
++        }
++    }
++}
+diff --git a/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/SpaceSuitsModule.java b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/SpaceSuitsModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..553a46b98610496655434f218e35dd00071b3ba8
+--- /dev/null
++++ b/SpaceTravel/src/main/java/uk/co/xfour/spacetravel/modules/SpaceSuitsModule.java
+@@ -0,0 +1,42 @@
++package uk.co.xfour.spacetravel.modules;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++
++/**
++ * Controls space suit oxygen and repair items.
++ */
++public final class SpaceSuitsModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a space suits module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public SpaceSuitsModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.space-suits.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Space suits module disabled via config.");
++            return;
++        }
++        int oxygenSeconds = config.getInt("modules.space-suits.oxygen-seconds", 300);
++        String repairItem = config.getString("modules.space-suits.repair-item", "minecraft:iron_ingot");
++        plugin.getLogger().info("Space suits module enabled with oxygen: " + oxygenSeconds
++                + "s, repair item: " + repairItem + ".");
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Space suits module stopped.");
++        }
++    }
++}
+diff --git a/SpaceTravel/src/main/resources/config.yml b/SpaceTravel/src/main/resources/config.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..45393897bdc09b7942c429d8edbdb08580db4fa8
+--- /dev/null
++++ b/SpaceTravel/src/main/resources/config.yml
+@@ -0,0 +1,21 @@
++modules:
++  launch-pads:
++    enabled: true
++    cooldown-seconds: 45
++    launch-sound: 'minecraft:entity.ender_dragon.growl'
++  orbital-stations:
++    enabled: true
++    max-docks: 6
++    airlocks-required: true
++  planet-routes:
++    enabled: true
++    default-window-hours: 24
++    route-limit: 12
++  space-suits:
++    enabled: true
++    oxygen-seconds: 300
++    repair-item: 'minecraft:iron_ingot'
++  asteroid-mining:
++    enabled: true
++    bonus-ore-chance: 0.35
++    hazard-rate: 0.15
+diff --git a/SpaceTravel/src/main/resources/plugin.yml b/SpaceTravel/src/main/resources/plugin.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..803ea4ba85d48d69bf6690731023d0e33890255b
+--- /dev/null
++++ b/SpaceTravel/src/main/resources/plugin.yml
+@@ -0,0 +1,7 @@
++name: SpaceTravel
++version: ${project.version}
++main: uk.co.xfour.spacetravel.SpaceTravelPlugin
++api-version: '1.21'
++author: xfour
++website: https://github.com/xfour/Minecraft-Plugins
++description: Interplanetary travel systems with launch pads, stations, and route planners.
+diff --git a/SpaceTravel/src/test/java/uk/co/xfour/spacetravel/LaunchWindowTest.java b/SpaceTravel/src/test/java/uk/co/xfour/spacetravel/LaunchWindowTest.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..4b1fe4070d0c54c9fc0d65506e51fe5075c6e37d
+--- /dev/null
++++ b/SpaceTravel/src/test/java/uk/co/xfour/spacetravel/LaunchWindowTest.java
+@@ -0,0 +1,17 @@
++package uk.co.xfour.spacetravel;
++
++import static org.junit.jupiter.api.Assertions.assertEquals;
++
++import org.junit.jupiter.api.Test;
++
++/**
++ * Tests for launch window utilities.
++ */
++class LaunchWindowTest {
++    @Test
++    void normaliseWindowHours() {
++        assertEquals(1, LaunchWindow.normaliseWindowHours(-3));
++        assertEquals(72, LaunchWindow.normaliseWindowHours(200));
++        assertEquals(24, LaunchWindow.normaliseWindowHours(24));
++    }
++}
+diff --git a/Transport/AGENTS.md b/Transport/AGENTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..2ea8a4124234dd86a34cf90e9b35f8fe8c877300
+--- /dev/null
++++ b/Transport/AGENTS.md
+@@ -0,0 +1,6 @@
++# Transport Plugin Instructions
++
++- Keep orchestration in `TransportPlugin.java` and module logic in `modules/` classes.
++- Keep module toggles and tuning values in `config.yml`.
++- Update `README.md`, `plugin.yml`, and player docs when changing player-facing behavior.
++- Use Paper APIs only.
+diff --git a/Transport/README.md b/Transport/README.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..7e809c1900fc7ec74be77f06d36cfe3de1cb118c
+--- /dev/null
++++ b/Transport/README.md
+@@ -0,0 +1,16 @@
++# Transport Plugin
++
++The Transport plugin adds configurable vehicle systems for trains, planes, cars, rail networks, and spaceships. Each vehicle category is a module you can enable or tune through `config.yml`.
++
++## Modules
++- Trains
++- Planes
++- Cars
++- Rail systems
++- Spaceships (optional integration with SpaceTravel when installed)
++
++## Configuration
++See `config.yml` for module toggles and tuning options.
++
++## Documentation
++Player documentation lives in `docs/MC-Docs/docs/plugins/transport.md`.
+diff --git a/Transport/pom.xml b/Transport/pom.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..6144eaa74f4ed941c3f78240815a4c90d8a116af
+--- /dev/null
++++ b/Transport/pom.xml
+@@ -0,0 +1,51 @@
++<project xmlns="http://maven.apache.org/POM/4.0.0"
++         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <modelVersion>4.0.0</modelVersion>
++
++    <groupId>uk.co.xfour</groupId>
++    <artifactId>transport</artifactId>
++    <version>1.0.0</version>
++    <packaging>jar</packaging>
++
++    <name>Transport</name>
++
++    <properties>
++        <maven.compiler.source>21</maven.compiler.source>
++        <maven.compiler.target>21</maven.compiler.target>
++        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++        <junit.version>5.10.2</junit.version>
++    </properties>
++
++    <repositories>
++        <repository>
++            <id>papermc</id>
++            <url>https://repo.papermc.io/repository/maven-public/</url>
++        </repository>
++    </repositories>
++
++    <dependencies>
++        <dependency>
++            <groupId>io.papermc.paper</groupId>
++            <artifactId>paper-api</artifactId>
++            <version>1.21.11-R0.1-SNAPSHOT</version>
++            <scope>provided</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.junit.jupiter</groupId>
++            <artifactId>junit-jupiter</artifactId>
++            <version>${junit.version}</version>
++            <scope>test</scope>
++        </dependency>
++    </dependencies>
++
++    <build>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-surefire-plugin</artifactId>
++                <version>3.2.5</version>
++            </plugin>
++        </plugins>
++    </build>
++</project>
+diff --git a/Transport/src/main/java/uk/co/xfour/transport/TransportPlugin.java b/Transport/src/main/java/uk/co/xfour/transport/TransportPlugin.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..734c5b74b22b0bdadb20bcdbcf61b8c1c7b7cab1
+--- /dev/null
++++ b/Transport/src/main/java/uk/co/xfour/transport/TransportPlugin.java
+@@ -0,0 +1,48 @@
++package uk.co.xfour.transport;
++
++import java.util.ArrayList;
++import java.util.List;
++import java.util.logging.Logger;
++import org.bukkit.Bukkit;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.transport.modules.CarsModule;
++import uk.co.xfour.transport.modules.Module;
++import uk.co.xfour.transport.modules.PlanesModule;
++import uk.co.xfour.transport.modules.RailSystemsModule;
++import uk.co.xfour.transport.modules.SpaceshipsModule;
++import uk.co.xfour.transport.modules.TrainsModule;
++
++/**
++ * Main plugin entrypoint for Transport.
++ */
++public final class TransportPlugin extends JavaPlugin {
++    private final List<Module> modules = new ArrayList<>();
++
++    @Override
++    public void onEnable() {
++        saveDefaultConfig();
++        Logger logger = getLogger();
++
++        boolean spaceTravelAvailable = Bukkit.getPluginManager().isPluginEnabled("SpaceTravel");
++
++        modules.add(new TrainsModule(this));
++        modules.add(new PlanesModule(this));
++        modules.add(new CarsModule(this));
++        modules.add(new RailSystemsModule(this));
++        modules.add(new SpaceshipsModule(this, spaceTravelAvailable));
++
++        for (Module module : modules) {
++            module.start();
++        }
++
++        logger.info("Transport modules initialised.");
++    }
++
++    @Override
++    public void onDisable() {
++        for (Module module : modules) {
++            module.stop();
++        }
++        getLogger().info("Transport modules stopped.");
++    }
++}
+diff --git a/Transport/src/main/java/uk/co/xfour/transport/TransportTuning.java b/Transport/src/main/java/uk/co/xfour/transport/TransportTuning.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..4cead4b7f22f8b51f348021dcda29a673df426f1
+--- /dev/null
++++ b/Transport/src/main/java/uk/co/xfour/transport/TransportTuning.java
+@@ -0,0 +1,25 @@
++package uk.co.xfour.transport;
++
++/**
++ * Utility helpers for transport configuration values.
++ */
++public final class TransportTuning {
++    private TransportTuning() {
++    }
++
++    /**
++     * Ensures a requested speed value stays within a safe range.
++     *
++     * @param speed the configured speed value
++     * @return the clamped speed between 0.1 and 5.0
++     */
++    public static double clampSpeed(double speed) {
++        if (speed < 0.1) {
++            return 0.1;
++        }
++        if (speed > 5.0) {
++            return 5.0;
++        }
++        return speed;
++    }
++}
+diff --git a/Transport/src/main/java/uk/co/xfour/transport/modules/CarsModule.java b/Transport/src/main/java/uk/co/xfour/transport/modules/CarsModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..deb5251ef49dacdd8d431e504e1a9a0a5879cf1a
+--- /dev/null
++++ b/Transport/src/main/java/uk/co/xfour/transport/modules/CarsModule.java
+@@ -0,0 +1,44 @@
++package uk.co.xfour.transport.modules;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.transport.TransportTuning;
++
++/**
++ * Controls car handling and fuel settings.
++ */
++public final class CarsModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a cars module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public CarsModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.cars.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Cars module disabled via config.");
++            return;
++        }
++        double maxSpeed = TransportTuning.clampSpeed(config.getDouble("modules.cars.max-speed", 1.2));
++        int defaultFuel = config.getInt("modules.cars.default-fuel", 100);
++        String hornSound = config.getString("modules.cars.horn-sound", "minecraft:block.note_block.pling");
++        plugin.getLogger().info("Cars module enabled with speed: " + maxSpeed + ", fuel: " + defaultFuel
++                + ", horn: " + hornSound + ".");
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Cars module stopped.");
++        }
++    }
++}
+diff --git a/Transport/src/main/java/uk/co/xfour/transport/modules/Module.java b/Transport/src/main/java/uk/co/xfour/transport/modules/Module.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..5f5d529b750ebe7f5f51130d9527d8a9fda7fe15
+--- /dev/null
++++ b/Transport/src/main/java/uk/co/xfour/transport/modules/Module.java
+@@ -0,0 +1,16 @@
++package uk.co.xfour.transport.modules;
++
++/**
++ * Lifecycle contract for a configurable Transport module.
++ */
++public interface Module {
++    /**
++     * Starts this module.
++     */
++    void start();
++
++    /**
++     * Stops this module.
++     */
++    void stop();
++}
+diff --git a/Transport/src/main/java/uk/co/xfour/transport/modules/PlanesModule.java b/Transport/src/main/java/uk/co/xfour/transport/modules/PlanesModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..84bc2ddf6eb785e3dd9236d85cee95bc1db7c28b
+--- /dev/null
++++ b/Transport/src/main/java/uk/co/xfour/transport/modules/PlanesModule.java
+@@ -0,0 +1,44 @@
++package uk.co.xfour.transport.modules;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.transport.TransportTuning;
++
++/**
++ * Controls plane flight behaviour and runway tuning.
++ */
++public final class PlanesModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a planes module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public PlanesModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.planes.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Planes module disabled via config.");
++            return;
++        }
++        int cruiseAltitude = config.getInt("modules.planes.cruise-altitude", 120);
++        double maxSpeed = TransportTuning.clampSpeed(config.getDouble("modules.planes.max-speed", 1.6));
++        int runwayLength = config.getInt("modules.planes.runway-length", 64);
++        plugin.getLogger().info("Planes module enabled with altitude: " + cruiseAltitude + ", speed: " + maxSpeed
++                + ", runway length: " + runwayLength + ".");
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Planes module stopped.");
++        }
++    }
++}
+diff --git a/Transport/src/main/java/uk/co/xfour/transport/modules/RailSystemsModule.java b/Transport/src/main/java/uk/co/xfour/transport/modules/RailSystemsModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..86a0e0649b50a9bbefec982704e9da5ba338f8e1
+--- /dev/null
++++ b/Transport/src/main/java/uk/co/xfour/transport/modules/RailSystemsModule.java
+@@ -0,0 +1,43 @@
++package uk.co.xfour.transport.modules;
++
++import java.util.List;
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++
++/**
++ * Controls railway networks and signal spacing.
++ */
++public final class RailSystemsModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a rail systems module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public RailSystemsModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.rail-systems.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Rail systems module disabled via config.");
++            return;
++        }
++        List<String> railTypes = config.getStringList("modules.rail-systems.rail-types");
++        int signalInterval = config.getInt("modules.rail-systems.signal-interval", 24);
++        plugin.getLogger().info("Rail systems module enabled with rail types: " + railTypes
++                + ", signal interval: " + signalInterval + ".");
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Rail systems module stopped.");
++        }
++    }
++}
+diff --git a/Transport/src/main/java/uk/co/xfour/transport/modules/SpaceshipsModule.java b/Transport/src/main/java/uk/co/xfour/transport/modules/SpaceshipsModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..41506b36a90efe0f2d1d82e1533eac2f5fead984
+--- /dev/null
++++ b/Transport/src/main/java/uk/co/xfour/transport/modules/SpaceshipsModule.java
+@@ -0,0 +1,54 @@
++package uk.co.xfour.transport.modules;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.transport.TransportTuning;
++
++/**
++ * Controls spaceship travel and optional SpaceTravel integration.
++ */
++public final class SpaceshipsModule implements Module {
++    private final JavaPlugin plugin;
++    private final boolean spaceTravelAvailable;
++    private boolean enabled;
++
++    /**
++     * Creates a spaceships module instance.
++     *
++     * @param plugin the owning plugin
++     * @param spaceTravelAvailable whether the SpaceTravel plugin is loaded
++     */
++    public SpaceshipsModule(JavaPlugin plugin, boolean spaceTravelAvailable) {
++        this.plugin = plugin;
++        this.spaceTravelAvailable = spaceTravelAvailable;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.spaceships.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Spaceships module disabled via config.");
++            return;
++        }
++        double maxSpeed = TransportTuning.clampSpeed(config.getDouble("modules.spaceships.max-speed", 3.2));
++        boolean autoLaunch = config.getBoolean("modules.spaceships.auto-launch", true);
++        boolean integrationEnabled = config.getBoolean("modules.spaceships.integration.enable-space-travel", true)
++                && spaceTravelAvailable;
++        boolean autoDock = config.getBoolean("modules.spaceships.integration.auto-dock", true);
++        plugin.getLogger().info("Spaceships module enabled with speed: " + maxSpeed + ", auto launch: "
++                + autoLaunch + ".");
++        if (integrationEnabled) {
++            plugin.getLogger().info("SpaceTravel integration active. Auto dock: " + autoDock + ".");
++        } else if (!spaceTravelAvailable) {
++            plugin.getLogger().info("SpaceTravel plugin not detected; spaceship integration disabled.");
++        }
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Spaceships module stopped.");
++        }
++    }
++}
+diff --git a/Transport/src/main/java/uk/co/xfour/transport/modules/TrainsModule.java b/Transport/src/main/java/uk/co/xfour/transport/modules/TrainsModule.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..8d9f7ca32c76126ecce8cb1649b439f66a2cf6b7
+--- /dev/null
++++ b/Transport/src/main/java/uk/co/xfour/transport/modules/TrainsModule.java
+@@ -0,0 +1,44 @@
++package uk.co.xfour.transport.modules;
++
++import org.bukkit.configuration.file.FileConfiguration;
++import org.bukkit.plugin.java.JavaPlugin;
++import uk.co.xfour.transport.TransportTuning;
++
++/**
++ * Controls train routing and vehicle settings.
++ */
++public final class TrainsModule implements Module {
++    private final JavaPlugin plugin;
++    private boolean enabled;
++
++    /**
++     * Creates a trains module instance.
++     *
++     * @param plugin the owning plugin
++     */
++    public TrainsModule(JavaPlugin plugin) {
++        this.plugin = plugin;
++    }
++
++    @Override
++    public void start() {
++        FileConfiguration config = plugin.getConfig();
++        enabled = config.getBoolean("modules.trains.enabled", true);
++        if (!enabled) {
++            plugin.getLogger().info("Trains module disabled via config.");
++            return;
++        }
++        int maxCars = config.getInt("modules.trains.max-cars", 8);
++        double defaultSpeed = TransportTuning.clampSpeed(config.getDouble("modules.trains.default-speed", 0.8));
++        String whistleSound = config.getString("modules.trains.whistle-sound", "minecraft:entity.villager.yes");
++        plugin.getLogger().info("Trains module enabled with max cars: " + maxCars + ", speed: " + defaultSpeed
++                + ", whistle: " + whistleSound + ".");
++    }
++
++    @Override
++    public void stop() {
++        if (enabled) {
++            plugin.getLogger().info("Trains module stopped.");
++        }
++    }
++}
+diff --git a/Transport/src/main/resources/config.yml b/Transport/src/main/resources/config.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..4421cd476b560135620165704948098e8b15a66f
+--- /dev/null
++++ b/Transport/src/main/resources/config.yml
+@@ -0,0 +1,30 @@
++modules:
++  trains:
++    enabled: true
++    max-cars: 8
++    default-speed: 0.8
++    whistle-sound: 'minecraft:entity.villager.yes'
++  planes:
++    enabled: true
++    cruise-altitude: 120
++    max-speed: 1.6
++    runway-length: 64
++  cars:
++    enabled: true
++    max-speed: 1.2
++    default-fuel: 100
++    horn-sound: 'minecraft:block.note_block.pling'
++  rail-systems:
++    enabled: true
++    rail-types:
++      - standard
++      - freight
++      - high-speed
++    signal-interval: 24
++  spaceships:
++    enabled: true
++    max-speed: 3.2
++    auto-launch: true
++    integration:
++      enable-space-travel: true
++      auto-dock: true
+diff --git a/Transport/src/main/resources/plugin.yml b/Transport/src/main/resources/plugin.yml
+new file mode 100644
+index 0000000000000000000000000000000000000000..da8bb90148e015d27329a309ac238cd72fb33e0c
+--- /dev/null
++++ b/Transport/src/main/resources/plugin.yml
+@@ -0,0 +1,7 @@
++name: Transport
++version: ${project.version}
++main: uk.co.xfour.transport.TransportPlugin
++api-version: '1.21'
++author: xfour
++website: https://github.com/xfour/Minecraft-Plugins
++description: Vehicle systems for trains, planes, cars, rail networks, and spaceships.
+diff --git a/Transport/src/test/java/uk/co/xfour/transport/TransportTuningTest.java b/Transport/src/test/java/uk/co/xfour/transport/TransportTuningTest.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..8fd5ad3211ef91416f1ccbc9b95c7a136bc40f61
+--- /dev/null
++++ b/Transport/src/test/java/uk/co/xfour/transport/TransportTuningTest.java
+@@ -0,0 +1,17 @@
++package uk.co.xfour.transport;
++
++import static org.junit.jupiter.api.Assertions.assertEquals;
++
++import org.junit.jupiter.api.Test;
++
++/**
++ * Tests for transport tuning helpers.
++ */
++class TransportTuningTest {
++    @Test
++    void clampSpeedWithinBounds() {
++        assertEquals(0.1, TransportTuning.clampSpeed(-4.0));
++        assertEquals(5.0, TransportTuning.clampSpeed(9.9));
++        assertEquals(1.5, TransportTuning.clampSpeed(1.5));
++    }
++}
+diff --git a/docs/MC-Docs b/docs/MC-Docs
+index a471fbdc58bf6904220841190bf26e12158a6271..6eacd1871f6b9a22bf62fa267ed9eb4a1d5484f9 160000
+--- a/docs/MC-Docs
++++ b/docs/MC-Docs
+@@ -1 +1 @@
+-Subproject commit a471fbdc58bf6904220841190bf26e12158a6271
++Subproject commit 6eacd1871f6b9a22bf62fa267ed9eb4a1d5484f9
