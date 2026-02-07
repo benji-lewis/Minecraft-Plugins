@@ -1,7 +1,7 @@
 # Furniture Plugin (Player Guide)
 
 ## Overview
-The Furniture plugin adds decorative items that are grouped into themed modules. Operators can use the commands below to hand out furniture pieces directly.
+The Furniture plugin adds decorative items that are grouped into themed modules. Furniture pieces place real blocks (or wall decor) and can be broken to recover the original item. Operators can use the commands below to hand out furniture pieces directly.
 
 ## Commands
 - `/furniture status` - shows which Furniture modules are enabled.
@@ -27,4 +27,6 @@ These keys come from the default configuration. If your server has custom items,
 
 ## Tips
 - Item keys are defined per module in `config.yml`.
+- Wall decor (mirrors, wall clocks, sconces) must be placed on the side of blocks.
+- Breaking placed furniture returns the original item, unless the player is in creative mode.
 - Crafting recipes remain the default way to obtain these items during normal gameplay.

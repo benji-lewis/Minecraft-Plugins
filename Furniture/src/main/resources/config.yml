@@ -64,3 +64,123 @@ modules:
       - mirror
   tuning:
     max-items-per-module: 24
+
+# Optional per-item overrides for how furniture looks in-hand and when placed.
+# Supported keys:
+#   - item-material: the item material given to players and used in recipes.
+#   - place-material: the block or display item used in the world.
+#   - placement: BLOCK or WALL_DECOR.
+items:
+  oak-armchair:
+    item-material: OAK_STAIRS
+    place-material: OAK_STAIRS
+  spruce-sofa:
+    item-material: SPRUCE_STAIRS
+    place-material: SPRUCE_STAIRS
+  crimson-bench:
+    item-material: CRIMSON_STAIRS
+    place-material: CRIMSON_STAIRS
+  leather-recliner:
+    item-material: BROWN_WOOL
+    place-material: BROWN_WOOL
+  oak-dining-table:
+    item-material: OAK_SLAB
+    place-material: OAK_SLAB
+  birch-coffee-table:
+    item-material: BIRCH_SLAB
+    place-material: BIRCH_SLAB
+  granite-side-table:
+    item-material: POLISHED_GRANITE_SLAB
+    place-material: POLISHED_GRANITE_SLAB
+  glass-console-table:
+    item-material: GLASS
+    place-material: GLASS
+  wardrobe:
+    item-material: BARREL
+    place-material: BARREL
+  cabinet:
+    item-material: CHEST
+    place-material: CHEST
+  dresser:
+    item-material: BROWN_SHULKER_BOX
+    place-material: BROWN_SHULKER_BOX
+  bookshelf:
+    item-material: BOOKSHELF
+    place-material: BOOKSHELF
+  chandelier:
+    item-material: SOUL_LANTERN
+    place-material: SOUL_LANTERN
+  floor-lamp:
+    item-material: LANTERN
+    place-material: LANTERN
+  wall-sconce:
+    item-material: LANTERN
+    place-material: LANTERN
+    placement: WALL_DECOR
+  lantern-stand:
+    item-material: LANTERN
+    place-material: LANTERN
+  rug:
+    item-material: RED_CARPET
+    place-material: RED_CARPET
+  wall-clock:
+    item-material: CLOCK
+    place-material: CLOCK
+    placement: WALL_DECOR
+  vase:
+    item-material: FLOWER_POT
+    place-material: FLOWER_POT
+  painting-set:
+    item-material: PAINTING
+    place-material: PAINTING
+    placement: WALL_DECOR
+  patio-chair:
+    item-material: OAK_STAIRS
+    place-material: OAK_STAIRS
+  garden-bench:
+    item-material: OAK_STAIRS
+    place-material: OAK_STAIRS
+  pergola:
+    item-material: OAK_FENCE
+    place-material: OAK_FENCE
+  firepit:
+    item-material: CAMPFIRE
+    place-material: CAMPFIRE
+  oven-range:
+    item-material: BLAST_FURNACE
+    place-material: BLAST_FURNACE
+  kitchen-island:
+    item-material: SMOOTH_QUARTZ
+    place-material: SMOOTH_QUARTZ
+  pantry-shelf:
+    item-material: BARREL
+    place-material: BARREL
+  sink-unit:
+    item-material: CAULDRON
+    place-material: CAULDRON
+  canopy-bed:
+    item-material: WHITE_WOOL
+    place-material: WHITE_WOOL
+  bunk-bed:
+    item-material: LIGHT_GRAY_WOOL
+    place-material: LIGHT_GRAY_WOOL
+  bedside-table:
+    item-material: OAK_SLAB
+    place-material: OAK_SLAB
+  vanity:
+    item-material: CARTOGRAPHY_TABLE
+    place-material: CARTOGRAPHY_TABLE
+  bathtub:
+    item-material: QUARTZ_STAIRS
+    place-material: QUARTZ_STAIRS
+  sink-basin:
+    item-material: CAULDRON
+    place-material: CAULDRON
+  towel-rack:
+    item-material: WHITE_BANNER
+    place-material: WHITE_BANNER
+    placement: WALL_DECOR
+  mirror:
+    item-material: GLASS_PANE
+    place-material: GLASS_PANE
+    placement: WALL_DECOR

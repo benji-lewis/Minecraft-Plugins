@@ -8,7 +8,7 @@ Furniture adds a large catalog of decorative items split into themed modules. En
 - `/furniture give <player> <item> [amount]` - gives a furniture item to a player (omit `<player>` to give to yourself).
 
 ## Crafting & Usage
-Furniture items are crafted via themed recipes and placed by right-clicking blocks. See the player documentation for full recipes and placement guidance.
+Furniture items are crafted via themed recipes and placed by right-clicking blocks. Furniture now places real blocks (or wall decor) and can be broken to recover the original item. See the player documentation for full recipes and placement guidance.
 
 ## Modules
 
@@ -52,7 +52,8 @@ Furniture items are crafted via themed recipes and placed by right-clicking bloc
 - `modules.tuning.max-items-per-module` limits the maximum items loaded per module.
 
 ## Configuration
-See `config.yml` for module toggles and tuning options.
+Use `modules.*.items` to control which furniture keys are craftable, and use the optional `items` section to override
+what each item looks like in-hand and when placed. Wall decor items should use the `WALL_DECOR` placement style.
 
 ## Player Documentation
 Player documentation lives in `docs/MC-Docs/docs/plugins/furniture.md`.
