@@ -3,9 +3,9 @@ name: Furniture
 on:
   push:
     branches: ["main", "develop"]
-    paths: ["Furniture/**", "docs/MC-Docs/docs/plugins/furniture.md", ".github/workflows/furniture.yml"]
+    paths: ["Furniture/**", ".github/workflows/furniture.yml"]
   pull_request:
-    paths: ["Furniture/**", "docs/MC-Docs/docs/plugins/furniture.md", ".github/workflows/furniture.yml"]
+    paths: ["Furniture/**", ".github/workflows/furniture.yml"]
 
 jobs:
   test-furniture:

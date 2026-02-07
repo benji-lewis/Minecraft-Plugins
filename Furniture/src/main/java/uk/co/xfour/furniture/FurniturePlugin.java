@@ -2,6 +2,7 @@ package uk.co.xfour.furniture;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.xfour.furniture.modules.BathroomModule;
 import uk.co.xfour.furniture.modules.BedroomModule;
@@ -33,6 +34,13 @@ public final class FurniturePlugin extends JavaPlugin {
         modules.add(new KitchenModule(this));
         modules.add(new BedroomModule(this));
         modules.add(new BathroomModule(this));
+
+        PluginCommand command = getCommand("furniture");
+        if (command != null) {
+            FurnitureCommand furnitureCommand = new FurnitureCommand(this, modules);
+            command.setExecutor(furnitureCommand);
+            command.setTabCompleter(furnitureCommand);
+        }
 
         for (Module module : modules) {
             module.start();

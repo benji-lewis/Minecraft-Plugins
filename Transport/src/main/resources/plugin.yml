@@ -5,3 +5,7 @@ api-version: '1.21'
 author: xfour
 website: https://github.com/xfour/Minecraft-Plugins
 description: Vehicle systems for trains, planes, cars, rail networks, and spaceships.
+commands:
+  transport:
+    description: Manage the Transport plugin modules.
+    usage: /<command> <status|reload>
