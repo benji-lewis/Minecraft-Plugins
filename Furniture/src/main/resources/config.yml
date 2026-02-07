@@ -1,0 +1,66 @@
+modules:
+  seating:
+    enabled: true
+    items:
+      - oak-armchair
+      - spruce-sofa
+      - crimson-bench
+      - leather-recliner
+  tables:
+    enabled: true
+    items:
+      - oak-dining-table
+      - birch-coffee-table
+      - granite-side-table
+      - glass-console-table
+  storage:
+    enabled: true
+    items:
+      - wardrobe
+      - cabinet
+      - dresser
+      - bookshelf
+  lighting:
+    enabled: true
+    items:
+      - chandelier
+      - floor-lamp
+      - wall-sconce
+      - lantern-stand
+  decor:
+    enabled: true
+    items:
+      - rug
+      - wall-clock
+      - vase
+      - painting-set
+  outdoor:
+    enabled: true
+    items:
+      - patio-chair
+      - garden-bench
+      - pergola
+      - firepit
+  kitchen:
+    enabled: true
+    items:
+      - oven-range
+      - kitchen-island
+      - pantry-shelf
+      - sink-unit
+  bedroom:
+    enabled: true
+    items:
+      - canopy-bed
+      - bunk-bed
+      - bedside-table
+      - vanity
+  bathroom:
+    enabled: true
+    items:
+      - bathtub
+      - sink-basin
+      - towel-rack
+      - mirror
+  tuning:
+    max-items-per-module: 24
