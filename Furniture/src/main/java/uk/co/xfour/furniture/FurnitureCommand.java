@@ -142,8 +142,9 @@ public final class FurnitureCommand implements CommandExecutor, TabCompleter {
         }
         ItemStack item = itemFactory.createItem(definition);
         item.setAmount(amount);
+        Player dropTarget = target;
         target.getInventory().addItem(item).values()
-                .forEach(remaining -> target.getWorld().dropItemNaturally(target.getLocation(), remaining));
+                .forEach(remaining -> dropTarget.getWorld().dropItemNaturally(dropTarget.getLocation(), remaining));
         sender.sendMessage("Gave " + amount + " " + definition.displayName() + " to " + target.getName() + ".");
         if (!sender.equals(target)) {
             target.sendMessage("You received " + amount + " " + definition.displayName() + ".");
