@@ -139,8 +139,9 @@ public final class SpaceTravelCommand implements CommandExecutor, TabCompleter {
         }
         ItemStack item = itemFactory.createItem(type);
         item.setAmount(amount);
+        Player dropTarget = target;
         target.getInventory().addItem(item).values()
-                .forEach(remaining -> target.getWorld().dropItemNaturally(target.getLocation(), remaining));
+                .forEach(remaining -> dropTarget.getWorld().dropItemNaturally(dropTarget.getLocation(), remaining));
         sender.sendMessage("Gave " + amount + " " + type.getDisplayName() + " to " + target.getName() + ".");
         if (!sender.equals(target)) {
             target.sendMessage("You received " + amount + " " + type.getDisplayName() + ".");
