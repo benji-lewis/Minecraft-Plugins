@@ -8,4 +8,4 @@ description: Vehicle systems for trains, planes, cars, rail networks, and spaces
 commands:
   transport:
     description: Manage the Transport plugin modules.
-    usage: /<command> <status|reload>
+    usage: /<command> <status|reload|give>

@@ -37,7 +37,7 @@ public final class TransportPlugin extends JavaPlugin {
 
         PluginCommand command = getCommand("transport");
         if (command != null) {
-            TransportCommand transportCommand = new TransportCommand(this, modules);
+            TransportCommand transportCommand = new TransportCommand(this, modules, itemFactory);
             command.setExecutor(transportCommand);
             command.setTabCompleter(transportCommand);
         }

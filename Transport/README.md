@@ -5,6 +5,7 @@ The Transport plugin adds configurable vehicle systems for trains, planes, cars,
 ## Commands
 - `/transport status` - lists module enablement and loaded module count.
 - `/transport reload` - reloads the configuration file.
+- `/transport give <player> <item> [amount]` - gives a transport item to a player (omit `<player>` to give to yourself).
 
 ## Crafting & Usage
 Transport vehicles and kits are crafted via custom recipes and used by right-clicking with the crafted item. See the player documentation for full recipes and usage guidance.
