@@ -6,6 +6,9 @@ Furniture adds a large catalog of decorative items split into themed modules. En
 - `/furniture status` - lists module enablement and loaded module count.
 - `/furniture reload` - reloads the configuration file.
 
+## Crafting & Usage
+Furniture items are crafted via themed recipes and placed by right-clicking blocks. See the player documentation for full recipes and placement guidance.
+
 ## Modules
 
 ### Seating
@@ -49,3 +52,6 @@ Furniture adds a large catalog of decorative items split into themed modules. En
 
 ## Configuration
 See `config.yml` for module toggles and tuning options.
+
+## Player Documentation
+Player documentation lives in `docs/MC-Docs/docs/plugins/furniture.md`.

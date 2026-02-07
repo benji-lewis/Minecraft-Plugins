@@ -21,6 +21,10 @@ public final class SpaceTravelPlugin extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
+        SpaceTravelItemFactory itemFactory = new SpaceTravelItemFactory(this);
+        new SpaceTravelRecipeRegistry(this, itemFactory).registerRecipes();
+        getServer().getPluginManager().registerEvents(new SpaceTravelListener(this, itemFactory), this);
+
         modules.add(new LaunchPadsModule(this));
         modules.add(new OrbitalStationsModule(this));
         modules.add(new PlanetRoutesModule(this));

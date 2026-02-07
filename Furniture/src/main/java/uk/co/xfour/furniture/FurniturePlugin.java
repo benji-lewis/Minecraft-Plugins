@@ -25,6 +25,10 @@ public final class FurniturePlugin extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
 
+        FurnitureItemFactory itemFactory = new FurnitureItemFactory(this);
+        new FurnitureRecipeRegistry(this, itemFactory).registerRecipes(itemFactory.loadDefinitions());
+        getServer().getPluginManager().registerEvents(new FurnitureListener(this, itemFactory), this);
+
         modules.add(new SeatingModule(this));
         modules.add(new TablesModule(this));
         modules.add(new StorageModule(this));

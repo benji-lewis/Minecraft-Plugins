@@ -3,9 +3,9 @@ name: Transport
 on:
   push:
     branches: ["main", "develop"]
-    paths: ["Transport/**", ".github/workflows/transport.yml"]
+    paths: ["Transport/**", "docs/MC-Docs/docs/plugins/transport.md", ".github/workflows/transport.yml"]
   pull_request:
-    paths: ["Transport/**", ".github/workflows/transport.yml"]
+    paths: ["Transport/**", "docs/MC-Docs/docs/plugins/transport.md", ".github/workflows/transport.yml"]
 
 jobs:
   test-transport:

@@ -3,9 +3,9 @@ name: SpaceTravel
 on:
   push:
     branches: ["main", "develop"]
-    paths: ["SpaceTravel/**", ".github/workflows/spacetravel.yml"]
+    paths: ["SpaceTravel/**", "docs/MC-Docs/docs/plugins/space-travel.md", ".github/workflows/spacetravel.yml"]
   pull_request:
-    paths: ["SpaceTravel/**", ".github/workflows/spacetravel.yml"]
+    paths: ["SpaceTravel/**", "docs/MC-Docs/docs/plugins/space-travel.md", ".github/workflows/spacetravel.yml"]
 
 jobs:
   test-spacetravel:

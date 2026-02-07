@@ -25,6 +25,9 @@ public final class TransportPlugin extends JavaPlugin {
         Logger logger = getLogger();
 
         boolean spaceTravelAvailable = Bukkit.getPluginManager().isPluginEnabled("SpaceTravel");
+        TransportItemFactory itemFactory = new TransportItemFactory(this);
+        new TransportRecipeRegistry(this, itemFactory).registerRecipes();
+        getServer().getPluginManager().registerEvents(new TransportListener(this, itemFactory), this);
 
         modules.add(new TrainsModule(this));
         modules.add(new PlanesModule(this));

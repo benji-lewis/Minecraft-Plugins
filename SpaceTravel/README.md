@@ -6,6 +6,9 @@ SpaceTravel adds configurable interplanetary travel systems such as launch pads,
 - `/spacetravel status` - lists module enablement and loaded module count.
 - `/spacetravel reload` - reloads the configuration file.
 
+## Crafting & Usage
+Space travel tools are crafted via custom recipes and used by right-clicking with the crafted item. See the player documentation for full recipes and usage guidance.
+
 ## Modules
 
 ### Launch pads
@@ -30,3 +33,6 @@ SpaceTravel adds configurable interplanetary travel systems such as launch pads,
 
 ## Configuration
 See `config.yml` for module toggles and tuning options.
+
+## Player Documentation
+Player documentation lives in `docs/MC-Docs/docs/plugins/space-travel.md`.
