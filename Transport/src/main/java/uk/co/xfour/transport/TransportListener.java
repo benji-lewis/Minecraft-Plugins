@@ -134,7 +134,11 @@ public final class TransportListener implements Listener {
         if (world == null) {
             return;
         }
-        Boat boat = world.spawn(location, Boat.class);
+        Entity spawned = world.spawnEntity(location, EntityType.OAK_BOAT);
+        if (!(spawned instanceof Boat boat)) {
+            player.sendMessage("Unable to deploy the plane frame right now.");
+            return;
+        }
         boat.setCustomName("Plane Frame");
         boat.setGravity(false);
         boat.setInvulnerable(true);
@@ -187,7 +191,11 @@ public final class TransportListener implements Listener {
         if (world == null) {
             return;
         }
-        Boat boat = world.spawn(location, Boat.class);
+        Entity spawned = world.spawnEntity(location, EntityType.OAK_BOAT);
+        if (!(spawned instanceof Boat boat)) {
+            player.sendMessage("Unable to deploy the spaceship right now.");
+            return;
+        }
         boat.setCustomName("Spaceship Core");
         boat.setGravity(false);
         boat.setInvulnerable(true);
