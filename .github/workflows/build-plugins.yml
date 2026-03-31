@@ -1,171 +1,33 @@
-name: Build Plugins
+name: Build CreeperConsent
 
 on:
   push:
     branches: [ main ]
     paths:
       - 'CreeperConsent/**'
-      - 'Furniture/**'
-      - 'Protestors/**'
-      - 'SpaceTravel/**'
-      - 'Transport/**'
-      - 'Worldcraft/**'
   pull_request:
     branches: [ main ]
 
 jobs:
-  detect-changes:
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      creeper: ${{ steps.changes.outputs.creeper }}
-      furniture: ${{ steps.changes.outputs.furniture }}
-      protestors: ${{ steps.changes.outputs.protestors }}
-      spacetravel: ${{ steps.changes.outputs.spacetravel }}
-      transport: ${{ steps.changes.outputs.transport }}
-      worldcraft: ${{ steps.changes.outputs.worldcraft }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: |
-            creeper:
-              - 'CreeperConsent/**'
-            furniture:
-              - 'Furniture/**'
-            protestors:
-              - 'Protestors/**'
-            spacetravel:
-              - 'SpaceTravel/**'
-            transport:
-              - 'Transport/**'
-            worldcraft:
-              - 'Worldcraft/**'
 
-  build-creeper:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.creeper == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
           cache-dependency-path: CreeperConsent/pom.xml
+
       - name: Build CreeperConsent
         run: cd CreeperConsent && mvn clean package -B
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: CreeperConsent
           path: CreeperConsent/target/CreeperConsent-*.jar
-          retention-days: 90
-
-  build-furniture:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.furniture == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-          cache-dependency-path: Furniture/pom.xml
-      - name: Build Furniture
-        run: cd Furniture && mvn clean package -B
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Furniture
-          path: Furniture/target/Furniture-*.jar
-          retention-days: 90
-
-  build-protestors:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.protestors == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-          cache-dependency-path: Protestors/pom.xml
-      - name: Build Protestors
-        run: cd Protestors && mvn clean package -B
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Protestors
-          path: Protestors/target/Protestors-*.jar
-          retention-days: 90
-
-  build-spacetravel:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.spacetravel == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-          cache-dependency-path: SpaceTravel/pom.xml
-      - name: Build SpaceTravel
-        run: cd SpaceTravel && mvn clean package -B
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: SpaceTravel
-          path: SpaceTravel/target/SpaceTravel-*.jar
-          retention-days: 90
-
-  build-transport:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.transport == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-          cache-dependency-path: Transport/pom.xml
-      - name: Build Transport
-        run: cd Transport && mvn clean package -B
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Transport
-          path: Transport/target/Transport-*.jar
-          retention-days: 90
-
-  build-worldcraft:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.worldcraft == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-          cache-dependency-path: Worldcraft/pom.xml
-      - name: Build Worldcraft
-        run: cd Worldcraft && mvn clean package -B
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Worldcraft
-          path: Worldcraft/target/Worldcraft-*.jar
           retention-days: 90
