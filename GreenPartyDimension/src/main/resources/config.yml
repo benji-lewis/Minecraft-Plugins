@@ -1,0 +1,360 @@
+# Green Party Dimension Configuration
+# "A config file so clean it runs on wind power (it doesn't)"
+
+# Dimension Settings
+dimension:
+  name: "the_verdant_utopia"
+  display-name: "§2§lThe Verdant Utopia"
+  enabled: true
+  # Blocks to replace in world generation
+  grass-density: 100  # percent (always 100, this is GREEN PARTY)
+  
+# Portal Settings
+portal:
+  # The portal is made of leaves, obviously
+  # Minimum size: 2x3, Maximum size: 21x21
+  enabled: true
+  require-permission: false
+  # Item needed to light the portal: a COMPOST BUCKET (bucket of water will also do)
+  activation-item: COMPOSTER  # Right-click the portal frame with this
+
+# NPC Settings
+npcs:
+  enabled: true
+  spawn-on-join: false
+  # The Eternal Council of Green NPCs
+  councillors:
+    - name: "§2Councillor Wheatgrass"
+      prefix: "§7[§2Green Council§7] §2"
+      greeting: "Ah, a new visitor! Have you signed our petition yet? We have 17."
+    - name: "§2Recycling Evangelist Bramble"
+      prefix: "§7[§aEco Warrior§7] §a"
+      greeting: "Did you know that by entering this dimension, you've offset 0.000003 tons of CO2? You're welcome."
+    - name: "§2Elder Composting Sage Fern"
+      prefix: "§7[§2Ancient Wisdom§7] §2"
+      greeting: "In my day, we composted everything. EVERYTHING. I once composted a shed."
+    - name: "§2Protest Coordinator Meadow"
+      prefix: "§7[§eActivist§7] §e"
+      greeting: "We're planning a march! Against... something. The date is TBD. We're very busy composting."
+
+# Quest Settings
+quests:
+  enabled: true
+  quests-per-player: 3
+  available:
+    - id: "compost_crisis"
+      name: "The Great Compost Crisis of Chunk 17"
+      description: "Something has disrupted the sacred composting cycle. Collect 64 dirt blocks to restore balance."
+      reward-xp: 500
+      reward-items:
+        - GREEN_DYE:32
+        - COMPOSTER:1
+    - id: "tree_planting"
+      name: "One Tree for Every Slogan"
+      description: "Plant 10 saplings. For every sapling, think of an environmental slogan. Write them in chat."
+      reward-xp: 750
+      reward-items:
+        - OAK_SAPLING:64
+        - EMERALD:5
+    - id: "fossil_fuel_protest"
+      name: "Down With Fossil Fuels (The Coal Blocks)"
+      description: "Destroy 16 coal ore blocks. Shout 'DOWN WITH COAL' in chat each time."
+      reward-xp: 600
+      reward-items:
+        - COAL:32
+        - GREEN_WOOL:16
+    - id: "renewable_energy"
+      name: "Wind Power or Bust"
+      description: "Place 5 note blocks (wind turbines). Play them loudly and repeatedly."
+      reward-xp: 400
+      reward-items:
+        - NOTE_BLOCK:10
+        - MUSIC_DISC_STRAD:1
+    - id: "biodiversity_survey"
+      name: "Emergency Biodiversity Survey of the Verdant Plains"
+      description: "Count 20 different mobs in the dimension. Submit your findings (just say 'survey complete')."
+      reward-xp: 1000
+      reward-items:
+        - EMERALD:10
+        - WRITTEN_BOOK:1
+
+# Messages (all appropriately preachy)
+messages:
+  welcome: "§2§lWelcome to the Verdant Utopia!§r\n§aA dimension where everything is green and the points don't matter, but the carbon credits definitely do.\n§7§o(Please recycle this welcome message)"
+  leave: "§2You have left the Verdant Utopia. §7The dimension will miss you. It has filed a formal objection with the planning committee."
+  quest-complete: "§2§l✓ QUEST COMPLETE!§r §aAnother victory for the environment! Sort of. Well, you did a thing."
+  no-permission: "§cYou don't have permission! §7Have you considered writing a strongly-worded letter?"
+  manifesto: |
+    §2§l===== THE GREEN PARTY DIMENSION MANIFESTO =====§r
+    §a1. Everything shall be green. §7(obviously)
+    §a2. Coal is banned. §7(the blocks, we're not sure about the rest)
+    §a3. All meat blocks (pork chops, beef) must be renamed "legacy protein"
+    §a4. Creepers are protected species. §7Do not provoke them. §c(we accept no liability)
+    §a5. Dirt is to be treated with reverence and occasional composting
+    §a6. The Nether is banned on environmental grounds. §7Too hot.
+    §a7. TNT requires a full environmental impact assessment
+    §a8. All players must say "reduce, reuse, recycle" before logging off
+    §2§l========================================
+
+# ─── Phase 1 Core Systems ─────────────────────────────────────────────────────
+
+# Eco-Score Settings
+# Tracks environmental virtue (and crime) per player
+eco-score:
+  points:
+    plant-tree: 5       # +5 for planting a sapling
+    place-composter: 3  # +3 for placing a composter
+    break-leaves: 2     # +2 for breaking leaves (gentleness appreciated)
+    mine-coal: -10      # -10 for mining coal (environmental crime)
+    destroy-nature: -5  # -5 for destroying wood/nature blocks
+
+  # List of blocks that count as "harmful to nature" when broken
+  # If empty, uses the default hardcoded list (see EcoScoreManager.java)
+  harmful-blocks: []
+
+  # List of blocks that count as "eco-friendly" when placed
+  # If empty, uses the default hardcoded list (see EcoScoreManager.java)
+  eco-friendly-blocks: []
+
+# Green Credits Currency Settings
+green-credits:
+  rewards:
+    council-task: 10   # GC earned for completing a council task
+    quest: 5           # GC earned for completing a quest
+    voting: 2          # GC earned for voting
+
+# Achievements Thresholds
+# Change these to make achievements harder or easier
+achievements:
+  thresholds:
+    kidnapped: 5           # Times kidnapped to earn "Involuntary Membership"
+    trees-planted: 100     # Saplings planted to earn "Arboreal Champion"
+    green-credits: 1000    # GC balance to earn "Green Tycoon"
+    council-meetings: 10   # Council visits to earn "Dedicated Attendee"
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ─── Phase 2 Systems ──────────────────────────────────────────────────────────
+
+# Environmental Violations System
+violations:
+  # Fine per violation in Green Credits
+  fine-amount: 10
+  # How often to reset all violations (in ticks). 8400000 = 7 days. Set to 0 to disable.
+  reset-interval-ticks: 8400000
+
+# Recycling System
+recycling:
+  # Green Credits awarded per successful recycle
+  credits-per-recycle: 5
+  # Range in blocks within which a thrown item lands near a bin and triggers recycling
+  bin-pickup-range: 3.0
+  # Number of recycling bins to auto-spawn around spawn (if bin-locations is empty)
+  auto-bin-count: 7
+  # Surface Y to place bins at (matches VerdantChunkGenerator grass level)
+  bin-surface-y: 57
+  # Optional: specify exact bin locations (x, y, z). If empty, auto-generates around spawn.
+  bin-locations: []
+  # Weighted drop table for recycled items.
+  # Each entry: material: <MATERIAL_NAME>, weight: <int>, amount: <int>
+  # Higher weight = more common. Leave empty to use built-in defaults.
+  drop-table: []
+
+# Motion / Voting System
+motions:
+  # How long a motion vote lasts in ticks. 2400 = 2 minutes.
+  vote-duration-ticks: 2400
+
+# Council Announcements
+announcements:
+  # Minimum interval between announcements in ticks. 6000 = 5 minutes.
+  min-interval-ticks: 6000
+  # Maximum interval between announcements in ticks. 12000 = 10 minutes.
+  max-interval-ticks: 12000
+  # Custom announcement list (leave empty to use built-in defaults)
+  list:
+    - "EMERGENCY: Compost shortage detected in Sector 7!"
+    - "Motion passed: All players must plant a tree immediately."
+    - "The council is convening. Attend immediately! Snacks provided (vegan only)."
+    - "ALERT: Unauthorised coal block detected. The offender has been fined."
+    - "Reminder: Recycling bins are available throughout the dimension. Use them!"
+    - "ANNOUNCEMENT: The Arboreal Committee has counted 247 new saplings. Well done."
+    - "URGENT: The composting rota has not been followed. Violations to follow."
+    - "NOTICE: A motion to ban cobblestone is under consideration. Please advise."
+    - "BREAKING: Emerald reserves at an all-time high. The council celebrates (sustainably)."
+    - "COUNCIL DECREE: All players must say reduce, reuse, recycle before logging off."
+    - "The dimension has been certified Extremely Green by the Green Rating Board (us)."
+    - "WARNING: Carbon footprint levels approaching acceptable thresholds. Act now!"
+    - "ANNOUNCEMENT: The Ceremonial Spoon has been polished. A solemn occasion."
+    - "MOTION TABLED: Should all blocks be renamed? The committee will discuss."
+    - "REMINDER: The Nether is banned on environmental grounds. Do not attempt access."
+    - "BREAKING: The council has commissioned another 89-page policy document."
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ─── Phase 3 Systems ──────────────────────────────────────────────────────────
+
+# NPC Schedule System
+npc-schedule:
+  enabled: true
+  # Movement speed in blocks per movement tick (every 4 ticks)
+  movement-speed: 0.22
+  # Schedule update interval in ticks (600 = 30 seconds)
+  update-interval-ticks: 600
+  # Zone waypoints (offset from world spawn)
+  zones:
+    council-chamber:
+      x-offset: 5
+      z-offset: 3
+      description: "The seat of Green Party governance. Most governance happens here."
+    compost-processing:
+      x-offset: 30
+      z-offset: 8
+      description: "The sacred composting facility. Fern lives here now."
+    tree-farm:
+      x-offset: -20
+      z-offset: 25
+      description: "Active reforestation zone. 847 saplings and counting."
+    recycling-centre:
+      x-offset: 15
+      z-offset: -30
+      description: "Primary waste processing hub. Bramble's favourite place."
+
+# Quest Chain System (Phase 3)
+quest-chains:
+  enabled: true
+  # Bonus Green Credits for completing an entire chain
+  chain-completion-bonus: 30
+  # Available chain IDs (all are always available unless modified here)
+  chains:
+    - petition_the_council
+    - composting_revolution
+    - clean_energy_champion
+    - eco_enforcer
+    - manifesto_rewrite
+    - carbon_neutral
+
+# Debate System
+debates:
+  enabled: true
+  # How often debates happen (ticks). 36000 = 30 minutes.
+  interval-ticks: 36000
+  # How many ticks before the debate to announce it AND how long the pre-debate countdown lasts.
+  # 2400 = 2 minutes. During this window players see the announcement but CANNOT vote yet.
+  announcement-offset-ticks: 2400
+  # How long the voting window lasts after the debate begins (ticks). 2400 = 2 minutes.
+  # Voting is open from debate start until all dialogue finishes (dialogue drives end, not a timer).
+  vote-duration-ticks: 2400
+  # Green Credits awarded to voters who backed the winner
+  winner-reward: 20
+  # Green Credits deducted from voters who backed the loser
+  loser-penalty: 5
+
+# Heckler System
+heckler:
+  enabled: true
+  # Cooldown between heckles per player in milliseconds. 30000 = 30 seconds.
+  cooldown-ms: 30000
+  # Extra insults for high-violation players (appended to the standard pool)
+  extra-insults:
+    - "§c%s: §7%s! The violations committee has opened a dedicated file for you!"
+    - "§c%s: §7At this rate, %s will have their own wing in the violation archives."
+  # Extra praise for champion eco-score players
+  extra-praise:
+    - "§a%s: §7%s's eco-score is an inspiration to us ALL!"
+    - "§a%s: §7I've submitted %s for the Green Excellence Medal. It's in committee."
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Kidnap Targets
+# Players listed here will be automatically teleported to The Verdant Utopia on login.
+# The Green Council spares no one on this list.
+# Leave empty (or remove entirely) to disable the kidnap mechanic entirely.
+kidnap-targets:
+  - "DanBrad098"
+
+# Geyser compatibility settings
+geyser:
+  # Custom form messages for Bedrock players
+  bedrock-welcome-title: "Welcome to the Verdant Utopia"
+  bedrock-welcome-body: "You have entered a dimension of extraordinary greenness. Please enjoy your stay and remember to compost."
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ─── Phase 4 Systems ──────────────────────────────────────────────────────────
+
+# Custom Structures
+structures:
+  enabled: true
+  # Auto-generate structures when dimension loads (first time only)
+  auto-generate: true
+  # Structure offsets from spawn (pre-set; edit only if your dimension layout changes)
+  offsets:
+    council-chamber:  { x: 5,    z: 90  }
+    compost-plant:    { x: 90,   z: 10  }
+    tree-farm:        { x: -90,  z: 30  }
+    recycling-centre: { x: -10,  z: -90 }
+
+# Leaderboard System
+leaderboard:
+  # Show top N players (max 10)
+  top-count: 10
+  # Sync leaderboard from live data every N ticks (2400 = 2 minutes)
+  sync-interval-ticks: 2400
+  monthly-reset:
+    enabled: true
+    rewards:
+      first:  { credits: 100, title: "Green Champion"  }
+      second: { credits: 50,  title: "Eco Advocate"    }
+      third:  { credits: 25,  title: "Green Supporter" }
+
+# Cosmetics System
+cosmetics:
+  enabled: true
+  # How often particle trails update (ticks). 2 = every 2 ticks (smooth)
+  particle-trail-interval-ticks: 2
+  # Re-apply cosmetics when player joins
+  persist-on-join: true
+  # Armour colours available (hex colour codes)
+  armor-colors:
+    verdant:  "#1DB954"
+    emerald:  "#00AA00"
+    moss:     "#4A7C59"
+    council:  "#C8A832"
+
+# Environmental Effects
+environment-effects:
+  leaf-particles:
+    enabled: true
+    interval-ticks: 40
+    count: 5           # particles per player per tick
+  composter-sounds:
+    enabled: true
+    interval-ticks: 80
+  light-show:
+    enabled: true
+    interval-ticks: 60
+  time-dilation:
+    enabled: false     # Set true to make time pass faster in dimension
+    rate: 2.0          # 2.0 = 2x speed
+  weather-effects:
+    enabled: true
+    interval-ticks: 100
+    aurora-particles: 8
+  boss-bar:
+    enabled: true
+    title: "§2🌍 Planet Vitality"
+    initial-vitality: 0.5   # 0.0 - 1.0
+
+# Progression System
+progression:
+  seasonal-bonuses:
+    enabled: true
+    # Earth Day April 22: 2x GC
+    # World Environment Day June 5: 1.5x GC
+    # Green Christmas Dec 25: 1.5x GC
+    # Spring Equinox March 20: 1.5x GC
+    # Bonuses are hardcoded in ProgressionManager.java — edit there for custom dates
+  composter-count-tracking: true
+
+# ──────────────────────────────────────────────────────────────────────────────
