@@ -1,18 +1,19 @@
-name: Build Green Party Dimension Plugin
+name: Build Green Party Dimension
 
 on:
   push:
     branches:
       - main
-      - develop
     paths:
-      - 'src/**'
-      - 'pom.xml'
-      - '.github/workflows/build.yml'
+      - 'GreenPartyDimension/src/**'
+      - 'GreenPartyDimension/pom.xml'
+      - '.github/workflows/greenpartydimension.yml'
   pull_request:
     branches:
       - main
-      - develop
+    paths:
+      - 'GreenPartyDimension/src/**'
+      - 'GreenPartyDimension/pom.xml'
 
 jobs:
   build:
@@ -33,21 +34,23 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: |
+          cd GreenPartyDimension
+          mvn clean package -DskipTests
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: GreenPartyDimension-plugin
-          path: target/GreenPartyDimension-*.jar
+          path: GreenPartyDimension/target/GreenPartyDimension-*.jar
           if-no-files-found: error
           retention-days: 30
 
       - name: Create Release (on version tag)
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') && contains(github.ref, 'green')
         uses: softprops/action-gh-release@v1
         with:
-          files: target/GreenPartyDimension-*.jar
+          files: GreenPartyDimension/target/GreenPartyDimension-*.jar
           draft: false
           prerelease: false
         env:
@@ -55,7 +58,7 @@ jobs:
 
       - name: Build Summary
         run: |
-          echo "## Build Complete ✅" >> $GITHUB_STEP_SUMMARY
+          echo "## Green Party Dimension Build ✅" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Artifact**: GreenPartyDimension-1.4.5.jar" >> $GITHUB_STEP_SUMMARY
           echo "**Java Version**: ${{ matrix.java-version }}" >> $GITHUB_STEP_SUMMARY
