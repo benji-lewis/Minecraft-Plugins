@@ -1,0 +1,626 @@
+# ============================================================
+# routines.yml — Scripted NPC Routine Definitions
+# Green Party Dimension — Council Choreography System
+# ============================================================
+#
+# Structure:
+#   routines:
+#     <routine_name>:           # snake_case identifier
+#       description: "..."
+#       required_npcs: [...]    # stripped NPC names (no colour codes)
+#       duration_ticks: N       # expected duration (for scheduling)
+#       cooldown_ticks: N       # minimum ticks between repeats
+#       priority: N             # 0=normal, 5=council, 10=debate, 20=emergency
+#       weight: N               # random scheduling weight (0 = manual only)
+#       steps: [...]            # ordered list of steps
+#
+# Step types: MOVE_TO, SIT, STAND, SAY, GROUP_SAY, WAIT, ANIMATE,
+#             TURN_FACE, EMOTE, BROADCAST, CONDITIONAL, CHAIN_ROUTINE
+#
+# Named locations: spawn, council_chamber, compost_processing, tree_farm,
+#   recycling_centre, chamber_presider, chamber_seat_1..6,
+#   tree_farm_oak, tree_farm_birch, tree_farm_centre,
+#   debate_podium_a, debate_podium_b, debate_audience_1..3
+#
+# Timing guide:
+#   20 ticks  = 1 second
+#   60 ticks  = 3 seconds  (comfortable dialogue pause)
+#   100 ticks = 5 seconds  (emphasis / dramatic moment)
+#   1200 ticks = 1 minute
+# ============================================================
+
+routines:
+
+  # ──────────────────────────────────────────────────────────
+  # 1. COUNCIL SESSION
+  #    Councillors assemble in the chamber, take their seats,
+  #    debate a motion, and formally adjourn. ~3.5 minutes.
+  # ──────────────────────────────────────────────────────────
+  council_session:
+    description: "Formal council session — councillors move to the chamber, sit, and debate a motion"
+    required_npcs:
+      - "Councillor Wheatgrass"
+      - "Recycling Evangelist Bramble"
+      - "Policy Director Sorrel"
+      - "Treasurer Daisy"
+    duration_ticks: 4200
+    cooldown_ticks: 18000   # 15-minute cooldown (30-min in-game cycle)
+    priority: 5
+    weight: 10
+    steps:
+
+      # — Opening Announcement —
+      - type: BROADCAST
+        message: "§2§l[ Green Party Council ]§r §7The Council is convening. A formal session is about to begin."
+        chat_only: true
+
+      - type: WAIT
+        ticks: 40
+
+      # — Councillors Walk to the Chamber —
+      - type: MOVE_TO
+        npc: "Councillor Wheatgrass"
+        location: "chamber_presider"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Recycling Evangelist Bramble"
+        location: "chamber_seat_1"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Policy Director Sorrel"
+        location: "chamber_seat_2"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Treasurer Daisy"
+        location: "chamber_seat_3"
+        speed: WALK
+
+      # — Face each other (chamber arrangement) —
+      - type: TURN_FACE
+        npc: "Recycling Evangelist Bramble"
+        face_target: "Councillor Wheatgrass"
+
+      - type: TURN_FACE
+        npc: "Policy Director Sorrel"
+        face_target: "Councillor Wheatgrass"
+
+      - type: TURN_FACE
+        npc: "Treasurer Daisy"
+        face_target: "Councillor Wheatgrass"
+
+      # — Councillors Take Their Seats —
+      - type: SIT
+        npc: "Recycling Evangelist Bramble"
+        duration_ticks: 0
+
+      - type: SIT
+        npc: "Policy Director Sorrel"
+        duration_ticks: 0
+
+      - type: SIT
+        npc: "Treasurer Daisy"
+        duration_ticks: 0
+
+      - type: WAIT
+        ticks: 60
+
+      # — Session Opens —
+      - type: ANIMATE
+        npc: "Councillor Wheatgrass"
+        animation: ARM_SWING
+
+      - type: SAY
+        npc: "Councillor Wheatgrass"
+        message: "I hereby call this session of the Green Party Council to order. Motion 77c is on the agenda."
+        pause_ticks: 100
+
+      - type: EMOTE
+        npc: "Councillor Wheatgrass"
+        emote: THINKING
+
+      - type: SAY
+        npc: "Councillor Wheatgrass"
+        message: "Motion 77c: §oProposal to rename all council documents 'Living Documents' and plant a tree for each one.§r"
+        pause_ticks: 100
+
+      # — The Debate Begins (GROUP_SAY) —
+      - type: GROUP_SAY
+        pause_per_line_ticks: 90
+        lines:
+          - speaker: "Recycling Evangelist Bramble"
+            message: "Point of order — are the chairs we're sitting on made from recycled materials?"
+          - speaker: "Councillor Wheatgrass"
+            message: "Bramble. We are discussing Motion 77c. Please focus."
+          - speaker: "Recycling Evangelist Bramble"
+            message: "I'm VERY focused. Focused on sustainability. Which these chairs may not be."
+          - speaker: "Policy Director Sorrel"
+            message: "I've reviewed the motion. It has 47 sub-clauses. I wrote 43 of them."
+          - speaker: "Treasurer Daisy"
+            message: "The budget for tree-planting per document is §a47 Green Credits§7. Per document. We have 847 documents."
+          - speaker: "Councillor Wheatgrass"
+            message: "The maths is frankly irrelevant, Daisy. This is about principle."
+          - speaker: "Treasurer Daisy"
+            message: "§8(It is not irrelevant.)"
+          - speaker: "Policy Director Sorrel"
+            message: "Sub-clause 31 actually addresses the funding mechanism. It proposes a bake sale."
+          - speaker: "Recycling Evangelist Bramble"
+            message: "I can confirm the chairs are made from oak. NON-RECYCLED oak. I'm filing a complaint."
+          - speaker: "Councillor Wheatgrass"
+            message: "All in favour of Motion 77c? The ayes have it. Motion passed. I am certain the ayes have it."
+
+      # — Celebratory Moment —
+      - type: EMOTE
+        npc: "Councillor Wheatgrass"
+        emote: CELEBRATE
+
+      - type: WAIT
+        ticks: 40
+
+      - type: SAY
+        npc: "Councillor Wheatgrass"
+        message: "Motion 77c is hereby passed. 847 trees will be planted. Eventually. The bake sale sub-committee will convene."
+        pause_ticks: 100
+
+      # — Treasurer's Quiet Protest —
+      - type: EMOTE
+        npc: "Treasurer Daisy"
+        emote: DISTRESS
+
+      - type: SAY
+        npc: "Treasurer Daisy"
+        message: "§8For the record, I abstained. Again. The minutes will reflect this. The minutes always reflect this."
+        pause_ticks: 80
+
+      # — Session Adjourns —
+      - type: WAIT
+        ticks: 60
+
+      - type: ANIMATE
+        npc: "Councillor Wheatgrass"
+        animation: ARM_SWING
+
+      - type: SAY
+        npc: "Councillor Wheatgrass"
+        message: "This session is hereby adjourned. The next session will cover Motions 78 through 82. All 78 sub-clauses."
+        pause_ticks: 100
+
+      - type: BROADCAST
+        message: "§2§8[ Council Session concluded. Motion 77c passed. The Green Party marches forward. ]"
+        chat_only: true
+
+      # — Councillors Stand and Disperse —
+      - type: STAND
+        npc: "Recycling Evangelist Bramble"
+
+      - type: STAND
+        npc: "Policy Director Sorrel"
+
+      - type: STAND
+        npc: "Treasurer Daisy"
+
+      # Chain into dismissal walk-out
+      - type: CHAIN_ROUTINE
+        routine_name: "council_dismiss"
+        delay_ticks: 40
+
+
+  # ──────────────────────────────────────────────────────────
+  # 1b. COUNCIL DISMISS (chained from council_session)
+  #     Councillors walk back from the chamber to spawn.
+  # ──────────────────────────────────────────────────────────
+  council_dismiss:
+    description: "Post-session dispersal — councillors walk back to spawn"
+    required_npcs:
+      - "Councillor Wheatgrass"
+      - "Recycling Evangelist Bramble"
+      - "Policy Director Sorrel"
+      - "Treasurer Daisy"
+    duration_ticks: 400
+    cooldown_ticks: 0     # No cooldown — only triggered by chain
+    priority: 5
+    weight: 0             # Never auto-scheduled
+    steps:
+
+      - type: MOVE_TO
+        npc: "Councillor Wheatgrass"
+        location: "spawn"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Recycling Evangelist Bramble"
+        location: "spawn"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Policy Director Sorrel"
+        location: "spawn"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Treasurer Daisy"
+        location: "spawn"
+        speed: WALK
+
+
+  # ──────────────────────────────────────────────────────────
+  # 2. SITE INSPECTION — TREE FARM
+  #    Group walks to the Tree Farm, inspects it, each
+  #    councillor notes something. ~2.5 minutes.
+  # ──────────────────────────────────────────────────────────
+  site_inspection_tree_farm:
+    description: "Council site inspection at the Tree Farm — each councillor assesses and comments"
+    required_npcs:
+      - "Councillor Wheatgrass"
+      - "Recycling Evangelist Bramble"
+      - "Policy Director Sorrel"
+    duration_ticks: 3000
+    cooldown_ticks: 14400   # 12-minute cooldown
+    priority: 5
+    weight: 8
+    steps:
+
+      # — Conditional: only proceed if players are online to see it —
+      - type: CONDITIONAL
+        condition: "players_online"
+        skip_steps: 1
+
+      - type: BROADCAST
+        message: "§2§l[ Site Inspection ]§r §7The Council is heading to the Tree Farm for an inspection."
+        chat_only: true
+
+      # — Walk to Tree Farm —
+      - type: MOVE_TO
+        npc: "Councillor Wheatgrass"
+        location: "tree_farm_centre"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Recycling Evangelist Bramble"
+        location: "tree_farm_birch"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Policy Director Sorrel"
+        location: "tree_farm_oak"
+        speed: WALK
+
+      # — Arrival Pause — 
+      - type: WAIT
+        ticks: 60
+
+      # — All face the trees —
+      - type: TURN_FACE
+        npc: "Councillor Wheatgrass"
+        face_target: "tree_farm_oak"
+
+      - type: TURN_FACE
+        npc: "Recycling Evangelist Bramble"
+        face_target: "tree_farm_birch"
+
+      - type: TURN_FACE
+        npc: "Policy Director Sorrel"
+        face_target: "tree_farm_centre"
+
+      - type: WAIT
+        ticks: 40
+
+      # — Inspection Begins —
+      - type: EMOTE
+        npc: "Councillor Wheatgrass"
+        emote: THINKING
+
+      - type: SAY
+        npc: "Councillor Wheatgrass"
+        message: "The Tree Farm is performing admirably. Reforestation rates are up 12%. I credit my oversight."
+        pause_ticks: 90
+
+      - type: ANIMATE
+        npc: "Recycling Evangelist Bramble"
+        animation: ARM_SWING
+
+      - type: SAY
+        npc: "Recycling Evangelist Bramble"
+        message: "I've been examining these birch trees. Are they aware of our composting output targets? Someone should brief them."
+        pause_ticks: 90
+
+      - type: EMOTE
+        npc: "Policy Director Sorrel"
+        emote: THINKING
+
+      - type: SAY
+        npc: "Policy Director Sorrel"
+        message: "I've drafted a 34-page arboricultural assessment. Key finding: the trees are trees. Further study recommended."
+        pause_ticks: 90
+
+      # — Group Discussion —
+      - type: GROUP_SAY
+        pause_per_line_ticks: 85
+        lines:
+          - speaker: "Councillor Wheatgrass"
+            message: "Overall assessment: excellent. I'm filing a commendation for the oaks."
+          - speaker: "Recycling Evangelist Bramble"
+            message: "Are the fallen leaves being composted or are they just LYING there?"
+          - speaker: "Policy Director Sorrel"
+            message: "Page 28 of my assessment covers fallen leaf management. Sub-section 7c: Leaf Fate Determination."
+          - speaker: "Recycling Evangelist Bramble"
+            message: "There's a fallen leaf RIGHT THERE. I'm composting it now. Don't anyone stop me."
+          - speaker: "Councillor Wheatgrass"
+            message: "Bramble, please don't aggressively compost the inspection site during the inspection."
+          - speaker: "Recycling Evangelist Bramble"
+            message: "I'm filing this as a success regardless."
+
+      # — Emotive Conclusion —
+      - type: EMOTE
+        npc: "Councillor Wheatgrass"
+        emote: APPLAUD
+
+      - type: SAY
+        npc: "Councillor Wheatgrass"
+        message: "Inspection complete. The Tree Farm receives a rating of §aExcellent§7 from this council. Good work, trees."
+        pause_ticks: 100
+
+      - type: BROADCAST
+        message: "§2§8[ Site Inspection complete. Tree Farm rated Excellent. Bramble has composted something. ]"
+        chat_only: true
+
+      # — Walk back —
+      - type: MOVE_TO
+        npc: "Councillor Wheatgrass"
+        location: "council_chamber"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Recycling Evangelist Bramble"
+        location: "council_chamber"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Policy Director Sorrel"
+        location: "council_chamber"
+        speed: WALK
+
+
+  # ──────────────────────────────────────────────────────────
+  # 3. HEATED DEBATE WITH CHOREOGRAPHY
+  #    Full movement debate — councillors take podiums,
+  #    positions shift mid-debate, audience NPC reacts.
+  #    ~4 minutes. Overrides normal schedule.
+  # ──────────────────────────────────────────────────────────
+  heated_debate:
+    description: "Choreographed debate with podium movement, position swaps, and audience reactions"
+    required_npcs:
+      - "Councillor Wheatgrass"
+      - "Recycling Evangelist Bramble"
+      - "Policy Director Sorrel"
+      - "Treasurer Daisy"
+    duration_ticks: 4800
+    cooldown_ticks: 24000   # 20-minute cooldown
+    priority: 10            # Debate priority — overrides council routines
+    weight: 5
+    steps:
+
+      # — Conditional: only run if no other debate is active —
+      - type: CONDITIONAL
+        condition: "debate_not_active"
+        skip_steps: 0
+
+      # — Pre-Debate Announcement —
+      - type: BROADCAST
+        message: "§e§l[ DEBATE ]§r §7A heated council debate is about to begin! Come watch!"
+        chat_only: false
+
+      - type: WAIT
+        ticks: 80
+
+      # — Debaters Walk to Podiums —
+      - type: MOVE_TO
+        npc: "Councillor Wheatgrass"
+        location: "debate_podium_a"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Recycling Evangelist Bramble"
+        location: "debate_podium_b"
+        speed: WALK
+
+      # — Audience Takes Position —
+      - type: MOVE_TO
+        npc: "Policy Director Sorrel"
+        location: "debate_audience_1"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Treasurer Daisy"
+        location: "debate_audience_2"
+        speed: WALK
+
+      # — Everyone Faces Each Other —
+      - type: TURN_FACE
+        npc: "Councillor Wheatgrass"
+        face_target: "Recycling Evangelist Bramble"
+
+      - type: TURN_FACE
+        npc: "Recycling Evangelist Bramble"
+        face_target: "Councillor Wheatgrass"
+
+      - type: TURN_FACE
+        npc: "Policy Director Sorrel"
+        face_target: "debate_podium_a"
+
+      - type: TURN_FACE
+        npc: "Treasurer Daisy"
+        face_target: "debate_podium_b"
+
+      - type: WAIT
+        ticks: 60
+
+      # — Motion Announced —
+      - type: SAY
+        npc: "Councillor Wheatgrass"
+        message: "§lMOTION 101§r§7: Should all new construction require a §lFull Ecological Impact Gala§r instead of a simple planning form?"
+        pause_ticks: 110
+
+      # — Opening Arguments —
+      - type: ANIMATE
+        npc: "Councillor Wheatgrass"
+        animation: ARM_SWING
+
+      - type: SAY
+        npc: "Councillor Wheatgrass"
+        message: "I propose: yes. A gala. With bunting. The environment deserves bunting."
+        pause_ticks: 90
+
+      - type: EMOTE
+        npc: "Recycling Evangelist Bramble"
+        emote: ANGRY
+
+      - type: ANIMATE
+        npc: "Recycling Evangelist Bramble"
+        animation: ARM_SWING
+
+      - type: SAY
+        npc: "Recycling Evangelist Bramble"
+        message: "A GALA? This is BUREAUCRATIC THEATRE! We need §laction§r, not canapés!"
+        pause_ticks: 90
+
+      # — Audience Reacts —
+      - type: EMOTE
+        npc: "Policy Director Sorrel"
+        emote: GASP
+
+      - type: EMOTE
+        npc: "Treasurer Daisy"
+        emote: THINKING
+
+      # — Main Exchange —
+      - type: GROUP_SAY
+        pause_per_line_ticks: 85
+        lines:
+          - speaker: "Councillor Wheatgrass"
+            message: "Canapés are sustainable, Bramble. I insist on ethically sourced canapés."
+          - speaker: "Recycling Evangelist Bramble"
+            message: "Every day we spend planning galas, someone is laying cobblestone SOMEWHERE!"
+          - speaker: "Councillor Wheatgrass"
+            message: "Cobblestone! You always bring it back to cobblestone!"
+          - speaker: "Recycling Evangelist Bramble"
+            message: "Because cobblestone is §lthe enemy§r!"
+          - speaker: "Policy Director Sorrel"
+            message: "Point of information — I've pre-drafted the gala agenda. It has 61 items."
+          - speaker: "Treasurer Daisy"
+            message: "The budget for 61 agenda items and canapés is... §cnot acceptable§7, financially."
+          - speaker: "Councillor Wheatgrass"
+            message: "Treasurer Daisy, please. This is a matter of principle."
+          - speaker: "Treasurer Daisy"
+            message: "§8(It is still a matter of money.)"
+
+      # — MID-DEBATE POSITION SWAP — Councillors swap sides for dramatic effect
+      - type: WAIT
+        ticks: 40
+
+      - type: BROADCAST
+        message: "§e§8[ The debaters swap positions — a classic council manoeuvre. ]"
+        chat_only: true
+
+      - type: MOVE_TO
+        npc: "Councillor Wheatgrass"
+        location: "debate_podium_b"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Recycling Evangelist Bramble"
+        location: "debate_podium_a"
+        speed: WALK
+
+      - type: TURN_FACE
+        npc: "Councillor Wheatgrass"
+        face_target: "Recycling Evangelist Bramble"
+
+      - type: TURN_FACE
+        npc: "Recycling Evangelist Bramble"
+        face_target: "Councillor Wheatgrass"
+
+      - type: WAIT
+        ticks: 40
+
+      # — Second Act —
+      - type: GROUP_SAY
+        pause_per_line_ticks: 90
+        lines:
+          - speaker: "Recycling Evangelist Bramble"
+            message: "Fine. You want a gala? We'll have a gala. But I'm recycling the invitations."
+          - speaker: "Councillor Wheatgrass"
+            message: "That's actually an improvement. I'll note this as your formal agreement."
+          - speaker: "Recycling Evangelist Bramble"
+            message: "I agreed to recycled invitations! Not the whole gala!"
+          - speaker: "Councillor Wheatgrass"
+            message: "The minutes will be §o ambiguous§r§7 on this point."
+          - speaker: "Policy Director Sorrel"
+            message: "I've already updated the agenda. Item 62: Bramble's Formal Agreement."
+          - speaker: "Recycling Evangelist Bramble"
+            message: "I OBJECT to Item 62 of the agenda of a gala I did not agree to attend!"
+
+      # — Audience Climax —
+      - type: EMOTE
+        npc: "Policy Director Sorrel"
+        emote: APPLAUD
+
+      - type: EMOTE
+        npc: "Treasurer Daisy"
+        emote: DISTRESS
+
+      # — Resolution —
+      - type: WAIT
+        ticks: 60
+
+      - type: ANIMATE
+        npc: "Councillor Wheatgrass"
+        animation: ARM_SWING
+
+      - type: SAY
+        npc: "Councillor Wheatgrass"
+        message: "Motion 101 passes 2-1 with 1 abstention. §8(Daisy again.)§7 The Ecological Impact Gala is now policy."
+        pause_ticks: 100
+
+      - type: EMOTE
+        npc: "Councillor Wheatgrass"
+        emote: CELEBRATE
+
+      - type: EMOTE
+        npc: "Recycling Evangelist Bramble"
+        emote: ANGRY
+
+      - type: SAY
+        npc: "Recycling Evangelist Bramble"
+        message: "This is the worst outcome. I'm composting my notes in protest."
+        pause_ticks: 80
+
+      - type: BROADCAST
+        message: "§e§l[ DEBATE CONCLUDED ]§r §7Motion 101 passed. Galas are now mandatory. Canapés to follow."
+        chat_only: false
+
+      # — Disperse —
+      - type: WAIT
+        ticks: 60
+
+      - type: MOVE_TO
+        npc: "Councillor Wheatgrass"
+        location: "council_chamber"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Recycling Evangelist Bramble"
+        location: "recycling_centre"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Policy Director Sorrel"
+        location: "council_chamber"
+        speed: WALK
+
+      - type: MOVE_TO
+        npc: "Treasurer Daisy"
+        location: "compost_processing"
+        speed: WALK

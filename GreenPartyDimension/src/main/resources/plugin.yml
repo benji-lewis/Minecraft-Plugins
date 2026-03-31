@@ -1,0 +1,108 @@
+name: GreenPartyDimension
+version: '${project.version}'
+main: uk.greenparty.GreenPartyPlugin
+api-version: '1.21'
+description: A dimension so green it makes the Amazon jealous. Probably.
+authors: [JeevesAI]
+website: https://greenparty.co.uk
+
+commands:
+  greenparty:
+    description: Main Green Party command
+    usage: /greenparty <teleport|leave|info|stats|dimension-info|quest|manifesto|council|release|give>
+    aliases: [gp, greens]
+  greenportal:
+    description: Create a Green Portal to the Verdant Utopia
+    usage: /greenportal
+    permission: greenparty.admin
+  greenreset:
+    description: Reset your Green Party progress (you capitalist sellout)
+    usage: /greenreset
+    permission: greenparty.admin
+  greencredit:
+    description: Manage Green Credits — the official currency of the Verdant Utopia
+    usage: /greencredit <balance|give <player> <amount>>
+    aliases: [gc, greencredits]
+  achievements:
+    description: View your achievements in the Verdant Utopia
+    usage: /achievements
+    aliases: [achieve, ach]
+  violations:
+    description: Check environmental violation count for a player
+    usage: /violations [player]
+    aliases: [violation, viol]
+  motion:
+    description: Democratic motions for The Verdant Utopia
+    usage: /motion <start <title>|vote <yes|no>|results|cancel>
+    aliases: [mot]
+  quest:
+    description: Quest chain system for The Verdant Utopia
+    usage: /quest <list|start <name>|progress|abandon>
+    aliases: [quests, q]
+  routine:
+    description: Scripted NPC routine management — trigger, stop, and inspect council routines
+    usage: /routine <list|trigger <name>|stop <npc_name>|info <name>>
+    aliases: [routines]
+    permission: greenparty.use
+  npc:
+    description: NPC information and schedule viewer
+    usage: /npc info <npc_name> | /npc routine info <npc_name>
+  debate:
+    description: Vote in councillor debates
+    usage: /debate <vote <councillor_name>|status>
+    aliases: [debates]
+  leaderboard:
+    description: View top 10 rankings in a category
+    usage: /leaderboard <green_credits|eco_score|trees_planted|quests_completed|violations>
+    aliases: [lb, boards, rankings]
+  cosmetics:
+    description: Manage your cosmetic rewards
+    usage: /cosmetics <list|equip <id>|unequip <id>|check>
+    aliases: [cosmetic, cos]
+  structure:
+    description: View structure information
+    usage: /structure <list|info <name>|rebuild <name>|rebuild-all|regenerate>
+    aliases: [structures, str]
+  progress:
+    description: Monthly progression and seasonal bonuses
+    usage: /progress <monthly|seasonal>
+    aliases: [progression, prog]
+  location:
+    description: Inspect the routine LocationRegistry
+    usage: /location <list|info <name>>
+    aliases: [loc]
+    permission: greenparty.admin
+permissions:
+  greenparty.admin:
+    description: Administrative access to the Green Party plugin
+    default: op
+  greenparty.use:
+    description: Allows use of Green Party features
+    default: true
+  greenparty.teleport:
+    description: Teleport to the Verdant Utopia
+    default: true
+  greenparty.credits.give:
+    description: Allows giving Green Credits to other players
+    default: op
+  greenparty.council:
+    description: Allows raising motions (councillor status)
+    default: false
+  greenparty.violations.check:
+    description: Allows checking other players' violations
+    default: op
+  greenparty.leaderboard:
+    description: View leaderboards
+    default: true
+  greenparty.cosmetics:
+    description: Use the cosmetics system
+    default: true
+  greenparty.structure:
+    description: View structure information
+    default: true
+  greenparty.progress:
+    description: View monthly progression
+    default: true
+  greenparty.structure.rebuild:
+    description: Rebuild structures (admin)
+    default: op
