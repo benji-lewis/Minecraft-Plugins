@@ -1,0 +1,10 @@
+# CreeperConsent Configuration
+
+# Enable or disable the plugin
+enabled: true
+
+# Messages shown to the player
+messages:
+  title: "A creeper has asked for permission to explode"
+  accept: "Sure, let's go"
+  deny: "Nah, not today"
