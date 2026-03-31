@@ -5,6 +5,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import com.xfour.creeperconsent.util.CreeperManager;
 
 public class DamageListener implements Listener {
@@ -21,9 +22,11 @@ public class DamageListener implements Listener {
 
         // Track who damaged creepers (for identifying the triggerer)
         if (damagedEntity instanceof Creeper creeper) {
-            Entity damager = event.getDamager();
-            if (damager != null) {
-                creeperManager.setDamager(creeper, damager);
+            if (event instanceof EntityDamageByEntityEvent damageEvent) {
+                Entity damager = damageEvent.getDamager();
+                if (damager != null) {
+                    creeperManager.setDamager(creeper, damager);
+                }
             }
         }
     }

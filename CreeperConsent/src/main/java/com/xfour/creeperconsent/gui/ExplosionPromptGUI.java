@@ -69,7 +69,7 @@ public class ExplosionPromptGUI {
      * Check if this is a CreeperConsent GUI (for click detection)
      */
     public static boolean isCreeperConsentGUI(Inventory inv) {
-        return inv.getSize() == 9 && inv.getName().contains("Creeper Consent");
+        return inv.getSize() == 9 && inv.getHolder() == null;
     }
 
     /**
